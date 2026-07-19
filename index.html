@@ -1,0 +1,542 @@
+<title>虎井嶼手釣魚 · 給媽媽的內容報告</title>
+<style>
+  :root {
+    --bg: #F7F1E5;
+    --paper: #FFFDF9;
+    --paper-2: #F6F0E2;
+    --ink: #45514D;
+    --ink-soft: #67726B;
+    --muted: #97A199;
+    --line: #ECE3D2;
+    --sea: #7FBBB0;
+    --sea-deep: #3F8478;
+    --coral: #F0A268;
+    --coral-ink: #A85416;
+    --on-coral: #4A2C10;
+    --coral-soft: #FCEBD8;
+    --sand: #F2E6CC;
+    --gold: #B8842E;
+    --ok: #4E9E86;
+    --shadow: 0 1px 2px rgba(69,81,77,.04), 0 10px 30px rgba(69,81,77,.07);
+    --radius: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #F7F1E5;
+      --paper: #FFFDF9;
+      --paper-2: #F6F0E2;
+      --ink: #45514D;
+      --ink-soft: #67726B;
+      --muted: #97A199;
+      --line: #ECE3D2;
+      --sea: #7FBBB0;
+      --sea-deep: #3F8478;
+      --coral: #F0A268;
+      --coral-ink: #A85416;
+      --on-coral: #4A2C10;
+      --coral-soft: #FCEBD8;
+      --sand: #F2E6CC;
+      --gold: #B8842E;
+      --ok: #4E9E86;
+      --shadow: 0 1px 2px rgba(69,81,77,.04), 0 10px 30px rgba(69,81,77,.07);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #F7F1E5; --paper: #FFFDF9; --paper-2: #F6F0E2; --ink: #45514D;
+    --ink-soft: #67726B; --muted: #97A199; --line: #ECE3D2; --sea: #7FBBB0;
+    --sea-deep: #3F8478; --coral: #F0A268; --coral-ink: #A85416; --on-coral: #4A2C10;
+    --coral-soft: #FCEBD8; --sand: #F2E6CC;
+    --gold: #B8842E; --ok: #4E9E86; --shadow: 0 1px 2px rgba(69,81,77,.04), 0 10px 30px rgba(69,81,77,.07);
+  }
+  :root[data-theme="dark"] {
+    --bg: #F7F1E5; --paper: #FFFDF9; --paper-2: #F6F0E2; --ink: #45514D;
+    --ink-soft: #67726B; --muted: #97A199; --line: #ECE3D2; --sea: #7FBBB0;
+    --sea-deep: #3F8478; --coral: #F0A268; --coral-ink: #A85416; --on-coral: #4A2C10;
+    --coral-soft: #FCEBD8; --sand: #F2E6CC;
+    --gold: #B8842E; --ok: #4E9E86; --shadow: 0 1px 2px rgba(69,81,77,.04), 0 10px 30px rgba(69,81,77,.07);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", "Segoe UI", Roboto, sans-serif;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  .eyebrow {
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+    letter-spacing: .02em;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; padding: clamp(20px, 5vw, 56px) clamp(16px, 4vw, 28px) 72px; }
+
+  /* ---------- header ---------- */
+  .masthead {
+    background: var(--paper);
+    color: var(--ink);
+    border: 0.5px solid var(--line);
+    border-radius: var(--radius);
+    padding: clamp(30px, 6vw, 52px) clamp(24px, 5vw, 46px);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .masthead::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 5px;
+    background: linear-gradient(90deg, var(--sea), var(--coral));
+  }
+  .masthead::after {
+    content: "";
+    position: absolute; right: -40px; bottom: -50px; width: 180px; height: 180px;
+    border-radius: 50%; background: var(--paper-2); z-index: 0;
+  }
+  .kicker {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: Georgia, serif; font-style: italic;
+    font-size: .9rem; color: var(--coral-ink);
+    background: var(--coral-soft);
+    padding: 5px 14px; border-radius: 999px; margin-bottom: 20px;
+    position: relative; z-index: 1;
+  }
+  .masthead h1 {
+    margin: 0 0 14px; font-size: clamp(1.7rem, 5.5vw, 2.5rem);
+    line-height: 1.25; letter-spacing: -.01em; text-wrap: balance; font-weight: 800;
+    color: var(--ink); position: relative; z-index: 1;
+  }
+  .masthead p { margin: 0; color: var(--ink-soft); font-size: 1.05rem; max-width: 46ch; position: relative; z-index: 1; }
+  .meta-row {
+    display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 22px;
+    font-size: .84rem; color: var(--muted); position: relative; z-index: 1;
+  }
+  .meta-row b { color: var(--sea-deep); font-weight: 600; }
+
+  /* ---------- intro letter ---------- */
+  .letter {
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: clamp(22px, 4vw, 32px); margin-top: 22px; box-shadow: var(--shadow);
+    font-size: 1.06rem; color: var(--ink-soft);
+  }
+  .letter p { margin: 0 0 14px; }
+  .letter p:last-child { margin-bottom: 0; }
+  .letter strong { color: var(--ink); }
+
+  /* ---------- section scaffold ---------- */
+  section { margin-top: 46px; }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 20px; }
+  .sec-num {
+    font-family: Georgia, serif; font-size: 1.05rem; color: var(--on-coral); background: var(--coral);
+    width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center;
+    flex: 0 0 auto; font-weight: 700; transform: translateY(2px);
+  }
+  .sec-head h2 { margin: 0; font-size: clamp(1.25rem, 3.6vw, 1.5rem); letter-spacing: -.01em; line-height: 1.3; }
+  .sec-head .sub { display: block; font-size: .9rem; color: var(--muted); font-weight: 400; margin-top: 2px; }
+
+  /* ---------- inventory cards ---------- */
+  .files { display: grid; gap: 12px; }
+  .file {
+    background: var(--paper); border: 1px solid var(--line); border-left: 4px solid var(--sea);
+    border-radius: 12px; padding: 15px 18px; box-shadow: var(--shadow);
+  }
+  .file .top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .file .name { font-weight: 700; color: var(--ink); font-size: 1.02rem; }
+  .badge {
+    font-size: .72rem; font-weight: 700; letter-spacing: .04em; padding: 2px 9px; border-radius: 999px;
+    background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok);
+    border: 1px solid color-mix(in srgb, var(--ok) 35%, transparent);
+  }
+  .badge.core { background: var(--coral-soft); color: var(--coral-ink); border-color: color-mix(in srgb, var(--coral) 45%, transparent); }
+  .file .desc { margin: 8px 0 0; color: var(--ink-soft); font-size: .96rem; }
+
+  /* ---------- highlight strip ---------- */
+  .highlights { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .hl {
+    background: var(--paper-2); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px;
+  }
+  .hl .h { font-weight: 700; color: var(--sea-deep); margin: 0 0 4px; font-size: 1rem; display: flex; gap: 8px; align-items: center; }
+  .hl p { margin: 0; font-size: .92rem; color: var(--ink-soft); }
+  @media (max-width: 560px){ .highlights { grid-template-columns: 1fr; } }
+
+  /* ---------- checklist ---------- */
+  .todo { display: grid; gap: 12px; }
+  .item {
+    display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow);
+  }
+  .tick {
+    width: 26px; height: 26px; border-radius: 8px; border: 2px dashed var(--coral);
+    display: grid; place-items: center; color: var(--coral-ink); font-weight: 800; font-size: .95rem; flex: 0 0 auto;
+  }
+  .item h3 { margin: 0 0 3px; font-size: 1.04rem; display: flex; gap: 9px; align-items: center; flex-wrap: wrap; }
+  .item p { margin: 0; color: var(--ink-soft); font-size: .95rem; }
+  .when {
+    font-size: .7rem; font-weight: 700; letter-spacing: .03em; padding: 2px 9px; border-radius: 999px; white-space: nowrap;
+  }
+  .when.now { background: var(--coral-soft); color: var(--coral-ink); }
+  .when.later { background: color-mix(in srgb, var(--gold) 16%, transparent); color: var(--gold); border: 1px solid color-mix(in srgb, var(--gold) 34%, transparent); }
+  .star { color: var(--coral-ink); }
+
+  /* ---------- webpage preview ---------- */
+  .preview-grid { display: grid; grid-template-columns: 200px 1fr; gap: 26px; align-items: start; }
+  @media (max-width: 620px){ .preview-grid { grid-template-columns: 1fr; } .phone { margin: 0 auto; } }
+  .phone {
+    width: 200px; background: var(--ink); border-radius: 26px; padding: 10px;
+    box-shadow: var(--shadow); position: sticky; top: 20px;
+  }
+  .phone .screen { background: var(--paper); border-radius: 18px; overflow: hidden; }
+  .band { padding: 12px 12px; border-bottom: 1px solid var(--line); font-size: .72rem; line-height: 1.4; }
+  .band:last-child { border-bottom: 0; }
+  .band .t { font-weight: 700; color: var(--ink); font-size: .78rem; }
+  .band.hero { background: var(--paper-2); color: var(--ink); padding: 16px 12px; border-bottom: 2px solid var(--sea); }
+  .band.hero .t { color: var(--ink); font-size: .84rem; }
+  .band.hero .s { color: var(--sea-deep); }
+  .band .s { color: var(--muted); }
+  .band.cta { background: var(--coral); color: var(--on-coral); text-align: center; font-weight: 800; font-size: .82rem; }
+  .dot { display:inline-block; width:7px; height:7px; border-radius:50%; background: var(--coral); margin-right: 5px; vertical-align: middle; }
+
+  .map { display: grid; gap: 10px; counter-reset: step; }
+  .map .row {
+    display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: start;
+    padding: 12px 0; border-bottom: 1px dashed var(--line);
+  }
+  .map .row:last-child { border-bottom: 0; }
+  .map .n {
+    counter-increment: step; font-family: Georgia, serif; color: var(--sea-deep); font-weight: 700;
+    font-size: 1.05rem; text-align: center;
+  }
+  .map .n::before { content: counter(step); }
+  .map .row .title { font-weight: 700; color: var(--ink); font-size: 1rem; }
+  .map .row .from { font-size: .86rem; color: var(--muted); margin-top: 2px; }
+  .map .row .from b { color: var(--sea-deep); font-weight: 600; }
+  .arrow { color: var(--coral-ink); font-weight: 700; }
+
+  /* ---------- next steps ---------- */
+  .next {
+    background: linear-gradient(160deg, var(--paper-2), var(--paper));
+    border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(22px,4vw,30px); box-shadow: var(--shadow);
+  }
+  .next h2 { margin: 0 0 14px; font-size: 1.35rem; }
+  .next ol { margin: 0; padding-left: 20px; }
+  .next li { margin-bottom: 10px; color: var(--ink-soft); }
+  .next li strong { color: var(--ink); }
+
+  .foot { text-align: center; color: var(--muted); font-size: .82rem; margin-top: 40px; }
+  .foot .eyebrow { color: var(--sea); }
+  hr.rule { border: 0; border-top: 1px solid var(--line); margin: 0; }
+
+  /* ---------- positioning ---------- */
+  .stance { display: grid; gap: 12px; }
+  .stance-row {
+    display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 18px; box-shadow: var(--shadow);
+  }
+  .stance-row .ic { font-size: 1.35rem; line-height: 1.3; }
+  .stance-row.yes { border-left: 4px solid var(--ok); }
+  .stance-row.no { border-left: 4px solid var(--coral); }
+  .stance-row.strategy { border-left: 4px solid var(--sea); }
+  .stance-row h3 { margin: 0 0 8px; font-size: 1.06rem; color: var(--ink); }
+  .stance-row ul { margin: 0; padding-left: 18px; color: var(--ink-soft); font-size: .95rem; display: grid; gap: 5px; }
+  .stance-row p { color: var(--ink-soft); font-size: .95rem; }
+  .stance-row strong { color: var(--ink); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { background: var(--paper-2); border: 1px solid var(--line); border-radius: 999px; padding: 6px 13px; font-size: .86rem; color: var(--ink-soft); }
+
+  /* ---------- name vote ---------- */
+  .name-fam { margin-top: 18px; }
+  .name-fam > .lbl { font-size: .82rem; letter-spacing: .03em; color: var(--muted); font-weight: 700; margin-bottom: 10px; }
+  .names { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+  .name {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+    cursor: pointer; position: relative; transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+  }
+  .name:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--sea); }
+  .name .place { font-size: .78rem; color: var(--muted); }
+  .name .sub { font-size: 1.16rem; font-weight: 800; color: var(--ink); letter-spacing: .01em; }
+  .name.top { border-color: color-mix(in srgb, var(--coral) 45%, transparent); }
+  .name.selected { border-color: var(--coral); box-shadow: 0 0 0 3px var(--coral-soft); }
+  .name .pick-flag { position: absolute; top: 10px; right: 12px; font-size: .7rem; font-weight: 800; color: var(--coral); opacity: 0; transition: opacity .12s ease; }
+  .name.selected .pick-flag { opacity: 1; }
+  .rec { display: inline-block; font-size: .66rem; font-weight: 800; letter-spacing: .04em; color: var(--on-coral); background: var(--coral); padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <span class="kicker">🎣 澎湖 · 虎井嶼</span>
+    <h1>虎井嶼手釣魚<br>內容盤點 &amp; 網頁預覽</h1>
+    <p>媽媽，這是我把你給的資料整理後的報告——先看你給的內容有多好、還缺什麼，再看它會變成什麼樣的網頁。</p>
+    <div class="meta-row">
+      <span>給：<b>媽媽</b></span>
+      <span>階段：<b>構想中（還沒開賣）</b></span>
+      <span>日期：<b>2026 / 07 / 19</b></span>
+    </div>
+  </header>
+
+  <div class="letter">
+    <p>媽媽，先跟你說——<strong>你整理的內容真的很專業</strong>。魚種按四季分、每種寫肉質、還有解凍步驟、保存期限、澎湖海鮮月曆，這些都是<strong>內行人才講得出來的東西</strong>，客人一看就知道我們是真的懂海、真的在地。</p>
+    <p>這份報告有幾個部分：<strong>你給了什麼</strong>、<strong>內容最強的地方</strong>、<strong>我們想賣給誰</strong>、<strong>幫品牌取個名字</strong>（可以圈選）、<strong>還想麻煩你補的</strong>、以及<strong>網頁長什麼樣</strong>。慢慢看，有想改的地方都可以跟我說。</p>
+  </div>
+
+  <!-- 1. 盤點 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num" style="font-family:Georgia,serif">1</span>
+      <h2>你給了什麼<span class="sub">六份檔案，全部收到，內容都很扎實</span></h2>
+    </div>
+    <div class="files">
+      <div class="file">
+        <div class="top"><span class="name">自家釣的魚（依季節分類）</span><span class="badge core">核心</span></div>
+        <p class="desc">春夏秋冬＋全年，共 11 種魚（水針、小管、黑點魚、黃雞魚、鸚哥魚、青嘴魚、石斑、石老魚、臭肚魚、雀鯛…），每一種都寫了肉質特色。這是整個網頁的靈魂。</p>
+      </div>
+      <div class="file">
+        <div class="top"><span class="name">完美解凍與烹調指南</span><span class="badge core">核心</span></div>
+        <p class="desc">解凍 3 步驟（不拆袋流水解凍／擦乾去腥／不重複冷凍）＋各魚推薦煮法（清蒸、香煎、川燙分類）。讓客人收到不會手足無措。</p>
+      </div>
+      <div class="file">
+        <div class="top"><span class="name">澎湖手釣魚與市場魚差異</span><span class="badge">賣點素材</span></div>
+        <p class="desc">從捕撈、處理、冷凍、便利四個角度，說清楚手釣 + 三去 + 急凍為什麼贏市場魚。這份會變成網頁的「為什麼選我們」。</p>
+      </div>
+      <div class="file">
+        <div class="top"><span class="name">澎湖 1～12 月當季海鮮月曆</span><span class="badge">信任素材</span></div>
+        <p class="desc">逐月列出當季魚種與推薦料理，證明我們跟著海走、當季才出。</p>
+      </div>
+      <div class="file">
+        <div class="top"><span class="name">新鮮魚獲冷凍保存與料理建議</span><span class="badge">信任素材</span></div>
+        <p class="desc">黃金賞味期（3 個月最佳／半年內吃完）＋為什麼家用冰箱不能放太久，很專業。</p>
+      </div>
+      <div class="file">
+        <div class="top"><span class="name">自家釣的魚保存期限</span><span class="badge">信任素材</span></div>
+        <p class="desc">各魚種真空急凍保存期限表（4～12 個月），可以直接做成一張表放上網頁。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 最強的地方 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num" style="font-family:Georgia,serif">2</span>
+      <h2>你內容最強的三個地方<span class="sub">這些是別人抄不走的優勢</span></h2>
+    </div>
+    <div class="highlights">
+      <div class="hl">
+        <p class="h">🐟 講得出魚的「個性」</p>
+        <p>每種魚的肉質、口感、最佳吃法都寫得出來——這是攤販講不出來的專業，客人會信任。</p>
+      </div>
+      <div class="hl">
+        <p class="h">⚖️ 賣點有憑有據</p>
+        <p>手釣 vs 網撈、急凍不出水、三去截斷腥味——不是空喊「新鮮」，而是說得出道理。</p>
+      </div>
+      <div class="hl">
+        <p class="h">📅 在地感十足</p>
+        <p>虎井嶼海域、澎湖月曆、季節限定——濃濃的產地故事，這正是宅配海鮮最缺的東西。</p>
+      </div>
+      <div class="hl">
+        <p class="h">🍽️ 貼心到收貨之後</p>
+        <p>連解凍、保存、怎麼煮都教了。客人不會踩雷，回購率自然高。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 客群與定位 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num" style="font-family:Georgia,serif">3</span>
+      <h2>我們想賣給誰<span class="sub">走品質路線，不打價格戰</span></h2>
+    </div>
+    <div class="stance">
+      <div class="stance-row yes">
+        <span class="ic">🎯</span>
+        <div>
+          <h3>主要客群：重視「吃得安心、吃得好」的人</h3>
+          <ul>
+            <li>自己下廚、講究食材的家庭</li>
+            <li>在意來源、怕藥水、重視新鮮與健康的人</li>
+            <li>想吃到澎湖在地真味、回不去菜市場的老饕</li>
+            <li>送禮——送給懂吃的人，有面子也放心</li>
+          </ul>
+        </div>
+      </div>
+      <div class="stance-row no">
+        <span class="ic">🚫</span>
+        <div>
+          <h3>我們不搶：只比價、貪便宜的低價客</h3>
+          <p style="margin:0">手釣一竿一線，成本本來就比網撈、大量冷凍貨高。跟他們拚便宜一定輸，還會把品牌做壞。<strong>我們賣的是品質與故事，不是最低價</strong>——只想撿便宜的客人，本來就不是我們的人。</p>
+        </div>
+      </div>
+      <div class="stance-row strategy">
+        <span class="ic">📣</span>
+        <div>
+          <h3>怎麼讓對的人找到我們</h3>
+          <p style="margin:0 0 12px">用<strong>短影音 ＆ 做菜教學</strong>，讓大家看到「一條魚怎麼從虎井嶼上到你家餐桌」——教解凍、教料理，降低嘗試門檻、慢慢建立信任。有畫面、有故事，對的客人自己會分享。</p>
+          <div class="chips">
+            <span class="chip">🎬 產地／出海短片</span>
+            <span class="chip">🍳 一魚一煮法教學</span>
+            <span class="chip">❄️ 解凍小撇步</span>
+            <span class="chip">📅 本週上什麼魚</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. 取名字 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num" style="font-family:Georgia,serif">4</span>
+      <h2>幫品牌取個名字<span class="sub">主品牌固定用「虎井嶼」，副標挑一個最喜歡的</span></h2>
+    </div>
+    <p style="margin:0 0 16px;color:var(--ink-soft)">「<strong style="color:var(--ink)">虎井嶼</strong>」是我們最大的資產——澎湖、少見、有畫面又好唸，拿來當招牌大字。後面接一句副標定調性（以後還能隨季節換，例如「虎井嶼・秋釣手帖」）。<br><span style="font-size:.9rem;color:var(--muted)">👉 電腦或手機上都能直接<strong style="color:var(--coral)">點一下卡片圈起來</strong>，再跟我說你們選哪個。</span></p>
+
+    <div class="name-fam">
+      <div class="lbl">🖋 日記／手記家族（敘事、有溫度）</div>
+      <div class="names">
+        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">討海日記</div></div>
+        <div class="name top"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">討海手帖<span class="rec">推薦</span></div></div>
+        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">潮汐手記</div></div>
+        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">海味手札</div></div>
+      </div>
+    </div>
+
+    <div class="name-fam">
+      <div class="lbl">🍽 餐桌／食堂家族（好懂、有畫面）</div>
+      <div class="names">
+        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">海邊餐桌</div></div>
+        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">島嶼食堂</div></div>
+        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">這片海的味道</div></div>
+      </div>
+    </div>
+
+    <div class="name-fam">
+      <div class="lbl">🎣 一竿／手釣家族（強調差異）</div>
+      <div class="names">
+        <div class="name top"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">一竿日記<span class="rec">最推</span></div></div>
+        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">手釣手記</div></div>
+        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">釣海人家</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 補件清單 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num" style="font-family:Georgia,serif">5</span>
+      <h2>還想麻煩你補的<span class="sub">不多，最重要的是照片</span></h2>
+    </div>
+    <div class="todo">
+      <div class="item">
+        <span class="tick">★</span>
+        <div>
+          <h3>真實照片 <span class="when now">現在就能準備</span></h3>
+          <p><strong class="star">最重要！</strong>網頁上文字再好，沒有照片都少一半說服力。最想要的幾張：①虎井嶼海邊／爸爸釣魚的畫面 ②真空包裝好的魚 ③煮好上桌的一道菜。手機拍就很夠，自然、真實最好。</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="tick">2</span>
+        <div>
+          <h3>爸爸／你們的一句話 <span class="when now">現在就能準備</span></h3>
+          <p>想放一小段「為什麼想做這個」的心裡話，讓客人認識背後的人。一兩句就好，你平常怎麼想就怎麼說。</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="tick">3</span>
+        <div>
+          <h3>價格與規格 <span class="when later">決定開賣再補</span></h3>
+          <p>怎麼賣（單一魚種／綜合箱／幾斤一份）、一份多少錢。現在還在構想階段，這個可以之後再想。</p>
+        </div>
+      </div>
+      <div class="item">
+        <span class="tick">4</span>
+        <div>
+          <h3>怎麼寄、怎麼下單 <span class="when later">決定開賣再補</span></h3>
+          <p>冷凍宅配、運費、幾天到、用 LINE 還是電話訂。網頁現在會先放一顆「有興趣・敲碗預購」的按鈕佔位，等你們決定了再接上。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. 網頁預覽 -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num" style="font-family:Georgia,serif">6</span>
+      <h2>你的內容會變成這樣的網頁<span class="sub">從上往下滑，每一段都對應你給的檔案</span></h2>
+    </div>
+    <div class="preview-grid">
+      <div class="phone" aria-hidden="true">
+        <div class="screen">
+          <div class="band hero">
+            <div class="t">一支釣竿、一座小島</div>
+            <div class="s">把虎井嶼的海味送到你家餐桌</div>
+          </div>
+          <div class="band"><span class="dot"></span><span class="t">為什麼選我們</span><div class="s">手釣 · 三去 · 急凍 4 大理由</div></div>
+          <div class="band"><span class="dot"></span><span class="t">當季有什麼魚</span><div class="s">春夏秋冬 11 種</div></div>
+          <div class="band"><span class="dot"></span><span class="t">這樣煮最好吃</span><div class="s">清蒸 / 香煎 / 川燙</div></div>
+          <div class="band"><span class="dot"></span><span class="t">收到怎麼保存</span><div class="s">解凍 3 步驟 · 保存期限表</div></div>
+          <div class="band"><span class="dot"></span><span class="t">澎湖海鮮月曆</span><div class="s">1～12 月</div></div>
+          <div class="band cta">有興趣・敲碗預購</div>
+        </div>
+      </div>
+
+      <div class="map">
+        <div class="row">
+          <div class="n"></div>
+          <div><div class="title">開場橫幅</div><div class="from"><span class="arrow">→</span> 大標「一支釣竿、一座小島」＋<b>虎井嶼海邊照片</b>（要補照片）</div></div>
+        </div>
+        <div class="row">
+          <div class="n"></div>
+          <div><div class="title">為什麼選我們（4 個賣點卡）</div><div class="from"><span class="arrow">→</span> 來自 <b>手釣 vs 市場魚差異</b></div></div>
+        </div>
+        <div class="row">
+          <div class="n"></div>
+          <div><div class="title">當季有什麼魚（春夏秋冬）</div><div class="from"><span class="arrow">→</span> 來自 <b>自家釣的魚（依季節分類）</b></div></div>
+        </div>
+        <div class="row">
+          <div class="n"></div>
+          <div><div class="title">這樣煮最好吃</div><div class="from"><span class="arrow">→</span> 來自 <b>完美解凍與烹調指南</b></div></div>
+        </div>
+        <div class="row">
+          <div class="n"></div>
+          <div><div class="title">收到後怎麼保存</div><div class="from"><span class="arrow">→</span> 來自 <b>解凍指南 ＋ 保存期限表</b></div></div>
+        </div>
+        <div class="row">
+          <div class="n"></div>
+          <div><div class="title">澎湖海鮮月曆</div><div class="from"><span class="arrow">→</span> 來自 <b>1～12 月當季海鮮月曆</b></div></div>
+        </div>
+        <div class="row">
+          <div class="n"></div>
+          <div><div class="title">敲碗預購（按鈕）</div><div class="from"><span class="arrow">→</span> 先放佔位，等決定怎麼賣再接 LINE／電話</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- next -->
+  <section class="next">
+    <h2>接下來怎麼走</h2>
+    <ol>
+      <li><strong>選一個品牌名字</strong>——上面圈一個，或跟我說你們想到的。</li>
+      <li><strong>你看完這份</strong>——有想加、想改、想拿掉的內容都跟我說。</li>
+      <li><strong>照片有了就傳給我</strong>——這是讓網頁「活起來」最關鍵的一步。</li>
+      <li><strong>我做出網頁初版</strong>給你看，先不接訂購、純介紹，確認方向對不對。</li>
+      <li><strong>等你們決定要開賣</strong>，再補價格、宅配、下單方式，正式上線。</li>
+    </ol>
+  </section>
+
+  <p class="foot"><span class="eyebrow">Hujing Island · hand-line caught</span><br>虎井嶼手釣魚 · 內容報告 · 2026.07.19</p>
+
+</div>
+
+<script>
+  (function () {
+    var cards = document.querySelectorAll('.name');
+    cards.forEach(function (el) {
+      el.addEventListener('click', function () {
+        var wasSelected = el.classList.contains('selected');
+        cards.forEach(function (n) { n.classList.remove('selected'); });
+        if (!wasSelected) { el.classList.add('selected'); }
+      });
+    });
+  })();
+</script>
