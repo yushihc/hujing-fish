@@ -1,7 +1,7 @@
 <title>虎井嶼手釣魚 · 給媽媽的內容報告</title>
 <style>
   :root {
-    --bg: #F7F1E5;
+    --bg: #FBF6E4;
     --paper: #FFFDF9;
     --paper-2: #F6F0E2;
     --ink: #45514D;
@@ -15,9 +15,9 @@
     --on-coral: #4A2C10;
     --coral-soft: #FCEBD8;
     --sand: #F2E6CC;
-    --sky: #1B80C2;
+    --sky: #1683C9;
     --sky-soft: #D6EAF7;
-    --sky-ink: #155A87;
+    --sky-ink: #124F86;
     --on-sky: #FFFFFF;
     --gold: #B8842E;
     --ok: #4E9E86;
@@ -26,7 +26,7 @@
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #F7F1E5;
+      --bg: #FBF6E4;
       --paper: #FFFDF9;
       --paper-2: #F6F0E2;
       --ink: #45514D;
@@ -46,14 +46,14 @@
     }
   }
   :root[data-theme="light"] {
-    --bg: #F7F1E5; --paper: #FFFDF9; --paper-2: #F6F0E2; --ink: #45514D;
+    --bg: #FBF6E4; --paper: #FFFDF9; --paper-2: #F6F0E2; --ink: #45514D;
     --ink-soft: #67726B; --muted: #97A199; --line: #ECE3D2; --sea: #7FBBB0;
     --sea-deep: #3F8478; --coral: #F0A268; --coral-ink: #A85416; --on-coral: #4A2C10;
     --coral-soft: #FCEBD8; --sand: #F2E6CC;
     --gold: #B8842E; --ok: #4E9E86; --shadow: 0 1px 2px rgba(69,81,77,.04), 0 10px 30px rgba(69,81,77,.07);
   }
   :root[data-theme="dark"] {
-    --bg: #F7F1E5; --paper: #FFFDF9; --paper-2: #F6F0E2; --ink: #45514D;
+    --bg: #FBF6E4; --paper: #FFFDF9; --paper-2: #F6F0E2; --ink: #45514D;
     --ink-soft: #67726B; --muted: #97A199; --line: #ECE3D2; --sea: #7FBBB0;
     --sea-deep: #3F8478; --coral: #F0A268; --coral-ink: #A85416; --on-coral: #4A2C10;
     --coral-soft: #FCEBD8; --sand: #F2E6CC;
@@ -78,9 +78,9 @@
 
   /* ---------- header ---------- */
   .masthead {
-    background: linear-gradient(180deg, var(--sky-soft), var(--paper) 62%);
-    color: var(--ink);
-    border: 0.5px solid var(--line);
+    background: linear-gradient(158deg, var(--sky-ink), var(--sky));
+    color: #FFFFFF;
+    border: none;
     border-radius: var(--radius);
     padding: clamp(30px, 6vw, 52px) clamp(24px, 5vw, 46px);
     position: relative;
@@ -89,8 +89,8 @@
   }
   .masthead::before {
     content: "";
-    position: absolute; top: 0; left: 0; right: 0; height: 5px;
-    background: linear-gradient(90deg, var(--sky-ink), var(--sky), var(--sea));
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--coral));
   }
   .masthead::after {
     content: "";
@@ -100,22 +100,23 @@
   .kicker {
     display: inline-flex; align-items: center; gap: 8px;
     font-family: Georgia, serif; font-style: italic;
-    font-size: .9rem; color: var(--sky-ink);
-    background: var(--sky-soft);
+    font-size: .9rem; color: #FFFFFF;
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.25);
     padding: 5px 14px; border-radius: 999px; margin-bottom: 20px;
     position: relative; z-index: 1;
   }
   .masthead h1 {
     margin: 0 0 14px; font-size: clamp(1.7rem, 5.5vw, 2.5rem);
     line-height: 1.25; letter-spacing: -.01em; text-wrap: balance; font-weight: 800;
-    color: var(--ink); position: relative; z-index: 1;
+    color: #FFFFFF; position: relative; z-index: 1;
   }
-  .masthead p { margin: 0; color: var(--ink-soft); font-size: 1.05rem; max-width: 46ch; position: relative; z-index: 1; }
+  .masthead p { margin: 0; color: rgba(255,255,255,.9); font-size: 1.05rem; max-width: 46ch; position: relative; z-index: 1; }
   .meta-row {
     display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 22px;
-    font-size: .84rem; color: var(--muted); position: relative; z-index: 1;
+    font-size: .84rem; color: rgba(255,255,255,.8); position: relative; z-index: 1;
   }
-  .meta-row b { color: var(--sea-deep); font-weight: 600; }
+  .meta-row b { color: #FFFFFF; font-weight: 600; }
 
   /* ---------- intro letter ---------- */
   .letter {
@@ -193,9 +194,9 @@
   .band { padding: 12px 12px; border-bottom: 1px solid var(--line); font-size: .72rem; line-height: 1.4; }
   .band:last-child { border-bottom: 0; }
   .band .t { font-weight: 700; color: var(--ink); font-size: .78rem; }
-  .band.hero { background: var(--sky-soft); color: var(--ink); padding: 16px 12px; border-bottom: 2px solid var(--sky); }
-  .band.hero .t { color: var(--ink); font-size: .84rem; }
-  .band.hero .s { color: var(--sky-ink); }
+  .band.hero { background: var(--sky); color: #fff; padding: 16px 12px; }
+  .band.hero .t { color: #fff; font-size: .84rem; }
+  .band.hero .s { color: rgba(255,255,255,.85); }
   .band .s { color: var(--muted); }
   .band.cta { background: var(--coral); color: var(--on-coral); text-align: center; font-weight: 800; font-size: .82rem; }
   .dot { display:inline-block; width:7px; height:7px; border-radius:50%; background: var(--sky); margin-right: 5px; vertical-align: middle; }
