@@ -6,128 +6,159 @@
 <title>虎井嶼手釣魚 · 一支釣竿，一座小島</title>
 <style>
   :root {
-    --bg: #FBF6E4;
-    --paper: #FFFDF9;
-    --paper-2: #F6F0E2;
-    --ink: #45514D;
-    --ink-soft: #67726B;
-    --muted: #97A199;
-    --line: #ECE3D2;
-    --sky: #1683C9;
-    --sky-ink: #124F86;
-    --sky-soft: #D6EAF7;
-    --sea: #6FB4C0;
-    --coral: #F0A268;
-    --coral-ink: #A85416;
-    --on-coral: #4A2C10;
-    --coral-soft: #FCEBD8;
-    --sand: #F2E6CC;
-    --gold: #B8842E;
-    --radius: 16px;
+    --bg: #FBF6E4; --paper: #FFFDF9; --paper-2: #F6F0E2;
+    --ink: #45514D; --ink-soft: #67726B; --muted: #97A199; --line: #ECE3D2;
+    --sky: #1683C9; --sky-ink: #124F86; --sky-soft: #D6EAF7; --sea: #6FB4C0;
+    --coral: #F0A268; --coral-ink: #A85416; --on-coral: #4A2C10; --coral-soft: #FCEBD8;
+    --sand: #F2E6CC; --gold: #B8842E; --radius: 16px;
     --shadow: 0 1px 2px rgba(69,81,77,.04), 0 10px 30px rgba(69,81,77,.08);
+    --sbw: 256px;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body {
-    margin: 0; background: var(--bg); color: var(--ink);
+  body { margin: 0; background: var(--bg); color: var(--ink);
     font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", "Segoe UI", Roboto, sans-serif;
-    line-height: 1.75; -webkit-font-smoothing: antialiased;
-  }
+    line-height: 1.75; -webkit-font-smoothing: antialiased; }
   img { max-width: 100%; display: block; }
-  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 32px); }
 
-  /* top bar */
-  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; }
-  .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1.15rem; letter-spacing: .04em; color: var(--sky-ink); }
-  .brand .mk { font-size: 22px; line-height: 1; }
-  .topbar .tag { font-family: Georgia, serif; font-style: italic; font-size: .85rem; color: var(--muted); }
+  /* ---------- sidebar ---------- */
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; width: var(--sbw); z-index: 60;
+    background: linear-gradient(180deg, var(--sky-ink), var(--sky));
+    color: #fff; display: flex; flex-direction: column;
+    padding: 26px 20px 14px; overflow-y: auto;
+  }
+  .sidebar::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background: linear-gradient(90deg, var(--gold), var(--coral)); }
+  .s-brand { font-weight: 800; font-size: 1.5rem; letter-spacing: .05em; display:flex; align-items:center; gap:8px; }
+  .s-brand .mk { font-size: 24px; }
+  .s-tag { font-family: Georgia, serif; font-style: italic; font-size: .82rem; color: rgba(255,255,255,.72); margin: 6px 0 26px; }
+  .nav { display: flex; flex-direction: column; gap: 4px; }
+  .nav button {
+    appearance:none; text-align:left; background: transparent; border: 0; color: rgba(255,255,255,.82);
+    font: inherit; font-size: 1.02rem; padding: 11px 14px; border-radius: 10px; cursor: pointer;
+    display:flex; align-items:center; gap:10px; transition: background .15s, color .15s;
+  }
+  .nav button .ico { font-size: 1.05rem; width: 20px; text-align:center; }
+  .nav button:hover { background: rgba(255,255,255,.10); color:#fff; }
+  .nav button.active { background: rgba(255,255,255,.16); color:#fff; font-weight: 700; box-shadow: inset 3px 0 0 var(--gold); }
+  .s-cta {
+    appearance:none; border:0; cursor:pointer; font: inherit; font-weight: 800; font-size: .98rem;
+    margin-top: 18px; background: var(--coral); color: var(--on-coral);
+    padding: 12px 16px; border-radius: 12px; display:flex; flex-direction:column; align-items:center; gap:1px;
+  }
+  .s-cta small { font-weight: 500; font-size: .72rem; opacity: .8; }
+  .s-spacer { flex: 1 1 auto; min-height: 18px; }
+  .s-cat { width: 150px; margin: 8px auto -6px; filter: drop-shadow(0 6px 10px rgba(0,0,0,.28)); }
 
-  /* hero */
-  .hero {
-    position: relative; overflow: hidden;
-    background: linear-gradient(158deg, var(--sky-ink), var(--sky));
-    color: #fff; border-radius: 22px; margin-top: 6px;
-    padding: clamp(38px, 6vw, 68px) clamp(26px, 5vw, 60px) clamp(120px, 16vw, 150px);
-    box-shadow: var(--shadow);
-  }
-  .hero::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background: linear-gradient(90deg, var(--gold), var(--coral)); }
-  .hero .kicker {
-    display:inline-flex; align-items:center; gap:8px; font-family: Georgia, serif; font-style: italic;
-    font-size:.9rem; color:#fff; background: rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.28);
-    padding:5px 14px; border-radius:999px; margin-bottom: 22px;
-  }
-  .hero h1 { margin:0 0 16px; font-size: clamp(2rem, 6vw, 3.3rem); line-height:1.18; letter-spacing:-.01em; text-wrap: balance; font-weight:800; }
-  .hero .sub { margin:0 0 28px; font-size: clamp(1rem, 2.4vw, 1.2rem); color: rgba(255,255,255,.92); max-width: 30ch; }
-  .cta {
-    display:inline-flex; align-items:center; gap:8px; background: var(--coral); color: var(--on-coral);
-    font-weight:800; font-size:1.02rem; padding: 13px 26px; border-radius: 999px; text-decoration:none;
-    box-shadow: 0 6px 20px rgba(0,0,0,.18); transition: transform .12s ease;
-  }
-  .cta:hover { transform: translateY(-2px); }
-  .cta .note { font-weight: 500; font-size: .82rem; opacity: .8; }
-  .hero .cat { position:absolute; right: clamp(8px, 4vw, 48px); bottom: -6px; width: clamp(150px, 26vw, 250px); filter: drop-shadow(0 8px 14px rgba(0,0,0,.25)); }
-  .hero .waves { position:absolute; left:0; right:0; bottom:0; height: 40px; background:
-    radial-gradient(circle at 20px -10px, transparent 18px, rgba(255,255,255,.10) 19px 20px, transparent 21px); opacity:.4; }
+  /* ---------- main ---------- */
+  main { margin-left: var(--sbw); min-height: 100vh; }
+  .page { max-width: 900px; margin: 0 auto; padding: clamp(30px, 5vw, 64px) clamp(20px, 4vw, 44px) 80px; }
+  .pane { display: none; animation: fade .3s ease; }
+  .pane.active { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px);} to { opacity:1; transform:none; } }
 
-  /* section scaffold */
-  section { padding: clamp(44px, 7vw, 72px) 0; }
   .eyebrow { font-family: Georgia, serif; font-style: italic; color: var(--coral-ink); font-size: .95rem; margin: 0 0 8px; }
-  .sec-title { margin: 0 0 8px; font-size: clamp(1.5rem, 4vw, 2rem); letter-spacing:-.01em; text-wrap: balance; }
-  .sec-lead { margin: 0 0 32px; color: var(--ink-soft); max-width: 54ch; }
+  h1.big { margin: 0 0 16px; font-size: clamp(2rem, 5.5vw, 3.2rem); line-height: 1.16; letter-spacing: -.01em; text-wrap: balance; font-weight: 800; color: var(--sky-ink); }
+  .lead { margin: 0 0 26px; font-size: clamp(1rem, 2.3vw, 1.18rem); color: var(--ink-soft); max-width: 46ch; }
+  h2.title { margin: 0 0 8px; font-size: clamp(1.5rem, 4vw, 2rem); letter-spacing: -.01em; text-wrap: balance; }
+  .sub { margin: 0 0 30px; color: var(--ink-soft); max-width: 56ch; }
+  .btn { display:inline-flex; align-items:center; gap:8px; background: var(--coral); color: var(--on-coral); font-weight: 800; padding: 13px 26px; border-radius: 999px; text-decoration:none; border:0; cursor:pointer; font-size: 1rem; box-shadow: 0 6px 18px rgba(240,162,104,.35); transition: transform .12s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn small { font-weight: 500; opacity: .8; font-size: .8rem; }
 
-  /* selling points */
-  .points { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-  .point { background: var(--paper); border:1px solid var(--line); border-radius: var(--radius); padding: 22px 22px 24px; box-shadow: var(--shadow); }
+  /* home pane */
+  .home-wrap { display:grid; grid-template-columns: 1.2fr .8fr; gap: 28px; align-items: center; }
+  .home-art { background: linear-gradient(160deg, var(--sky-soft), var(--paper)); border-radius: 20px; padding: 26px; display:grid; place-items:center; box-shadow: var(--shadow); }
+  .home-art img { max-height: 210px; width:auto; filter: drop-shadow(0 8px 14px rgba(69,81,77,.2)); }
+  @media (max-width: 640px){ .home-wrap { grid-template-columns: 1fr; } .home-art { order:-1; } }
+
+  /* points */
+  .points { display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+  .point { background: var(--paper); border:1px solid var(--line); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
   .point .n { display:inline-grid; place-items:center; width:34px; height:34px; border-radius:10px; background: var(--sky); color:#fff; font-family: Georgia, serif; font-weight:700; margin-bottom:12px; }
   .point h3 { margin:0 0 6px; font-size:1.12rem; }
   .point p { margin:0; color: var(--ink-soft); font-size:.96rem; }
 
   /* fish */
-  .fish-band { background: linear-gradient(180deg, var(--sky-soft), var(--bg) 70%); border-radius: 22px; }
-  .fish-band .inner { padding: clamp(30px,5vw,52px) clamp(20px,4vw,44px); }
   .fish { display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
-  .fcard { background: var(--paper); border:1px solid var(--line); border-radius: var(--radius); overflow:hidden; box-shadow: var(--shadow); display:flex; flex-direction:column; }
-  .fcard .pic { background: radial-gradient(circle at 50% 60%, #fff, var(--paper-2)); height: 150px; display:grid; place-items:center; padding: 14px; }
-  .fcard .pic img { max-height: 122px; width:auto; filter: drop-shadow(0 4px 8px rgba(69,81,77,.18)); }
+  .fcard { background: var(--paper); border:1px solid var(--line); border-radius: var(--radius); overflow:hidden; box-shadow: var(--shadow); }
+  .fcard .pic { background: linear-gradient(160deg, var(--sky-soft), var(--paper-2)); height: 150px; display:grid; place-items:center; padding: 12px; }
+  .fcard .pic img { max-height: 124px; width:auto; filter: drop-shadow(0 4px 8px rgba(69,81,77,.18)); }
   .fcard .body { padding: 14px 18px 18px; }
   .fcard .top { display:flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap; }
   .fcard h3 { margin:0; font-size:1.12rem; }
   .season { font-size:.72rem; font-weight:700; padding:2px 9px; border-radius:999px; background: var(--sky-soft); color: var(--sky-ink); }
   .fcard p { margin:0; color: var(--ink-soft); font-size:.92rem; }
 
-  /* cta band */
-  .ctaband { background: linear-gradient(158deg, var(--sky-ink), var(--sky)); color:#fff; border-radius:22px; text-align:center; padding: clamp(38px,6vw,60px) 24px; box-shadow: var(--shadow); position:relative; overflow:hidden; }
-  .ctaband::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background: linear-gradient(90deg, var(--gold), var(--coral)); }
-  .ctaband h2 { margin:0 0 10px; font-size: clamp(1.5rem, 4vw, 2rem); }
-  .ctaband p { margin:0 0 24px; color: rgba(255,255,255,.9); }
+  /* about */
+  .story { display:grid; gap: 18px; max-width: 60ch; }
+  .story p { margin: 0; }
+  .story .hl { background: var(--coral-soft); border-left: 4px solid var(--coral); border-radius: 0 12px 12px 0; padding: 14px 18px; color: var(--ink); font-weight: 500; }
+  .note-card { margin-top: 26px; background: var(--paper); border: 1px dashed var(--line); border-radius: 12px; padding: 16px 18px; color: var(--muted); font-size: .9rem; }
 
-  footer { text-align:center; padding: 40px 0 56px; color: var(--muted); font-size:.85rem; }
-  footer .fcat { width: 88px; margin: 0 auto 10px; opacity:.9; }
-  footer .fbrand { color: var(--sky-ink); font-weight:800; letter-spacing:.05em; }
-  .disc { margin-top: 8px; font-size:.78rem; color: var(--muted); }
+  /* order */
+  .order-card { background: linear-gradient(158deg, var(--sky-ink), var(--sky)); color:#fff; border-radius: 20px; padding: clamp(30px,5vw,52px); box-shadow: var(--shadow); text-align:center; position:relative; overflow:hidden; }
+  .order-card::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background: linear-gradient(90deg, var(--gold), var(--coral)); }
+  .order-card h2 { margin:0 0 10px; font-size: clamp(1.5rem,4vw,2rem); color:#fff; }
+  .order-card p { margin:0 0 22px; color: rgba(255,255,255,.9); }
+
+  /* mobile top bar */
+  .mtop { display:none; }
+  .backdrop { display:none; }
+  @media (max-width: 860px) {
+    .sidebar { transform: translateX(-100%); transition: transform .25s ease; box-shadow: 0 0 40px rgba(0,0,0,.25); }
+    .sidebar.open { transform: none; }
+    main { margin-left: 0; padding-top: 58px; }
+    .mtop { display:flex; align-items:center; gap:12px; position: fixed; top:0; left:0; right:0; height:58px; z-index:40;
+      background: var(--sky); color:#fff; padding: 0 16px; box-shadow: var(--shadow); }
+    .mtop .burger { appearance:none; background:transparent; border:0; color:#fff; font-size:1.5rem; cursor:pointer; line-height:1; padding:4px; }
+    .mtop .mt-brand { font-weight:800; letter-spacing:.05em; font-size:1.15rem; }
+    .backdrop.show { display:block; position:fixed; inset:0; background: rgba(0,0,0,.35); z-index:55; }
+  }
+  .foot { color: var(--muted); font-size:.82rem; margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--line); }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <div class="topbar">
-    <div class="brand"><span class="mk">🐟</span> 虎井嶼</div>
-    <span class="tag">Hujing Island · hand-line caught</span>
-  </div>
+<div class="mtop">
+  <button class="burger" aria-label="選單" onclick="toggleNav()">☰</button>
+  <span class="mt-brand">🐟 虎井嶼</span>
+</div>
+<div class="backdrop" id="backdrop" onclick="toggleNav(false)"></div>
 
-  <header class="hero">
-    <span class="kicker">🎣 澎湖 · 虎井嶼直送</span>
-    <h1>一支釣竿，<br>一座小島</h1>
-    <p class="sub">把虎井嶼的海味，急凍鎖鮮、宅配到你家餐桌。</p>
-    <a class="cta" href="#order">有興趣・敲碗預購 <span class="note">（籌備中）</span></a>
-    <img class="cat" src="assets/cat.png" alt="虎井嶼港邊貓">
-    <div class="waves"></div>
-  </header>
+<aside class="sidebar" id="sidebar">
+  <div class="s-brand"><span class="mk">🐟</span> 虎井嶼</div>
+  <div class="s-tag">Hujing Island · hand-line caught</div>
+  <nav class="nav" id="nav">
+    <button class="active" data-target="home"><span class="ico">🌊</span> 首頁</button>
+    <button data-target="why"><span class="ico">⚓</span> 為什麼選我們</button>
+    <button data-target="fish"><span class="ico">🐟</span> 當季魚種</button>
+    <button data-target="about"><span class="ico">🏝️</span> 關於我們</button>
+  </nav>
+  <button class="s-cta" data-target="order">有興趣・敲碗預購 <small>（籌備中）</small></button>
+  <div class="s-spacer"></div>
+  <img class="s-cat" src="assets/cat.png" alt="虎井嶼港邊貓">
+</aside>
 
-  <section>
+<main>
+
+  <section class="pane active page" id="pane-home">
+    <p class="eyebrow">澎湖 · 虎井嶼直送</p>
+    <div class="home-wrap">
+      <div>
+        <h1 class="big">一支釣竿，<br>一座小島</h1>
+        <p class="lead">把虎井嶼的海味，急凍鎖鮮、宅配到你家餐桌。手釣、三去、真空、急凍——每一步都說得出道理。</p>
+        <button class="btn" data-target="order">有興趣・敲碗預購 <small>（籌備中）</small></button>
+      </div>
+      <div class="home-art"><img src="assets/squid.png" alt="虎井嶼小管"></div>
+    </div>
+    <p class="foot">澎湖虎井嶼 · 產地直送手釣魚 · 目前為構想籌備階段</p>
+  </section>
+
+  <section class="pane page" id="pane-why">
     <p class="eyebrow">why us</p>
-    <h2 class="sec-title">為什麼選我們的魚</h2>
-    <p class="sec-lead">手釣、三去、真空、急凍——不是空喊「新鮮」，而是每一步都說得出道理。</p>
+    <h2 class="title">為什麼選我們的魚</h2>
+    <p class="sub">手釣、三去、真空、急凍——不是空喊「新鮮」，而是每一步都說得出道理。</p>
     <div class="points">
       <div class="point"><span class="n">1</span><h3>手釣一竿一線</h3><p>逐隻釣上，沒有網具擠壓、沒有掙扎乳酸，魚體完整、肉質純淨緊實。</p></div>
       <div class="point"><span class="n">2</span><h3>靠岸即三去＋真空</h3><p>去鱗、去鰓、去內臟並洗淨血水，真空隔絕空氣，截斷九成腥味來源。</p></div>
@@ -136,50 +167,65 @@
     </div>
   </section>
 
-  <section>
-    <div class="fish-band"><div class="inner">
-      <p class="eyebrow">in season</p>
-      <h2 class="sec-title">當季有什麼魚</h2>
-      <p class="sec-lead">跟著澎湖的海走，當季才出。每種魚的肉質、吃法我們都講得出來。</p>
-      <div class="fish">
-        <div class="fcard">
-          <div class="pic"><img src="assets/squid.png" alt="小管"></div>
-          <div class="body"><div class="top"><h3>小管</h3><span class="season">春末～夏</span></div>
-          <p>盛產期肉質最脆甜，川燙冰鎮、現撈沙西米或夜釣現吃都對味。</p></div>
-        </div>
-        <div class="fcard">
-          <div class="pic"><img src="assets/grouper.png" alt="石斑"></div>
-          <div class="body"><div class="top"><h3>石斑</h3><span class="season">秋</span></div>
-          <p>秋季水溫適中，肉質Ｑ彈、魚皮膠質豐厚，清蒸或煮湯最能吃到鮮甜。</p></div>
-        </div>
-        <div class="fcard">
-          <div class="pic"><img src="assets/grunt.png" alt="黃雞魚"></div>
-          <div class="body"><div class="top"><h3>黃雞魚</h3><span class="season">夏</span></div>
-          <p>夏季產季，肉質細軟鮮甜；乾淨的白肉，鹽烤、香煎特別香。</p></div>
-        </div>
-        <div class="fcard">
-          <div class="pic"><img src="assets/wrasse.png" alt="石老魚"></div>
-          <div class="body"><div class="top"><h3>石老魚</h3><span class="season">秋</span></div>
-          <p>又名寒鯛，肉質清甜、肉多刺少，魚頭富含膠質，煮薑絲魚湯一絕。</p></div>
-        </div>
-      </div>
-    </div></div>
-  </section>
-
-  <section id="order">
-    <div class="ctaband">
-      <h2>喜歡這片海的味道嗎？</h2>
-      <p>我們還在籌備中——先按下「敲碗」，開賣第一時間通知你。</p>
-      <a class="cta" href="#" onclick="return false;">有興趣・敲碗預購 <span class="note">（籌備中）</span></a>
+  <section class="pane page" id="pane-fish">
+    <p class="eyebrow">in season</p>
+    <h2 class="title">當季有什麼魚</h2>
+    <p class="sub">跟著澎湖的海走，當季才出。每種魚的肉質、吃法我們都講得出來。</p>
+    <div class="fish">
+      <div class="fcard"><div class="pic"><img src="assets/squid.png" alt="小管"></div>
+        <div class="body"><div class="top"><h3>小管</h3><span class="season">春末～夏</span></div>
+        <p>盛產期肉質最脆甜，川燙冰鎮、現撈沙西米或夜釣現吃都對味。</p></div></div>
+      <div class="fcard"><div class="pic"><img src="assets/grouper.png" alt="石斑"></div>
+        <div class="body"><div class="top"><h3>石斑</h3><span class="season">秋</span></div>
+        <p>秋季水溫適中，肉質Ｑ彈、魚皮膠質豐厚，清蒸或煮湯最能吃到鮮甜。</p></div></div>
+      <div class="fcard"><div class="pic"><img src="assets/grunt.png" alt="黃雞魚"></div>
+        <div class="body"><div class="top"><h3>黃雞魚</h3><span class="season">夏</span></div>
+        <p>夏季產季，肉質細軟鮮甜；乾淨的白肉，鹽烤、香煎特別香。</p></div></div>
+      <div class="fcard"><div class="pic"><img src="assets/wrasse.png" alt="石老魚"></div>
+        <div class="body"><div class="top"><h3>石老魚</h3><span class="season">秋</span></div>
+        <p>又名寒鯛，肉質清甜、肉多刺少，魚頭富含膠質，煮薑絲魚湯一絕。</p></div></div>
     </div>
   </section>
 
-  <footer>
-    <img class="fcat" src="assets/cat.png" alt="">
-    <div><span class="fbrand">虎井嶼手釣魚</span></div>
-    <div class="disc">澎湖虎井嶼 · 產地直送手釣魚 · 目前為構想籌備階段</div>
-  </footer>
+  <section class="pane page" id="pane-about">
+    <p class="eyebrow">about us</p>
+    <h2 class="title">關於虎井嶼手釣魚</h2>
+    <div class="story">
+      <p>虎井嶼，是澎湖南方一座小島。這裡的海乾淨、礁岩多，養出一身好肉的魚。</p>
+      <p>爸爸一支釣竿，在虎井海域一尾一尾手釣；媽媽把每一批漁獲三去、真空、急凍，仔細整理好，宅配到你家。</p>
+      <p class="hl">我們想做的，是把「虎井嶼海邊最鮮的那一刻」，原封不動凍給你——來源清楚、無藥水、魚體完整。</p>
+      <p>比起網撈的大量堆疊，手釣慢、成本高，但換來的是完整漂亮、肉質純淨的魚。這是我們選擇的路。</p>
+      <div class="note-card">📷 更多故事、爸爸出海的畫面與家常料理照，正在籌備中。媽媽的手作澎湖高麗菜酸也在規劃，之後會一起端上來。</div>
+    </div>
+  </section>
 
-</div>
+  <section class="pane page" id="pane-order">
+    <div class="order-card">
+      <h2>喜歡這片海的味道嗎？</h2>
+      <p>我們還在籌備中——先按下「敲碗」，開賣第一時間通知你。</p>
+      <button class="btn" style="background:#fff;color:var(--sky-ink);box-shadow:none" onclick="alert('謝謝你的敲碗！開賣會第一時間通知 🐟')">敲碗，通知我 🔔</button>
+    </div>
+    <p class="foot">目前無價格與訂購連結，僅為構想階段的品牌介紹。</p>
+  </section>
+
+</main>
+
+<script>
+  var nav = document.getElementById('nav');
+  var navBtns = document.querySelectorAll('[data-target]');
+  var panes = document.querySelectorAll('.pane');
+  function show(id){
+    panes.forEach(function(p){ p.classList.toggle('active', p.id === 'pane-'+id); });
+    document.querySelectorAll('#nav button').forEach(function(b){ b.classList.toggle('active', b.dataset.target === id); });
+    window.scrollTo(0,0);
+    toggleNav(false);
+  }
+  navBtns.forEach(function(b){ b.addEventListener('click', function(){ show(b.dataset.target); }); });
+  function toggleNav(force){
+    var sb = document.getElementById('sidebar'), bd = document.getElementById('backdrop');
+    var open = (typeof force === 'boolean') ? force : !sb.classList.contains('open');
+    sb.classList.toggle('open', open); bd.classList.toggle('show', open);
+  }
+</script>
 </body>
 </html>
