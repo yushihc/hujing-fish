@@ -8,16 +8,17 @@
     --ink-soft: #67726B;
     --muted: #97A199;
     --line: #ECE3D2;
-    --sea: #7FBBB0;
-    --sea-deep: #3F8478;
+    --sea: #6FB4C0;
+    --sea-deep: #2C7E93;
     --coral: #F0A268;
     --coral-ink: #A85416;
     --on-coral: #4A2C10;
     --coral-soft: #FCEBD8;
     --sand: #F2E6CC;
-    --sky: #1E88C9;
+    --sky: #1B80C2;
     --sky-soft: #D6EAF7;
-    --sky-ink: #175B84;
+    --sky-ink: #155A87;
+    --on-sky: #FFFFFF;
     --gold: #B8842E;
     --ok: #4E9E86;
     --shadow: 0 1px 2px rgba(69,81,77,.04), 0 10px 30px rgba(69,81,77,.07);
@@ -89,7 +90,7 @@
   .masthead::before {
     content: "";
     position: absolute; top: 0; left: 0; right: 0; height: 5px;
-    background: linear-gradient(90deg, var(--sky), var(--coral), var(--gold));
+    background: linear-gradient(90deg, var(--sky-ink), var(--sky), var(--sea));
   }
   .masthead::after {
     content: "";
@@ -99,8 +100,8 @@
   .kicker {
     display: inline-flex; align-items: center; gap: 8px;
     font-family: Georgia, serif; font-style: italic;
-    font-size: .9rem; color: var(--coral-ink);
-    background: var(--coral-soft);
+    font-size: .9rem; color: var(--sky-ink);
+    background: var(--sky-soft);
     padding: 5px 14px; border-radius: 999px; margin-bottom: 20px;
     position: relative; z-index: 1;
   }
@@ -130,7 +131,7 @@
   section { margin-top: 46px; }
   .sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 20px; }
   .sec-num {
-    font-family: Georgia, serif; font-size: 1.05rem; color: var(--on-coral); background: var(--coral);
+    font-family: Georgia, serif; font-size: 1.05rem; color: var(--on-sky); background: var(--sky);
     width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center;
     flex: 0 0 auto; font-weight: 700; transform: translateY(2px);
   }
@@ -150,7 +151,7 @@
     background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok);
     border: 1px solid color-mix(in srgb, var(--ok) 35%, transparent);
   }
-  .badge.core { background: var(--coral-soft); color: var(--coral-ink); border-color: color-mix(in srgb, var(--coral) 45%, transparent); }
+  .badge.core { background: var(--sky-soft); color: var(--sky-ink); border-color: color-mix(in srgb, var(--sky) 45%, transparent); }
   .file .desc { margin: 8px 0 0; color: var(--ink-soft); font-size: .96rem; }
 
   /* ---------- highlight strip ---------- */
@@ -197,7 +198,7 @@
   .band.hero .s { color: var(--sky-ink); }
   .band .s { color: var(--muted); }
   .band.cta { background: var(--coral); color: var(--on-coral); text-align: center; font-weight: 800; font-size: .82rem; }
-  .dot { display:inline-block; width:7px; height:7px; border-radius:50%; background: var(--coral); margin-right: 5px; vertical-align: middle; }
+  .dot { display:inline-block; width:7px; height:7px; border-radius:50%; background: var(--sky); margin-right: 5px; vertical-align: middle; }
 
   .map { display: grid; gap: 10px; counter-reset: step; }
   .map .row {
@@ -213,7 +214,7 @@
   .map .row .title { font-weight: 700; color: var(--ink); font-size: 1rem; }
   .map .row .from { font-size: .86rem; color: var(--muted); margin-top: 2px; }
   .map .row .from b { color: var(--sea-deep); font-weight: 600; }
-  .arrow { color: var(--coral-ink); font-weight: 700; }
+  .arrow { color: var(--sky-ink); font-weight: 700; }
 
   /* ---------- next steps ---------- */
   .next {
