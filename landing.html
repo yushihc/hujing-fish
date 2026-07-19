@@ -61,7 +61,8 @@
   .btn small { font-weight:500; opacity:.8; font-size:.8rem; }
 
   /* home photo hero */
-  .hero { position:relative; border-radius: var(--r-lg); overflow:hidden; box-shadow: var(--shadow); min-height: clamp(360px, 62vh, 560px); display:flex; align-items:flex-end; }
+  .hero { position:relative; border-radius:0; overflow:hidden; min-height: clamp(440px, 82vh, 760px); display:flex; align-items:flex-end; }
+  .home-below { padding-top: 20px; }
   .hero img.bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
   .hero .veil { position:absolute; inset:0; background: linear-gradient(120deg, rgba(18,79,134,.86) 0%, rgba(18,79,134,.35) 55%, rgba(22,131,201,.15) 100%); }
   .hero::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; z-index:2; background: linear-gradient(90deg, var(--gold), var(--coral)); }
@@ -147,7 +148,7 @@
 
 <main>
 
-  <section class="pane active page" id="pane-home">
+  <section class="pane active" id="pane-home">
     <div class="hero">
       <img class="bg" src="assets/photos/hero.jpg" alt="虎井嶼的玄武岩海岸與漁港">
       <div class="veil"></div>
@@ -158,7 +159,9 @@
         <a class="btn" href="#order" data-target="order">有興趣・敲碗預購 <small>（籌備中）</small></a>
       </div>
     </div>
-    <p class="home-foot">澎湖虎井嶼 · 產地直送手釣魚 · 目前為構想籌備階段</p>
+    <div class="page home-below">
+      <p class="home-foot">澎湖虎井嶼 · 產地直送手釣魚 · 目前為構想籌備階段</p>
+    </div>
   </section>
 
   <section class="pane page" id="pane-why">
