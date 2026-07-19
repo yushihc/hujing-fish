@@ -61,15 +61,15 @@
   .btn small { font-weight:500; opacity:.8; font-size:.8rem; }
 
   /* home photo hero */
-  .hero { position:relative; border-radius:0; overflow:hidden; min-height: clamp(440px, 82vh, 760px); display:flex; align-items:flex-end; }
-  .home-below { padding-top: 20px; }
+  .hero { position:relative; border-radius:0; overflow:hidden; height: 100dvh; min-height: 480px; display:flex; align-items:flex-end; }
+  #pane-home.active { display:flex; flex-direction:column; }
   .hero img.bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-  .hero .veil { position:absolute; inset:0; background: linear-gradient(120deg, rgba(18,79,134,.86) 0%, rgba(18,79,134,.35) 55%, rgba(22,131,201,.15) 100%); }
+  .hero .veil { position:absolute; inset:0; background: rgba(15,52,88,.30); }
   .hero::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; z-index:2; background: linear-gradient(90deg, var(--gold), var(--coral)); }
   .hero .inner { position:relative; z-index:1; color:#fff; padding: clamp(28px,5vw,48px); }
   .hero .kicker { display:inline-flex; align-items:center; gap:8px; font-family:Georgia,serif; font-style:italic; font-size:.9rem; color:#fff; background: rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.3); padding:5px 14px; border-radius:999px; margin-bottom:18px; }
-  .hero h1 { font-family: var(--font-serif); font-weight:700; margin:0 0 14px; font-size: clamp(2rem,6vw,3.4rem); line-height:1.18; text-wrap:balance; text-shadow: 0 2px 14px rgba(0,0,0,.3); }
-  .hero p.lead { margin:0 0 26px; font-size: clamp(1rem,2.3vw,1.2rem); color: rgba(255,255,255,.94); max-width:34ch; text-shadow: 0 1px 8px rgba(0,0,0,.3); }
+  .hero h1 { font-family: var(--font-serif); font-weight:700; margin:0 0 14px; font-size: clamp(2rem,6vw,3.4rem); line-height:1.18; text-wrap:balance; text-shadow: 0 2px 18px rgba(0,0,0,.55); }
+  .hero p.lead { margin:0 0 26px; font-size: clamp(1rem,2.3vw,1.2rem); color: rgba(255,255,255,.96); max-width:34ch; text-shadow: 0 1px 12px rgba(0,0,0,.55); }
   .home-foot { color: var(--muted); font-size:.82rem; margin-top:22px; }
 
   /* points */
@@ -117,6 +117,7 @@
     .sidebar { transform: translateX(-100%); transition: transform .25s ease; box-shadow: 0 0 40px rgba(0,0,0,.25); }
     .sidebar.open { transform:none; }
     main { margin-left:0; padding-top:58px; }
+    .hero { height: calc(100dvh - 58px); }
     .mtop { display:flex; align-items:center; gap:12px; position:fixed; top:0; left:0; right:0; height:58px; z-index:40; background: var(--sky); color:#fff; padding:0 16px; box-shadow: var(--shadow); }
     .mtop .burger { appearance:none; background:transparent; border:0; color:#fff; font-size:1.5rem; cursor:pointer; line-height:1; padding:4px; }
     .mtop .mt-brand { font-family: var(--font-serif); font-weight:700; letter-spacing:.05em; font-size:1.2rem; }
@@ -158,9 +159,6 @@
         <p class="lead">把虎井嶼的海味，鎖鮮宅配到你家餐桌。</p>
         <a class="btn" href="#order" data-target="order">有興趣・敲碗預購 <small>（籌備中）</small></a>
       </div>
-    </div>
-    <div class="page home-below">
-      <p class="home-foot">澎湖虎井嶼 · 產地直送手釣魚 · 目前為構想籌備階段</p>
     </div>
   </section>
 
