@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>虎井嶼手釣魚 · 一支釣竿，一座小島</title>
+<style>
+  :root {
+    --bg: #FBF6E4;
+    --paper: #FFFDF9;
+    --paper-2: #F6F0E2;
+    --ink: #45514D;
+    --ink-soft: #67726B;
+    --muted: #97A199;
+    --line: #ECE3D2;
+    --sky: #1683C9;
+    --sky-ink: #124F86;
+    --sky-soft: #D6EAF7;
+    --sea: #6FB4C0;
+    --coral: #F0A268;
+    --coral-ink: #A85416;
+    --on-coral: #4A2C10;
+    --coral-soft: #FCEBD8;
+    --sand: #F2E6CC;
+    --gold: #B8842E;
+    --radius: 16px;
+    --shadow: 0 1px 2px rgba(69,81,77,.04), 0 10px 30px rgba(69,81,77,.08);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", "Segoe UI", Roboto, sans-serif;
+    line-height: 1.75; -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 32px); }
+
+  /* top bar */
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem; letter-spacing: .04em; color: var(--sky-ink); }
+  .brand .mk { width: 30px; height: 30px; }
+  .topbar .tag { font-family: Georgia, serif; font-style: italic; font-size: .85rem; color: var(--muted); }
+
+  /* hero */
+  .hero {
+    position: relative; overflow: hidden;
+    background: linear-gradient(158deg, var(--sky-ink), var(--sky));
+    color: #fff; border-radius: 22px; margin-top: 6px;
+    padding: clamp(38px, 6vw, 68px) clamp(26px, 5vw, 60px) clamp(120px, 16vw, 150px);
+    box-shadow: var(--shadow);
+  }
+  .hero::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background: linear-gradient(90deg, var(--gold), var(--coral)); }
+  .hero .kicker {
+    display:inline-flex; align-items:center; gap:8px; font-family: Georgia, serif; font-style: italic;
+    font-size:.9rem; color:#fff; background: rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.28);
+    padding:5px 14px; border-radius:999px; margin-bottom: 22px;
+  }
+  .hero h1 { margin:0 0 16px; font-size: clamp(2rem, 6vw, 3.3rem); line-height:1.18; letter-spacing:-.01em; text-wrap: balance; font-weight:800; }
+  .hero .sub { margin:0 0 28px; font-size: clamp(1rem, 2.4vw, 1.2rem); color: rgba(255,255,255,.92); max-width: 30ch; }
+  .cta {
+    display:inline-flex; align-items:center; gap:8px; background: var(--coral); color: var(--on-coral);
+    font-weight:800; font-size:1.02rem; padding: 13px 26px; border-radius: 999px; text-decoration:none;
+    box-shadow: 0 6px 20px rgba(0,0,0,.18); transition: transform .12s ease;
+  }
+  .cta:hover { transform: translateY(-2px); }
+  .cta .note { font-weight: 500; font-size: .82rem; opacity: .8; }
+  .hero .cat { position:absolute; right: clamp(8px, 4vw, 48px); bottom: -6px; width: clamp(150px, 26vw, 250px); filter: drop-shadow(0 8px 14px rgba(0,0,0,.25)); }
+  .hero .waves { position:absolute; left:0; right:0; bottom:0; height: 40px; background:
+    radial-gradient(circle at 20px -10px, transparent 18px, rgba(255,255,255,.10) 19px 20px, transparent 21px); opacity:.4; }
+
+  /* section scaffold */
+  section { padding: clamp(44px, 7vw, 72px) 0; }
+  .eyebrow { font-family: Georgia, serif; font-style: italic; color: var(--coral-ink); font-size: .95rem; margin: 0 0 8px; }
+  .sec-title { margin: 0 0 8px; font-size: clamp(1.5rem, 4vw, 2rem); letter-spacing:-.01em; text-wrap: balance; }
+  .sec-lead { margin: 0 0 32px; color: var(--ink-soft); max-width: 54ch; }
+
+  /* selling points */
+  .points { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .point { background: var(--paper); border:1px solid var(--line); border-radius: var(--radius); padding: 22px 22px 24px; box-shadow: var(--shadow); }
+  .point .n { display:inline-grid; place-items:center; width:34px; height:34px; border-radius:10px; background: var(--sky); color:#fff; font-family: Georgia, serif; font-weight:700; margin-bottom:12px; }
+  .point h3 { margin:0 0 6px; font-size:1.12rem; }
+  .point p { margin:0; color: var(--ink-soft); font-size:.96rem; }
+
+  /* fish */
+  .fish-band { background: linear-gradient(180deg, var(--sky-soft), var(--bg) 70%); border-radius: 22px; }
+  .fish-band .inner { padding: clamp(30px,5vw,52px) clamp(20px,4vw,44px); }
+  .fish { display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
+  .fcard { background: var(--paper); border:1px solid var(--line); border-radius: var(--radius); overflow:hidden; box-shadow: var(--shadow); display:flex; flex-direction:column; }
+  .fcard .pic { background: radial-gradient(circle at 50% 60%, #fff, var(--paper-2)); height: 150px; display:grid; place-items:center; padding: 14px; }
+  .fcard .pic img { max-height: 122px; width:auto; filter: drop-shadow(0 4px 8px rgba(69,81,77,.18)); }
+  .fcard .body { padding: 14px 18px 18px; }
+  .fcard .top { display:flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap; }
+  .fcard h3 { margin:0; font-size:1.12rem; }
+  .season { font-size:.72rem; font-weight:700; padding:2px 9px; border-radius:999px; background: var(--sky-soft); color: var(--sky-ink); }
+  .fcard p { margin:0; color: var(--ink-soft); font-size:.92rem; }
+
+  /* cta band */
+  .ctaband { background: linear-gradient(158deg, var(--sky-ink), var(--sky)); color:#fff; border-radius:22px; text-align:center; padding: clamp(38px,6vw,60px) 24px; box-shadow: var(--shadow); position:relative; overflow:hidden; }
+  .ctaband::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background: linear-gradient(90deg, var(--gold), var(--coral)); }
+  .ctaband h2 { margin:0 0 10px; font-size: clamp(1.5rem, 4vw, 2rem); }
+  .ctaband p { margin:0 0 24px; color: rgba(255,255,255,.9); }
+
+  footer { text-align:center; padding: 40px 0 56px; color: var(--muted); font-size:.85rem; }
+  footer .fcat { width: 88px; margin: 0 auto 10px; opacity:.9; }
+  footer .fbrand { color: var(--sky-ink); font-weight:800; letter-spacing:.05em; }
+  .disc { margin-top: 8px; font-size:.78rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand"><img class="mk" src="assets/cat.png" alt=""> 虎井嶼</div>
+    <span class="tag">Hujing Island · hand-line caught</span>
+  </div>
+
+  <header class="hero">
+    <span class="kicker">🎣 澎湖 · 虎井嶼直送</span>
+    <h1>一支釣竿，<br>一座小島</h1>
+    <p class="sub">把虎井嶼的海味，急凍鎖鮮、宅配到你家餐桌。</p>
+    <a class="cta" href="#order">有興趣・敲碗預購 <span class="note">（籌備中）</span></a>
+    <img class="cat" src="assets/cat.png" alt="虎井嶼港邊貓">
+    <div class="waves"></div>
+  </header>
+
+  <section>
+    <p class="eyebrow">why us</p>
+    <h2 class="sec-title">為什麼選我們的魚</h2>
+    <p class="sec-lead">手釣、三去、真空、急凍——不是空喊「新鮮」，而是每一步都說得出道理。</p>
+    <div class="points">
+      <div class="point"><span class="n">1</span><h3>手釣一竿一線</h3><p>逐隻釣上，沒有網具擠壓、沒有掙扎乳酸，魚體完整、肉質純淨緊實。</p></div>
+      <div class="point"><span class="n">2</span><h3>靠岸即三去＋真空</h3><p>去鱗、去鰓、去內臟並洗淨血水，真空隔絕空氣，截斷九成腥味來源。</p></div>
+      <div class="point"><span class="n">3</span><h3>急速冷凍鎖鮮</h3><p>−30～−40°C 瞬凍，細胞不破、解凍不出水，口感和剛上岸幾乎一樣。</p></div>
+      <div class="point"><span class="n">4</span><h3>料理超方便</h3><p>連袋沖水解凍、擦乾就能下鍋，免去鱗掏內臟的髒亂，新手也不怕。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="fish-band"><div class="inner">
+      <p class="eyebrow">in season</p>
+      <h2 class="sec-title">當季有什麼魚</h2>
+      <p class="sec-lead">跟著澎湖的海走，當季才出。每種魚的肉質、吃法我們都講得出來。</p>
+      <div class="fish">
+        <div class="fcard">
+          <div class="pic"><img src="assets/squid.png" alt="小管"></div>
+          <div class="body"><div class="top"><h3>小管</h3><span class="season">春末～夏</span></div>
+          <p>盛產期肉質最脆甜，川燙冰鎮、現撈沙西米或夜釣現吃都對味。</p></div>
+        </div>
+        <div class="fcard">
+          <div class="pic"><img src="assets/grouper.png" alt="石斑"></div>
+          <div class="body"><div class="top"><h3>石斑</h3><span class="season">秋</span></div>
+          <p>秋季水溫適中，肉質Ｑ彈、魚皮膠質豐厚，清蒸或煮湯最能吃到鮮甜。</p></div>
+        </div>
+        <div class="fcard">
+          <div class="pic"><img src="assets/grunt.png" alt="黃雞魚"></div>
+          <div class="body"><div class="top"><h3>黃雞魚</h3><span class="season">夏</span></div>
+          <p>夏季產季，肉質細軟鮮甜；乾淨的白肉，鹽烤、香煎特別香。</p></div>
+        </div>
+        <div class="fcard">
+          <div class="pic"><img src="assets/wrasse.png" alt="石老魚"></div>
+          <div class="body"><div class="top"><h3>石老魚</h3><span class="season">秋</span></div>
+          <p>又名寒鯛，肉質清甜、肉多刺少，魚頭富含膠質，煮薑絲魚湯一絕。</p></div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section id="order">
+    <div class="ctaband">
+      <h2>喜歡這片海的味道嗎？</h2>
+      <p>我們還在籌備中——先按下「敲碗」，開賣第一時間通知你。</p>
+      <a class="cta" href="#" onclick="return false;">有興趣・敲碗預購 <span class="note">（籌備中）</span></a>
+    </div>
+  </section>
+
+  <footer>
+    <img class="fcat" src="assets/cat.png" alt="">
+    <div><span class="fbrand">虎井嶼手釣魚</span></div>
+    <div class="disc">澎湖虎井嶼 · 產地直送手釣魚 · 目前為構想籌備階段</div>
+  </footer>
+
+</div>
+</body>
+</html>
