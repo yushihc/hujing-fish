@@ -123,6 +123,19 @@
     .mtop .mt-brand { font-family: var(--font-serif); font-weight:700; letter-spacing:.05em; font-size:1.2rem; }
     .backdrop.show { display:block; position:fixed; inset:0; background: rgba(0,0,0,.35); z-index:55; }
   }
+  .twrap { overflow-x:auto; margin-bottom:24px; }
+  .dtable { width:100%; border-collapse:collapse; font-size:.94rem; }
+  .dtable th { background: var(--sky); color:#fff; font-weight:700; text-align:left; padding:10px 14px; font-size:.9rem; }
+  .dtable td { padding:10px 14px; border-top:1px solid var(--line); background: var(--paper); color: var(--ink-soft); }
+  .dtable tr:first-child th:first-child { border-top-left-radius: var(--r-card); }
+  .dtable tr:first-child th:last-child { border-top-right-radius: var(--r-card); }
+  .dtable td:first-child { color: var(--ink); font-weight:600; white-space:nowrap; }
+  .steps { display:grid; gap:14px; counter-reset:s; margin:0 0 26px; }
+  .step { display:grid; grid-template-columns:auto 1fr; gap:14px; background:var(--paper); border:1px solid var(--line); border-radius:var(--r-card); padding:16px 18px; box-shadow:var(--shadow); }
+  .step .sn { counter-increment:s; width:32px; height:32px; border-radius:9px; background:var(--coral); color:var(--on-coral); display:grid; place-items:center; font-family:Georgia,serif; font-weight:700; }
+  .step .sn::before { content:counter(s); }
+  .step h3 { margin:0 0 3px; font-size:1.05rem; }
+  .step p { margin:0; color:var(--ink-soft); font-size:.94rem; }
 </style>
 </head>
 <body>
@@ -140,6 +153,8 @@
     <button data-target="home" aria-current="page"><span class="ico" aria-hidden="true">🌊</span> 首頁</button>
     <button data-target="why"><span class="ico" aria-hidden="true">⚓</span> 為什麼選我們</button>
     <button data-target="fish"><span class="ico" aria-hidden="true">🐟</span> 當季魚種</button>
+    <button data-target="cook"><span class="ico" aria-hidden="true">🍳</span> 料理與保存</button>
+    <button data-target="calendar"><span class="ico" aria-hidden="true">📅</span> 海鮮月曆</button>
     <button data-target="about"><span class="ico" aria-hidden="true">🏝️</span> 關於我們</button>
   </nav>
   <a class="s-cta" href="#order" data-target="order">有興趣・敲碗預購 <small>（籌備中）</small></a>
@@ -191,6 +206,59 @@
         <div class="body"><div class="top"><h3>石老魚</h3><span class="season">秋</span></div>
         <p>又名寒鯛，肉質清甜、肉多刺少，魚頭富含膠質，煮薑絲魚湯一絕。</p></div></div>
     </div>
+  </section>
+
+  <section class="pane page" id="pane-cook">
+    <p class="eyebrow">cook &amp; keep</p>
+    <h2 class="title">料理與保存</h2>
+    <p class="sub">收到魚之後這樣做，鮮度與口感不打折。</p>
+    <div class="steps">
+      <div class="step"><span class="sn"></span><div><h3>不拆真空袋，流水解凍</h3><p>整包未拆封直接泡自來水、開微小水流，約 15 分鐘就退冰（約 10–20 分鐘，最推薦）。</p></div></div>
+      <div class="step"><span class="sn"></span><div><h3>擦乾水分（去腥關鍵）</h3><p>拆封後用廚房紙巾把魚體表面與腹腔血水徹底擦乾，去掉大部分腥味來源。</p></div></div>
+      <div class="step"><span class="sn"></span><div><h3>切勿重複冷凍</h3><p>解凍後當天料理完畢，別再丟回冷凍庫，否則細菌倍增、肉質變柴。</p></div></div>
+    </div>
+    <h3 class="about-h3">這樣煮最內行</h3>
+    <div class="twrap"><table class="dtable">
+      <tr><th>煮法</th><th>推薦魚種</th></tr>
+      <tr><td>清蒸 / 煮湯</td><td>石斑、青嘴魚、鸚哥魚、石老魚（肉質細嫩鮮甜）</td></tr>
+      <tr><td>香煎 / 鹽烤</td><td>黃雞魚、黑點魚、雀鯛、水針（油脂適中、肉質扎實）</td></tr>
+      <tr><td>川燙 / 快炒</td><td>小管（水滾關火川燙 30 秒、撈起冰鎮最 Q）</td></tr>
+      <tr><td>煮湯 / 乾煎</td><td>臭肚魚（薑絲酸菜湯或乾煎）</td></tr>
+    </table></div>
+    <h3 class="about-h3">保存期限（−18°C 冷凍、真空未拆）</h3>
+    <div class="twrap"><table class="dtable">
+      <tr><th>魚種</th><th>建議保存</th></tr>
+      <tr><td>石斑魚</td><td>8–12 個月</td></tr>
+      <tr><td>石老魚</td><td>8–12 個月</td></tr>
+      <tr><td>臭肚魚</td><td>6–8 個月</td></tr>
+      <tr><td>鸚哥魚</td><td>6–8 個月</td></tr>
+      <tr><td>雀鯛</td><td>6–8 個月</td></tr>
+      <tr><td>水針魚</td><td>4–6 個月</td></tr>
+      <tr><td>小管</td><td>1–2 個月內優先吃完（軟體易變韌）</td></tr>
+    </table></div>
+    <div class="note-card">🥇 黃金賞味期：3 個月內最佳、半年內吃完；家用冰箱頻繁開關，別放到一年（會凍燒變柴）。</div>
+  </section>
+
+  <section class="pane page" id="pane-calendar">
+    <p class="eyebrow">seasonal calendar</p>
+    <h2 class="title">澎湖海鮮月曆</h2>
+    <p class="sub">跟著海走、當季才出。以下依虎井海域的季節整理。</p>
+    <div class="twrap"><table class="dtable">
+      <tr><th>月份</th><th>當季推薦</th></tr>
+      <tr><td>1 月</td><td>石斑、黃雞魚</td></tr>
+      <tr><td>2 月</td><td>石斑、黃雞魚</td></tr>
+      <tr><td>3 月</td><td>小管、水針、黃雞魚</td></tr>
+      <tr><td>4 月</td><td>小管、石斑、黃雞魚</td></tr>
+      <tr><td>5 月</td><td>小管、水針、黃雞魚</td></tr>
+      <tr><td>6 月</td><td>小管、石斑、臭肚、雀鯛、石老魚、青嘴</td></tr>
+      <tr><td>7 月</td><td>小管、黑點魚、黃雞魚、鸚哥魚、青嘴</td></tr>
+      <tr><td>8 月</td><td>小管、黑點魚、黃雞魚、鸚哥魚</td></tr>
+      <tr><td>9 月</td><td>石斑、石老魚、黃雞魚、黑點魚</td></tr>
+      <tr><td>10 月</td><td>石斑、石老魚、黑點魚</td></tr>
+      <tr><td>11 月</td><td>石斑、石老魚、黃雞魚</td></tr>
+      <tr><td>12 月</td><td>臭肚魚、石斑</td></tr>
+    </table></div>
+    <div class="note-card">📅 實際漁獲會隨天候與季風調整，當週上什麼魚以出貨為準。</div>
   </section>
 
   <section class="pane page" id="pane-about">
