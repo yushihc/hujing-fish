@@ -33,7 +33,7 @@
 
   /* sidebar */
   .sidebar { position: fixed; top:0; left:0; bottom:0; width: var(--sbw); z-index:60; background: linear-gradient(180deg, var(--sky-ink), var(--sky)); color:#fff; display:flex; flex-direction:column; padding: 26px 20px 14px; overflow-y:auto; }
-  .sidebar::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background: linear-gradient(90deg, var(--gold), var(--coral)); }
+  .sidebar::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background: var(--gold); z-index:2; }
   .s-brand { font-family: var(--font-serif); font-weight:700; font-size:1.6rem; letter-spacing:.06em; display:flex; align-items:center; gap:8px; }
   .s-brand .mk { font-size:24px; }
   .s-tag { font-family: Georgia, serif; font-style: italic; font-size:.82rem; color: rgba(255,255,255,.78); margin:6px 0 26px; }
@@ -61,11 +61,11 @@
   .btn small { font-weight:500; opacity:.8; font-size:.8rem; }
 
   /* home photo hero */
-  .hero { position:relative; border-radius:0; overflow:hidden; height: 100dvh; min-height: 480px; display:flex; align-items:center; }
+  .hero { position:relative; border-radius:0; overflow:hidden; height: 100dvh; min-height: 480px; display:flex; align-items:center; padding-bottom: 16vh; }
   #pane-home.active { display:flex; flex-direction:column; }
   .hero img.bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
   .hero .veil { position:absolute; inset:0; background: rgba(15,52,88,.30); }
-  .hero::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; z-index:2; background: linear-gradient(90deg, var(--gold), var(--coral)); }
+  .hero::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; z-index:2; background: var(--gold); }
   .hero .inner { position:relative; z-index:1; color:#fff; padding: clamp(28px,5vw,48px); }
   .hero .kicker { display:inline-flex; align-items:center; gap:8px; font-family:Georgia,serif; font-style:italic; font-size:.9rem; color:#fff; background: rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.3); padding:5px 14px; border-radius:999px; margin-bottom:18px; }
   .hero h1 { font-family: var(--font-serif); font-weight:700; margin:0 0 14px; font-size: clamp(2rem,6vw,3.4rem); line-height:1.18; text-wrap:balance; text-shadow: 0 2px 18px rgba(0,0,0,.55); }
