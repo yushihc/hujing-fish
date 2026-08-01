@@ -96,6 +96,16 @@
   .stock-note { margin-top:12px; font-size:.83rem; color:#8E3430; background:#FBE4E2; border-radius:10px; padding:10px 12px; line-height:1.5; }
   .two-btn { display:flex; gap:8px; }
   .two-btn .btn { margin-top:0; }
+  .batch-bar { display:flex; align-items:center; gap:10px; padding:10px 12px; background: var(--sky-soft); border-radius:10px; margin-bottom:12px; flex-wrap:wrap; }
+  .batch-bar label { margin:0; font-size:.88rem; color: var(--sky-ink); display:flex; align-items:center; gap:7px; cursor:pointer; }
+  .batch-bar .sel-count { font-size:.85rem; color: var(--sky-ink); font-weight:700; margin-left:auto; }
+  .batch-bar .go { border:0; border-radius:999px; background: var(--sky); color:#fff; font:inherit; font-weight:700; font-size:.86rem; padding:8px 16px; cursor:pointer; }
+  .batch-bar .go:disabled { opacity:.45; cursor:not-allowed; }
+  .list-item { position:relative; }
+  .list-item.picked { border-color: var(--sky); background: var(--sky-soft); }
+  .pick { display:flex; align-items:flex-start; gap:10px; }
+  .pick input[type=checkbox] { width:22px; height:22px; margin-top:2px; accent-color: var(--sky); flex:0 0 auto; }
+  .pick .body { flex:1; min-width:0; }
   .take-box { display:none; margin-top:14px; padding-top:16px; border-top:1px dashed var(--line); }
   .take-box.show { display:block; }
   .adj { border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:10px; background: var(--paper-2); }
@@ -615,46 +625,94 @@
     flashBtn(this, '✅ 已下載');
   });
 
-  function renderShip(items) {
-    shipRows = items || [];
-    var box = document.getElementById('s-ship-list');
-    if (!items.length) { box.innerHTML = '<div class="empty">目前沒有待出貨的訂單</div>'; return; }
+  // 可勾選的清單（待出貨／待收款共用）
+  function renderPickList(opts) {
+    var box = document.getElementById(opts.boxId);
+    var items = opts.items || [];
+    if (!items.length) { box.innerHTML = '<div class="empty">' + opts.emptyText + '</div>'; return; }
     box.innerHTML = '';
+
+    var bar = document.createElement('div');
+    bar.className = 'batch-bar';
+    bar.innerHTML = '<label><input type="checkbox" class="all"> 全選</label>' +
+      '<span class="sel-count">已選 0 筆</span>' +
+      '<button type="button" class="go" disabled>' + opts.goText + '</button>';
+    box.appendChild(bar);
+
+    var allCb = bar.querySelector('.all');
+    var goBtn = bar.querySelector('.go');
+    var countEl = bar.querySelector('.sel-count');
+    var boxes = [];
+
+    function refresh() {
+      var picked = boxes.filter(function (c) { return c.checked; });
+      countEl.textContent = '已選 ' + picked.length + ' 筆';
+      goBtn.disabled = picked.length === 0;
+      allCb.checked = picked.length === boxes.length && boxes.length > 0;
+      boxes.forEach(function (c) { c.closest('.list-item').classList.toggle('picked', c.checked); });
+    }
+
+    allCb.addEventListener('change', function () {
+      boxes.forEach(function (c) { c.checked = allCb.checked; });
+      refresh();
+    });
+
     items.forEach(function (o) {
       var div = document.createElement('div');
       div.className = 'list-item';
-      div.innerHTML = '<div class="top"><span class="name">' + o.客人姓名 + '</span><span>' + o.品項 + ' ' + o.公斤數 + ' 公斤</span></div>' +
-        (o.電話 ? '<div class="meta">☎ ' + o.電話 + '</div>' : '') +
-        '<div class="meta">' + o.出貨方式 + '　' + o.門市或地址 + '</div>' +
-        '<div class="meta">' + money(o.金額) + '（' + o.收款狀態 + '）</div>';
-      var btn = document.createElement('button');
-      btn.className = 'btn ghost'; btn.textContent = '✅ 標記已出貨';
-      btn.addEventListener('click', function () {
-        btn.disabled = true; btn.textContent = '更新中…';
-        postAction({ action: '更新訂單', rowIndex: o.rowIndex, 欄位: '出貨狀態', 值: '已出' }).then(function () { loadSummary(); });
-      });
-      div.appendChild(btn);
+      var wrap = document.createElement('div');
+      wrap.className = 'pick';
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = o.rowIndex;
+      cb.addEventListener('change', refresh);
+      boxes.push(cb);
+      var body = document.createElement('div');
+      body.className = 'body';
+      body.innerHTML = opts.rowHtml(o);
+      wrap.appendChild(cb);
+      wrap.appendChild(body);
+      div.appendChild(wrap);
       box.appendChild(div);
+    });
+
+    goBtn.addEventListener('click', function () {
+      var picked = boxes.filter(function (c) { return c.checked; }).map(function (c) { return Number(c.value); });
+      if (!picked.length) return;
+      goBtn.disabled = true; goBtn.textContent = '更新中…';
+      postAction({ action: '批次更新訂單', rowIndexes: picked, 欄位: opts.field, 值: opts.value })
+        .then(function (res) {
+          if (res.ok) { loadSummary(); }
+          else { goBtn.textContent = res.error; goBtn.disabled = false; }
+        })
+        .catch(function (err) { goBtn.textContent = '失敗：' + err; goBtn.disabled = false; });
+    });
+
+    refresh();
+  }
+
+  function renderShip(items) {
+    shipRows = items || [];
+    renderPickList({
+      boxId: 's-ship-list', items: items, emptyText: '目前沒有待出貨的訂單',
+      goText: '✅ 批次標記已出貨', field: '出貨狀態', value: '已出',
+      rowHtml: function (o) {
+        return '<div class="top"><span class="name">' + o.客人姓名 + '</span><span>' + o.品項 + ' ' + o.公斤數 + ' 公斤</span></div>' +
+          (o.電話 ? '<div class="meta">☎ ' + o.電話 + '</div>' : '') +
+          '<div class="meta">' + o.出貨方式 + '　' + o.門市或地址 + '</div>' +
+          '<div class="meta">' + money(o.金額) + '（' + o.收款狀態 + '）</div>';
+      }
     });
   }
 
   function renderPay(items) {
-    var box = document.getElementById('s-pay-list');
-    if (!items.length) { box.innerHTML = '<div class="empty">目前沒有待收款的訂單</div>'; return; }
-    box.innerHTML = '';
-    items.forEach(function (o) {
-      var div = document.createElement('div');
-      div.className = 'list-item';
-      div.innerHTML = '<div class="top"><span class="name">' + o.客人姓名 + '</span><span>$' + o.金額 + '</span></div>' +
-        '<div class="meta">' + o.公斤數 + ' 公斤</div>';
-      var btn = document.createElement('button');
-      btn.className = 'btn ghost'; btn.textContent = '💰 標記已收款';
-      btn.addEventListener('click', function () {
-        btn.disabled = true; btn.textContent = '更新中…';
-        postAction({ action: '更新訂單', rowIndex: o.rowIndex, 欄位: '收款狀態', 值: '已收' }).then(function () { loadSummary(); });
-      });
-      div.appendChild(btn);
-      box.appendChild(div);
+    renderPickList({
+      boxId: 's-pay-list', items: items, emptyText: '目前沒有待收款的訂單',
+      goText: '💰 批次標記已收款', field: '收款狀態', value: '已收',
+      rowHtml: function (o) {
+        return '<div class="top"><span class="name">' + o.客人姓名 + '</span><span>' + money(o.金額) + '</span></div>' +
+          '<div class="meta">' + o.品項 + ' ' + o.公斤數 + ' 公斤</div>';
+      }
     });
   }
 
