@@ -201,7 +201,8 @@
   <nav class="tabs" role="tablist">
     <button role="tab" aria-selected="true" data-target="catch">🎣 回報漁獲</button>
     <button role="tab" aria-selected="false" data-target="order">📋 登記訂單</button>
-    <button role="tab" aria-selected="false" data-target="summary">📊 總覽</button>
+    <button role="tab" aria-selected="false" data-target="pending">🚚 待處理</button>
+    <button role="tab" aria-selected="false" data-target="stock">📦 庫存</button>
     <button role="tab" aria-selected="false" data-target="orders">🔍 訂單查詢</button>
     <button role="tab" aria-selected="false" data-target="report">📈 報表</button>
   </nav>
@@ -267,7 +268,31 @@
     </div>
   </section>
 
-  <section class="pane" id="pane-summary">
+  <section class="pane" id="pane-pending">
+    <div class="stat-row">
+      <div class="stat"><div class="n" id="s-ship">–</div><div class="l">待出貨筆數</div></div>
+      <div class="stat"><div class="n" id="s-pay">–</div><div class="l">待收款筆數</div></div>
+    </div>
+
+    <div class="card">
+      <h2>待出貨</h2>
+      <p class="hint">這次要寄的清單，可以複製貼到 LINE，或下載成 Excel。</p>
+      <div class="two-btn">
+        <button class="btn ghost" id="btn-copy-ship" type="button">📋 複製清單</button>
+        <button class="btn ghost" id="btn-csv-ship" type="button">📥 下載 Excel</button>
+      </div>
+      <div id="s-ship-list" class="loading" style="margin-top:14px">讀取中…</div>
+    </div>
+
+    <div class="card">
+      <h2>待收款</h2>
+      <div id="s-pay-list" class="loading">讀取中…</div>
+    </div>
+
+    <button class="btn ghost" id="btn-refresh" type="button">🔄 重新整理</button>
+  </section>
+
+  <section class="pane" id="pane-stock">
     <div class="card">
       <h2>現有庫存</h2>
       <div id="s-stock-list" class="loading">讀取中…</div>
@@ -292,27 +317,7 @@
       <div id="a-list" class="loading">讀取中…</div>
     </div>
 
-    <div class="stat-row">
-      <div class="stat"><div class="n" id="s-ship">–</div><div class="l">待出貨筆數</div></div>
-      <div class="stat"><div class="n" id="s-pay">–</div><div class="l">待收款筆數</div></div>
-    </div>
-
-    <div class="card">
-      <h2>待出貨</h2>
-      <p class="hint">這次要寄的清單，可以複製貼到 LINE，或下載成 Excel。</p>
-      <div class="two-btn">
-        <button class="btn ghost" id="btn-copy-ship" type="button">📋 複製清單</button>
-        <button class="btn ghost" id="btn-csv-ship" type="button">📥 下載 Excel</button>
-      </div>
-      <div id="s-ship-list" class="loading" style="margin-top:14px">讀取中…</div>
-    </div>
-
-    <div class="card">
-      <h2>待收款</h2>
-      <div id="s-pay-list" class="loading">讀取中…</div>
-    </div>
-
-    <button class="btn ghost" id="btn-refresh" type="button">🔄 重新整理總覽</button>
+    <button class="btn ghost" id="btn-refresh-stock" type="button">🔄 重新整理</button>
   </section>
 
   <section class="pane" id="pane-orders">
@@ -350,7 +355,8 @@
     btn.addEventListener('click', function () {
       tabs.forEach(function (b) { b.setAttribute('aria-selected', b === btn); });
       panes.forEach(function (p) { p.classList.toggle('active', p.id === 'pane-' + btn.dataset.target); });
-      if (btn.dataset.target === 'summary') { loadSummary(); loadAdjusts(); }
+      if (btn.dataset.target === 'pending') loadSummary();
+      if (btn.dataset.target === 'stock') { loadSummary(); loadAdjusts(); }
       if (btn.dataset.target === 'report') loadReport();
       if (btn.dataset.target === 'orders') loadOrders();
     });
@@ -952,6 +958,7 @@
   }
 
   document.getElementById('btn-refresh').addEventListener('click', loadSummary);
+  document.getElementById('btn-refresh-stock').addEventListener('click', function () { loadSummary(); loadAdjusts(); });
   document.getElementById('btn-refresh-report').addEventListener('click', loadReport);
 </script>
 </body>
