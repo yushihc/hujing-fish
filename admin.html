@@ -54,9 +54,17 @@
   label { display:block; font-size:.88rem; font-weight:600; color: var(--ink); margin: 12px 0 6px; }
   label:first-of-type { margin-top:0; }
   input[type=text], input[type=number], input[type=tel], input[type=date], select {
-    width:100%; font: inherit; font-size:1rem; padding:11px 14px; border-radius:10px;
+    width:100%; max-width:100%; font: inherit; font-size:16px; padding:11px 14px; border-radius:10px;
     border:1px solid var(--line); background: var(--paper-2); color: var(--ink);
+    -webkit-appearance: none; appearance: none;
   }
+  /* iPhone 的日期欄位預設會撐開/對不齊，要另外壓住 */
+  input[type=date] {
+    min-height: 46px; line-height: 1.2; display: block; text-align: left;
+  }
+  input[type=date]::-webkit-date-and-time-value { text-align: left; margin: 0; }
+  input[type=date]::-webkit-calendar-picker-indicator { margin-left: auto; }
+  select { background-image: none; }
   input:focus, select:focus { border-color: var(--sky); outline: none; }
   .radio-row { display:flex; gap:10px; }
   .radio-row label.opt {
@@ -84,6 +92,8 @@
   .stock-pill { background: var(--sky-soft); color: var(--sky-ink); border-radius:12px; padding:10px 16px; text-align:center; min-width:100px; }
   .stock-pill .n { font-family: var(--font-serif); font-weight:700; font-size:1.2rem; }
   .stock-pill .l { font-size:.78rem; margin-top:2px; }
+  .stock-pill.neg { background:#FBE4E2; color:#B4413B; }
+  .stock-note { margin-top:12px; font-size:.83rem; color:#8E3430; background:#FBE4E2; border-radius:10px; padding:10px 12px; line-height:1.5; }
   .stat { background: var(--paper); border:1px solid var(--line); border-radius:12px; padding:14px 10px; text-align:center; box-shadow: var(--shadow); }
   .stat .n { font-family: var(--font-serif); font-weight:700; font-size:1.35rem; color: var(--sky-ink); }
   .stat .l { font-size:.76rem; color: var(--muted); margin-top:2px; }
@@ -106,6 +116,30 @@
   .mgrid .v { font-weight:700; color: var(--ink); }
   .mgrid .v.money { color: var(--coral-ink); }
   .mgrid .v.unpaid { color: #B4413B; }
+
+  .ocard { background: var(--paper); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:12px; box-shadow: var(--shadow); }
+  .ocard .oh { display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap; margin-bottom:6px; }
+  .ocard .who { font-weight:700; font-size:1.05rem; }
+  .ocard .amt { font-family: var(--font-serif); font-weight:700; color: var(--coral-ink); }
+  .ocard .line { font-size:.87rem; color: var(--ink-soft); }
+  .tags { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+  .tag { font-size:.75rem; font-weight:700; padding:3px 10px; border-radius:999px; }
+  .tag.paid { background: var(--ok-soft); color: var(--ok); }
+  .tag.unpaid { background: #FBE4E2; color:#B4413B; }
+  .tag.shipped { background: var(--ok-soft); color: var(--ok); }
+  .tag.unshipped { background: var(--sky-soft); color: var(--sky-ink); }
+  .qcount { color: var(--muted); font-size:.85rem; margin-bottom:10px; }
+
+  .del-link { background:none; border:0; color:#B4413B; font-size:.82rem; cursor:pointer; text-decoration:underline; padding:4px 0; margin-top:8px; }
+  .del-box { margin-top:10px; padding:12px 14px; border-radius:10px; background:#FBE4E2; border:1px solid #F0C4C0; display:none; }
+  .del-box.show { display:block; }
+  .del-box p { margin:0 0 8px; font-size:.86rem; color:#8E3430; line-height:1.5; }
+  .del-box .code { font-family: var(--font-serif); font-weight:700; font-size:1.25rem; color:#B4413B; letter-spacing:.15em; }
+  .del-box input { margin-bottom:8px; }
+  .del-actions { display:flex; gap:8px; }
+  .del-actions button { flex:1; border:0; border-radius:999px; padding:10px; font:inherit; font-weight:700; font-size:.9rem; cursor:pointer; }
+  .del-actions .yes { background:#B4413B; color:#fff; }
+  .del-actions .no { background: var(--paper-2); color: var(--ink-soft); }
 
   .login-wrap { max-width: 380px; margin: 15vh auto 0; padding: 0 16px; }
   .logout-link { display:block; text-align:center; margin-top: 20px; color: var(--muted); font-size:.85rem; background:none; border:0; cursor:pointer; text-decoration: underline; }
@@ -148,6 +182,7 @@
     <button role="tab" aria-selected="true" data-target="catch">🎣 回報漁獲</button>
     <button role="tab" aria-selected="false" data-target="order">📋 登記訂單</button>
     <button role="tab" aria-selected="false" data-target="summary">📊 總覽</button>
+    <button role="tab" aria-selected="false" data-target="orders">🔍 訂單查詢</button>
     <button role="tab" aria-selected="false" data-target="report">📈 報表</button>
   </nav>
 
@@ -171,6 +206,11 @@
         <button type="submit" class="btn">送出漁獲回報</button>
         <div class="msg" id="c-msg"></div>
       </form>
+    </div>
+    <div class="card">
+      <h2>最近的漁獲紀錄</h2>
+      <p class="hint">記錯的話可以在這裡刪掉。</p>
+      <div id="c-list" class="loading">讀取中…</div>
     </div>
   </section>
 
@@ -196,7 +236,7 @@
         <div class="calc" id="o-calc">金額：－</div>
         <label>出貨方式</label>
         <div class="radio-row">
-          <label class="opt"><input type="radio" name="o-ship" value="7-11" checked> 7-11 冷凍交貨便</label>
+          <label class="opt"><input type="radio" name="o-ship" value="7-11交貨便" checked> 7-11 冷凍交貨便</label>
           <label class="opt"><input type="radio" name="o-ship" value="宅配"> 冷凍宅配</label>
         </div>
         <label id="o-addr-label" for="o-addr">7-11 門市名稱</label>
@@ -231,6 +271,16 @@
     <button class="btn ghost" id="btn-refresh" type="button">🔄 重新整理總覽</button>
   </section>
 
+  <section class="pane" id="pane-orders">
+    <div class="card">
+      <h2>訂單查詢</h2>
+      <p class="hint">全部訂單，最新的排前面。可以打客人姓名、電話或門市來找。</p>
+      <input type="text" id="q-search" placeholder="搜尋姓名／電話／門市">
+      <button class="btn ghost" id="btn-search" type="button" style="margin-top:12px">🔍 查詢</button>
+    </div>
+    <div id="q-list" class="loading">讀取中…</div>
+  </section>
+
   <section class="pane" id="pane-report">
     <div class="card">
       <h2>累計總計</h2>
@@ -258,6 +308,7 @@
       panes.forEach(function (p) { p.classList.toggle('active', p.id === 'pane-' + btn.dataset.target); });
       if (btn.dataset.target === 'summary') loadSummary();
       if (btn.dataset.target === 'report') loadReport();
+      if (btn.dataset.target === 'orders') loadOrders();
     });
   });
 
@@ -278,7 +329,7 @@
     r.addEventListener('change', function () {
       var label = document.getElementById('o-addr-label');
       var input = document.getElementById('o-addr');
-      if (this.value === '7-11') { label.textContent = '7-11 門市名稱'; input.placeholder = ''; }
+      if (this.value === '7-11交貨便') { label.textContent = '7-11 門市名稱'; input.placeholder = ''; }
       else { label.textContent = '完整地址'; input.placeholder = ''; }
     });
   });
@@ -331,6 +382,7 @@
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app-screen').style.display = 'block';
     loadSummary();
+    loadCatches();
   }
 
   document.getElementById('form-login').addEventListener('submit', function (e) {
@@ -384,6 +436,7 @@
         document.getElementById('form-catch').reset();
         document.getElementById('c-date').value = todayStr();
         document.getElementById('c-item-other').style.display = 'none';
+        loadCatches();
       }
     }).catch(function (err) { showMsg(msg, false, '送出失敗：' + err); });
   });
@@ -435,12 +488,20 @@
     if (!items || !items.length) { box.innerHTML = '<div class="empty">還沒有任何漁獲或訂單紀錄</div>'; return; }
     box.innerHTML = '<div class="stock-row"></div>';
     var row = box.querySelector('.stock-row');
+    var hasNegative = false;
     items.forEach(function (s) {
       var pill = document.createElement('div');
-      pill.className = 'stock-pill';
+      pill.className = 'stock-pill' + (s.公斤 < 0 ? ' neg' : '');
       pill.innerHTML = '<div class="n">' + s.公斤 + '</div><div class="l">' + s.品項 + '（公斤）</div>';
+      if (s.公斤 < 0) hasNegative = true;
       row.appendChild(pill);
     });
+    if (hasNegative) {
+      var note = document.createElement('div');
+      note.className = 'stock-note';
+      note.textContent = '⚠️ 出現負數，表示賣出的比登記的漁獲還多——可能有漁獲忘記回報了。';
+      box.appendChild(note);
+    }
   }
 
   function renderShip(items) {
@@ -484,6 +545,122 @@
   }
 
   function money(n) { return '$' + (Number(n) || 0).toLocaleString(); }
+
+  // 刪除防呆：畫面顯示一組隨機 4 位數字，要打對才能刪
+  function attachDelete(container, opts) {
+    var link = document.createElement('button');
+    link.type = 'button';
+    link.className = 'del-link';
+    link.textContent = '🗑 刪除這筆';
+
+    var box = document.createElement('div');
+    box.className = 'del-box';
+    var code = String(Math.floor(1000 + Math.random() * 9000));
+    box.innerHTML =
+      '<p>確定要刪除「<strong>' + opts.label + '</strong>」嗎？<br>刪掉就救不回來了。請輸入下面這組數字確認：<br><span class="code">' + code + '</span></p>' +
+      '<input type="tel" inputmode="numeric" maxlength="4">' +
+      '<div class="del-actions"><button type="button" class="no">取消</button><button type="button" class="yes">確定刪除</button></div>' +
+      '<p class="err" style="display:none;margin-top:8px"></p>';
+
+    var input = box.querySelector('input');
+    var errP = box.querySelector('.err');
+
+    link.addEventListener('click', function () {
+      box.classList.toggle('show');
+      if (box.classList.contains('show')) input.focus();
+    });
+    box.querySelector('.no').addEventListener('click', function () {
+      box.classList.remove('show'); input.value = ''; errP.style.display = 'none';
+    });
+    box.querySelector('.yes').addEventListener('click', function () {
+      if (input.value.trim() !== code) {
+        errP.textContent = '數字不對，請重新輸入 ' + code;
+        errP.style.display = 'block';
+        return;
+      }
+      var yes = box.querySelector('.yes');
+      yes.disabled = true; yes.textContent = '刪除中…';
+      postAction({ action: opts.action, rowIndex: opts.rowIndex }).then(function (res) {
+        if (res.ok) { opts.onDone(); }
+        else { errP.textContent = res.error; errP.style.display = 'block'; yes.disabled = false; yes.textContent = '確定刪除'; }
+      }).catch(function (err) {
+        errP.textContent = '刪除失敗：' + err; errP.style.display = 'block';
+        yes.disabled = false; yes.textContent = '確定刪除';
+      });
+    });
+
+    container.appendChild(link);
+    container.appendChild(box);
+  }
+
+  function loadOrders() {
+    var box = document.getElementById('q-list');
+    box.className = 'loading';
+    box.textContent = '讀取中…';
+    postAction({ action: '訂單清單', 關鍵字: document.getElementById('q-search').value }).then(function (res) {
+      box.className = '';
+      if (!res.ok) { box.innerHTML = '<div class="empty">' + res.error + '</div>'; return; }
+      if (!res.訂單.length) { box.innerHTML = '<div class="empty">找不到訂單</div>'; return; }
+      box.innerHTML = '<div class="qcount">共 ' + res.筆數 + ' 筆</div>';
+      res.訂單.forEach(function (o) {
+        var div = document.createElement('div');
+        div.className = 'ocard';
+        var paidTag = o.收款狀態 === '已收'
+          ? '<span class="tag paid">已收款</span>' : '<span class="tag unpaid">未收款</span>';
+        var shipTag = o.出貨狀態 === '已出'
+          ? '<span class="tag shipped">已出貨</span>' : '<span class="tag unshipped">未出貨</span>';
+        div.innerHTML =
+          '<div class="oh"><span class="who">' + o.客人姓名 + '</span><span class="amt">' + money(o.金額) + '</span></div>' +
+          '<div class="line">' + o.日期 + '　' + o.品項 + ' ' + o.公斤數 + ' 公斤 × ' + o.單價 + ' 元</div>' +
+          '<div class="line">' + o.出貨方式 + '　' + o.門市或地址 + '</div>' +
+          (o.電話 ? '<div class="line">☎ ' + o.電話 + '</div>' : '') +
+          '<div class="tags">' + paidTag + shipTag + '</div>';
+        attachDelete(div, {
+          label: o.客人姓名 + '　' + o.品項 + ' ' + o.公斤數 + ' 公斤',
+          action: '刪除訂單',
+          rowIndex: o.rowIndex,
+          onDone: loadOrders
+        });
+        box.appendChild(div);
+      });
+    }).catch(function (err) {
+      box.className = '';
+      box.innerHTML = '<div class="empty">讀取失敗：' + err + '</div>';
+    });
+  }
+  function loadCatches() {
+    var box = document.getElementById('c-list');
+    box.className = 'loading';
+    box.textContent = '讀取中…';
+    postAction({ action: '漁獲清單' }).then(function (res) {
+      box.className = '';
+      if (!res.ok) { box.innerHTML = '<div class="empty">' + res.error + '</div>'; return; }
+      if (!res.漁獲.length) { box.innerHTML = '<div class="empty">還沒有漁獲紀錄</div>'; return; }
+      box.innerHTML = '';
+      res.漁獲.forEach(function (c) {
+        var div = document.createElement('div');
+        div.className = 'ocard';
+        div.innerHTML =
+          '<div class="oh"><span class="who">' + c.品項 + ' ' + c.公斤數 + ' 公斤</span><span class="line">' + c.日期 + '</span></div>' +
+          (c.備註 ? '<div class="line">備註：' + c.備註 + '</div>' : '');
+        attachDelete(div, {
+          label: c.日期 + '　' + c.品項 + ' ' + c.公斤數 + ' 公斤',
+          action: '刪除漁獲',
+          rowIndex: c.rowIndex,
+          onDone: loadCatches
+        });
+        box.appendChild(div);
+      });
+    }).catch(function (err) {
+      box.className = '';
+      box.innerHTML = '<div class="empty">讀取失敗：' + err + '</div>';
+    });
+  }
+
+  document.getElementById('btn-search').addEventListener('click', loadOrders);
+  document.getElementById('q-search').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); loadOrders(); }
+  });
 
   function loadReport() {
     document.getElementById('r-total').textContent = '讀取中…';
