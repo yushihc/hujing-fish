@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>虎井嶼手釣魚 · 庫存與訂單管理</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FBF6E4; --paper: #FFFDF9; --paper-2: #F6F0E2;
+    --ink: #45514D; --ink-soft: #67726B; --muted: #97A199; --line: #ECE3D2;
+    --sky: #1683C9; --sky-ink: #124F86; --sky-soft: #D6EAF7;
+    --coral: #F0A268; --coral-ink: #A85416; --on-coral: #4A2C10; --coral-soft: #FCEBD8;
+    --ok: #4E9E86; --ok-soft: #E1F0EA;
+    --radius: 16px;
+    --shadow: 0 1px 2px rgba(69,81,77,.04), 0 10px 30px rgba(69,81,77,.08);
+    --font-serif: "Noto Serif TC", "Songti TC", serif;
+    --font-sans: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", "Segoe UI", Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background: var(--bg); color: var(--ink); font-family: var(--font-sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  img { max-width: 100%; }
+  :focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; border-radius: 4px; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: clamp(16px,4vw,32px) clamp(14px,4vw,24px) 80px; }
+
+  header.top {
+    background: linear-gradient(158deg, var(--sky-ink), var(--sky)); color:#fff;
+    border-radius: var(--radius); padding: 22px clamp(18px,4vw,30px); box-shadow: var(--shadow);
+    position: relative; overflow: hidden; margin-bottom: 18px;
+  }
+  header.top::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background: linear-gradient(90deg, #B8842E, var(--coral)); }
+  header.top h1 { font-family: var(--font-serif); font-weight:700; margin:0 0 4px; font-size: 1.5rem; }
+  header.top p { margin:0; color: rgba(255,255,255,.86); font-size:.92rem; }
+
+  nav.tabs { display:flex; gap:8px; margin-bottom: 18px; overflow-x:auto; }
+  nav.tabs button {
+    appearance:none; border:1px solid var(--line); background: var(--paper); color: var(--ink-soft);
+    font: inherit; font-weight:600; font-size:.92rem; padding:10px 16px; border-radius:999px; cursor:pointer;
+    white-space:nowrap; transition: background .15s, color .15s, border-color .15s;
+  }
+  nav.tabs button[aria-selected="true"] { background: var(--sky); color:#fff; border-color: var(--sky); }
+
+  section.pane { display:none; }
+  section.pane.active { display:block; animation: fade .25s ease; }
+  @keyframes fade { from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+
+  .card { background: var(--paper); border:1px solid var(--line); border-radius: var(--radius); padding: 20px clamp(16px,4vw,26px); box-shadow: var(--shadow); margin-bottom: 16px; }
+  .card h2 { font-family: var(--font-serif); font-weight:700; color: var(--sky-ink); margin:0 0 4px; font-size:1.2rem; }
+  .card .hint { color: var(--muted); font-size:.86rem; margin: 0 0 16px; }
+
+  label { display:block; font-size:.88rem; font-weight:600; color: var(--ink); margin: 12px 0 6px; }
+  label:first-of-type { margin-top:0; }
+  input[type=text], input[type=number], input[type=tel], input[type=date], select {
+    width:100%; font: inherit; font-size:1rem; padding:11px 14px; border-radius:10px;
+    border:1px solid var(--line); background: var(--paper-2); color: var(--ink);
+  }
+  input:focus, select:focus { border-color: var(--sky); outline: none; }
+  .radio-row { display:flex; gap:10px; }
+  .radio-row label.opt {
+    flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
+    border:1px solid var(--line); background: var(--paper-2); border-radius:10px; padding:11px 10px;
+    font-weight:600; font-size:.94rem; cursor:pointer; margin:0; color: var(--ink-soft);
+  }
+  .radio-row input { accent-color: var(--sky); }
+  .radio-row label.opt:has(input:checked) { background: var(--sky-soft); border-color: var(--sky); color: var(--sky-ink); }
+
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%;
+    background: var(--coral); color: var(--on-coral); font-weight:800; padding:13px 18px; border-radius:999px;
+    border:0; cursor:pointer; font-size:1rem; margin-top:18px; box-shadow: 0 6px 18px rgba(240,162,104,.3); }
+  .btn:active { transform: translateY(1px); }
+  .btn.ghost { background: var(--sky-soft); color: var(--sky-ink); box-shadow:none; }
+  .btn:disabled { opacity:.55; cursor:not-allowed; }
+
+  .msg { margin-top:12px; padding:10px 14px; border-radius:10px; font-size:.9rem; display:none; }
+  .msg.show { display:block; }
+  .msg.ok { background: var(--ok-soft); color: var(--ok); }
+  .msg.err { background: var(--coral-soft); color: var(--coral-ink); }
+
+  .stat-row { display:grid; grid-template-columns: repeat(2,1fr); gap:10px; margin-bottom:16px; }
+  .stock-row { display:flex; flex-wrap:wrap; gap:10px; }
+  .stock-pill { background: var(--sky-soft); color: var(--sky-ink); border-radius:12px; padding:10px 16px; text-align:center; min-width:100px; }
+  .stock-pill .n { font-family: var(--font-serif); font-weight:700; font-size:1.2rem; }
+  .stock-pill .l { font-size:.78rem; margin-top:2px; }
+  .stat { background: var(--paper); border:1px solid var(--line); border-radius:12px; padding:14px 10px; text-align:center; box-shadow: var(--shadow); }
+  .stat .n { font-family: var(--font-serif); font-weight:700; font-size:1.35rem; color: var(--sky-ink); }
+  .stat .l { font-size:.76rem; color: var(--muted); margin-top:2px; }
+
+  .list-item { border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:10px; background: var(--paper-2); }
+  .list-item .top { display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap; }
+  .list-item .name { font-weight:700; }
+  .list-item .meta { font-size:.84rem; color: var(--ink-soft); margin-top:4px; }
+  .list-item button { margin-top:10px; }
+  .empty { text-align:center; color: var(--muted); font-size:.9rem; padding: 18px 0; }
+  .loading { text-align:center; color: var(--muted); font-size:.9rem; padding: 18px 0; }
+
+  .calc { margin-top:10px; padding:10px 14px; border-radius:10px; background: var(--coral-soft); color: var(--coral-ink); font-weight:700; font-size:.95rem; }
+
+  .mrow { border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:12px; background: var(--paper-2); }
+  .mrow .m { font-family: var(--font-serif); font-weight:700; color: var(--sky-ink); font-size:1.1rem; margin-bottom:8px; }
+  .mgrid { display:grid; grid-template-columns: repeat(2,1fr); gap:8px 14px; }
+  .mgrid div { font-size:.9rem; display:flex; justify-content:space-between; gap:8px; }
+  .mgrid .k { color: var(--muted); }
+  .mgrid .v { font-weight:700; color: var(--ink); }
+  .mgrid .v.money { color: var(--coral-ink); }
+  .mgrid .v.unpaid { color: #B4413B; }
+
+  .login-wrap { max-width: 380px; margin: 15vh auto 0; padding: 0 16px; }
+  .logout-link { display:block; text-align:center; margin-top: 20px; color: var(--muted); font-size:.85rem; background:none; border:0; cursor:pointer; text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="wrap login-wrap" id="login-screen">
+  <header class="top">
+    <h1>🐟 虎井嶼手釣魚</h1>
+    <p>庫存與訂單管理</p>
+  </header>
+  <div class="card">
+    <h2>登入</h2>
+    <p class="hint">輸入姓名和電話號碼。</p>
+    <form id="form-login">
+      <label for="l-name">姓名</label>
+      <input type="text" id="l-name">
+      <label for="l-phone">電話號碼（當密碼）</label>
+      <input type="tel" id="l-phone">
+      <button type="submit" class="btn">登入</button>
+      <div class="msg" id="l-msg"></div>
+    </form>
+  </div>
+</div>
+
+<div class="wrap" id="app-screen" style="display:none;">
+  <header class="top">
+    <h1>🐟 虎井嶼手釣魚</h1>
+    <p>庫存與訂單管理</p>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-target="catch">🎣 回報漁獲</button>
+    <button role="tab" aria-selected="false" data-target="order">📋 登記訂單</button>
+    <button role="tab" aria-selected="false" data-target="summary">📊 總覽</button>
+    <button role="tab" aria-selected="false" data-target="report">📈 報表</button>
+  </nav>
+
+  <section class="pane active" id="pane-catch">
+    <div class="card">
+      <h2>回報漁獲</h2>
+      <p class="hint">記一下這趟釣了多少。</p>
+      <form id="form-catch">
+        <label for="c-item">品項</label>
+        <select id="c-item">
+          <option value="小卷">小卷</option>
+          <option value="其他">其他</option>
+        </select>
+        <input type="text" id="c-item-other" placeholder="請輸入品項名稱" style="display:none; margin-top:8px;">
+        <label for="c-date">日期</label>
+        <input type="date" id="c-date">
+        <label for="c-kg">公斤數</label>
+        <input type="number" id="c-kg" inputmode="decimal" step="0.1" min="0">
+        <label for="c-note">備註（不用填也可以）</label>
+        <input type="text" id="c-note">
+        <button type="submit" class="btn">送出漁獲回報</button>
+        <div class="msg" id="c-msg"></div>
+      </form>
+    </div>
+  </section>
+
+  <section class="pane" id="pane-order">
+    <div class="card">
+      <h2>登記訂單</h2>
+      <p class="hint">收到 LINE 訂單後，把客人資料記下來。</p>
+      <form id="form-order">
+        <label for="o-item">品項</label>
+        <select id="o-item">
+          <option value="小卷">小卷</option>
+          <option value="其他">其他</option>
+        </select>
+        <input type="text" id="o-item-other" placeholder="請輸入品項名稱" style="display:none; margin-top:8px;">
+        <label for="o-name">客人姓名</label>
+        <input type="text" id="o-name">
+        <label for="o-phone">電話</label>
+        <input type="tel" id="o-phone">
+        <label for="o-kg">公斤數</label>
+        <input type="number" id="o-kg" inputmode="decimal" step="0.1" min="0">
+        <label for="o-price">單價（元／公斤）</label>
+        <input type="number" id="o-price" inputmode="numeric" step="10" min="0" value="650">
+        <div class="calc" id="o-calc">金額：－</div>
+        <label>出貨方式</label>
+        <div class="radio-row">
+          <label class="opt"><input type="radio" name="o-ship" value="7-11" checked> 7-11 冷凍交貨便</label>
+          <label class="opt"><input type="radio" name="o-ship" value="宅配"> 冷凍宅配</label>
+        </div>
+        <label id="o-addr-label" for="o-addr">7-11 門市名稱</label>
+        <input type="text" id="o-addr">
+        <button type="submit" class="btn">送出訂單登記</button>
+        <div class="msg" id="o-msg"></div>
+      </form>
+    </div>
+  </section>
+
+  <section class="pane" id="pane-summary">
+    <div class="card">
+      <h2>現有庫存</h2>
+      <div id="s-stock-list" class="loading">讀取中…</div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><div class="n" id="s-ship">–</div><div class="l">待出貨筆數</div></div>
+      <div class="stat"><div class="n" id="s-pay">–</div><div class="l">待收款筆數</div></div>
+    </div>
+
+    <div class="card">
+      <h2>待出貨</h2>
+      <div id="s-ship-list" class="loading">讀取中…</div>
+    </div>
+
+    <div class="card">
+      <h2>待收款</h2>
+      <div id="s-pay-list" class="loading">讀取中…</div>
+    </div>
+
+    <button class="btn ghost" id="btn-refresh" type="button">🔄 重新整理總覽</button>
+  </section>
+
+  <section class="pane" id="pane-report">
+    <div class="card">
+      <h2>累計總計</h2>
+      <div id="r-total" class="loading">讀取中…</div>
+    </div>
+    <div class="card">
+      <h2>每月報表</h2>
+      <p class="hint">依月份看漁獲、賣出與收益。</p>
+      <div id="r-months" class="loading">讀取中…</div>
+    </div>
+    <button class="btn ghost" id="btn-refresh-report" type="button">🔄 重新整理報表</button>
+  </section>
+
+  <button class="logout-link" id="btn-logout" type="button">登出</button>
+</div>
+
+<script>
+  var API_URL = 'https://script.google.com/macros/s/AKfycbzWsIIe9jZXdLXe2q2XqsB4S83FrDNAU9zDMu-Vqqam63vhNnqrIrEi8G4CavTVLvBxaw/exec';
+
+  var tabs = document.querySelectorAll('nav.tabs button');
+  var panes = document.querySelectorAll('.pane');
+  tabs.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      tabs.forEach(function (b) { b.setAttribute('aria-selected', b === btn); });
+      panes.forEach(function (p) { p.classList.toggle('active', p.id === 'pane-' + btn.dataset.target); });
+      if (btn.dataset.target === 'summary') loadSummary();
+      if (btn.dataset.target === 'report') loadReport();
+    });
+  });
+
+  function updateCalc() {
+    var kg = parseFloat(document.getElementById('o-kg').value);
+    var price = parseFloat(document.getElementById('o-price').value);
+    var box = document.getElementById('o-calc');
+    if (kg > 0 && price > 0) {
+      box.textContent = '金額：$' + Math.round(kg * price).toLocaleString() + '（' + kg + ' 公斤 × ' + price + ' 元）';
+    } else {
+      box.textContent = '金額：－';
+    }
+  }
+  document.getElementById('o-kg').addEventListener('input', updateCalc);
+  document.getElementById('o-price').addEventListener('input', updateCalc);
+
+  document.querySelectorAll('input[name="o-ship"]').forEach(function (r) {
+    r.addEventListener('change', function () {
+      var label = document.getElementById('o-addr-label');
+      var input = document.getElementById('o-addr');
+      if (this.value === '7-11') { label.textContent = '7-11 門市名稱'; input.placeholder = ''; }
+      else { label.textContent = '完整地址'; input.placeholder = ''; }
+    });
+  });
+
+  function wireItemSelect(selectId, otherId) {
+    var sel = document.getElementById(selectId);
+    var other = document.getElementById(otherId);
+    sel.addEventListener('change', function () {
+      other.style.display = sel.value === '其他' ? 'block' : 'none';
+    });
+  }
+  wireItemSelect('c-item', 'c-item-other');
+  wireItemSelect('o-item', 'o-item-other');
+
+  function pickedItem(selectId, otherId) {
+    var sel = document.getElementById(selectId);
+    if (sel.value === '其他') return document.getElementById(otherId).value.trim();
+    return sel.value;
+  }
+
+  function todayStr() {
+    var d = new Date();
+    var local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+    return local.toISOString().slice(0, 10);
+  }
+  document.getElementById('c-date').value = todayStr();
+
+  function showMsg(el, ok, text) {
+    el.className = 'msg show ' + (ok ? 'ok' : 'err');
+    el.textContent = text;
+  }
+
+  function getAuth() {
+    var raw = localStorage.getItem('hujing_auth');
+    return raw ? JSON.parse(raw) : null;
+  }
+
+  function postAction(payload) {
+    var auth = getAuth();
+    payload.帳號 = auth ? auth.name : '';
+    payload.密碼 = auth ? auth.phone : '';
+    return fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).then(function (r) { return r.json(); });
+  }
+
+  function showApp() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-screen').style.display = 'block';
+    loadSummary();
+  }
+
+  document.getElementById('form-login').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = document.getElementById('l-name').value.trim();
+    var phone = document.getElementById('l-phone').value.trim();
+    var msg = document.getElementById('l-msg');
+    fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: '總覽', 帳號: name, 密碼: phone })
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      if (res.ok) {
+        localStorage.setItem('hujing_auth', JSON.stringify({ name: name, phone: phone }));
+        showApp();
+      } else {
+        showMsg(msg, false, res.error);
+      }
+    }).catch(function (err) { showMsg(msg, false, '登入失敗：' + err); });
+  });
+
+  document.getElementById('btn-logout').addEventListener('click', function () {
+    localStorage.removeItem('hujing_auth');
+    document.getElementById('app-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'block';
+  });
+
+  var savedAuth = getAuth();
+  if (savedAuth) {
+    fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: '總覽', 帳號: savedAuth.name, 密碼: savedAuth.phone })
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      if (res.ok) { showApp(); } else { localStorage.removeItem('hujing_auth'); }
+    }).catch(function () { /* 離線時先讓使用者留在登入畫面 */ });
+  }
+
+  document.getElementById('form-catch').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var kg = document.getElementById('c-kg').value;
+    var note = document.getElementById('c-note').value;
+    var date = document.getElementById('c-date').value || todayStr();
+    var item = pickedItem('c-item', 'c-item-other');
+    var msg = document.getElementById('c-msg');
+    postAction({ action: '回報漁獲', 品項: item, 日期: date, 公斤數: kg, 備註: note }).then(function (res) {
+      showMsg(msg, res.ok, res.ok ? res.message : res.error);
+      if (res.ok) {
+        document.getElementById('form-catch').reset();
+        document.getElementById('c-date').value = todayStr();
+        document.getElementById('c-item-other').style.display = 'none';
+      }
+    }).catch(function (err) { showMsg(msg, false, '送出失敗：' + err); });
+  });
+
+  document.getElementById('form-order').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var ship = document.querySelector('input[name="o-ship"]:checked').value;
+    var msg = document.getElementById('o-msg');
+    postAction({
+      action: '新增訂單',
+      品項: pickedItem('o-item', 'o-item-other'),
+      客人姓名: document.getElementById('o-name').value,
+      電話: document.getElementById('o-phone').value,
+      公斤數: document.getElementById('o-kg').value,
+      單價: document.getElementById('o-price').value,
+      出貨方式: ship,
+      門市或地址: document.getElementById('o-addr').value
+    }).then(function (res) {
+      showMsg(msg, res.ok, res.ok ? res.message : res.error);
+      if (res.ok) {
+        document.getElementById('form-order').reset();
+        document.getElementById('o-price').value = 650;
+        document.getElementById('o-item-other').style.display = 'none';
+        updateCalc();
+      }
+    }).catch(function (err) { showMsg(msg, false, '送出失敗：' + err); });
+  });
+
+  function loadSummary() {
+    document.getElementById('s-stock-list').textContent = '讀取中…';
+    document.getElementById('s-ship-list').textContent = '讀取中…';
+    document.getElementById('s-pay-list').textContent = '讀取中…';
+    postAction({ action: '總覽' }).then(function (res) {
+      if (!res.ok) { document.getElementById('s-stock-list').textContent = res.error; return; }
+      renderStock(res.庫存明細);
+      document.getElementById('s-ship').textContent = res.待出貨.length;
+      document.getElementById('s-pay').textContent = res.待收款.length;
+      renderShip(res.待出貨);
+      renderPay(res.待收款);
+    }).catch(function (err) {
+      document.getElementById('s-stock-list').textContent = '讀取失敗：' + err;
+      document.getElementById('s-ship-list').textContent = '讀取失敗：' + err;
+      document.getElementById('s-pay-list').textContent = '讀取失敗：' + err;
+    });
+  }
+
+  function renderStock(items) {
+    var box = document.getElementById('s-stock-list');
+    if (!items || !items.length) { box.innerHTML = '<div class="empty">還沒有任何漁獲或訂單紀錄</div>'; return; }
+    box.innerHTML = '<div class="stock-row"></div>';
+    var row = box.querySelector('.stock-row');
+    items.forEach(function (s) {
+      var pill = document.createElement('div');
+      pill.className = 'stock-pill';
+      pill.innerHTML = '<div class="n">' + s.公斤 + '</div><div class="l">' + s.品項 + '（公斤）</div>';
+      row.appendChild(pill);
+    });
+  }
+
+  function renderShip(items) {
+    var box = document.getElementById('s-ship-list');
+    if (!items.length) { box.innerHTML = '<div class="empty">目前沒有待出貨的訂單</div>'; return; }
+    box.innerHTML = '';
+    items.forEach(function (o) {
+      var div = document.createElement('div');
+      div.className = 'list-item';
+      div.innerHTML = '<div class="top"><span class="name">' + o.客人姓名 + '</span><span>' + o.公斤數 + ' 公斤</span></div>' +
+        '<div class="meta">' + o.出貨方式 + '　' + o.門市或地址 + (o.電話 ? '　' + o.電話 : '') + '</div>';
+      var btn = document.createElement('button');
+      btn.className = 'btn ghost'; btn.textContent = '✅ 標記已出貨';
+      btn.addEventListener('click', function () {
+        btn.disabled = true; btn.textContent = '更新中…';
+        postAction({ action: '更新訂單', rowIndex: o.rowIndex, 欄位: '出貨狀態', 值: '已出' }).then(function () { loadSummary(); });
+      });
+      div.appendChild(btn);
+      box.appendChild(div);
+    });
+  }
+
+  function renderPay(items) {
+    var box = document.getElementById('s-pay-list');
+    if (!items.length) { box.innerHTML = '<div class="empty">目前沒有待收款的訂單</div>'; return; }
+    box.innerHTML = '';
+    items.forEach(function (o) {
+      var div = document.createElement('div');
+      div.className = 'list-item';
+      div.innerHTML = '<div class="top"><span class="name">' + o.客人姓名 + '</span><span>$' + o.金額 + '</span></div>' +
+        '<div class="meta">' + o.公斤數 + ' 公斤</div>';
+      var btn = document.createElement('button');
+      btn.className = 'btn ghost'; btn.textContent = '💰 標記已收款';
+      btn.addEventListener('click', function () {
+        btn.disabled = true; btn.textContent = '更新中…';
+        postAction({ action: '更新訂單', rowIndex: o.rowIndex, 欄位: '收款狀態', 值: '已收' }).then(function () { loadSummary(); });
+      });
+      div.appendChild(btn);
+      box.appendChild(div);
+    });
+  }
+
+  function money(n) { return '$' + (Number(n) || 0).toLocaleString(); }
+
+  function loadReport() {
+    document.getElementById('r-total').textContent = '讀取中…';
+    document.getElementById('r-months').textContent = '讀取中…';
+    postAction({ action: '報表' }).then(function (res) {
+      if (!res.ok) { document.getElementById('r-total').textContent = res.error; return; }
+      var t = res.總計;
+      document.getElementById('r-total').innerHTML =
+        '<div class="mgrid">' +
+        '<div><span class="k">總漁獲</span><span class="v">' + t.漁獲公斤 + ' 公斤</span></div>' +
+        '<div><span class="k">總賣出</span><span class="v">' + t.賣出公斤 + ' 公斤</span></div>' +
+        '<div><span class="k">總營業額</span><span class="v money">' + money(t.營業額) + '</span></div>' +
+        '<div><span class="k">訂單數</span><span class="v">' + t.訂單數 + ' 筆</span></div>' +
+        '<div><span class="k">已收款</span><span class="v">' + money(t.已收) + '</span></div>' +
+        '<div><span class="k">未收款</span><span class="v unpaid">' + money(t.未收) + '</span></div>' +
+        '</div>';
+
+      var box = document.getElementById('r-months');
+      if (!res.月報表.length) { box.innerHTML = '<div class="empty">還沒有任何紀錄</div>'; return; }
+      box.innerHTML = '';
+      res.月報表.forEach(function (m) {
+        var div = document.createElement('div');
+        div.className = 'mrow';
+        div.innerHTML = '<div class="m">' + m.月份 + '</div><div class="mgrid">' +
+          '<div><span class="k">漁獲</span><span class="v">' + m.漁獲公斤 + ' 公斤</span></div>' +
+          '<div><span class="k">賣出</span><span class="v">' + m.賣出公斤 + ' 公斤</span></div>' +
+          '<div><span class="k">營業額</span><span class="v money">' + money(m.營業額) + '</span></div>' +
+          '<div><span class="k">訂單數</span><span class="v">' + m.訂單數 + ' 筆</span></div>' +
+          '<div><span class="k">已收</span><span class="v">' + money(m.已收) + '</span></div>' +
+          '<div><span class="k">未收</span><span class="v unpaid">' + money(m.未收) + '</span></div>' +
+          '</div>';
+        box.appendChild(div);
+      });
+    }).catch(function (err) {
+      document.getElementById('r-total').textContent = '讀取失敗：' + err;
+      document.getElementById('r-months').textContent = '讀取失敗：' + err;
+    });
+  }
+
+  document.getElementById('btn-refresh').addEventListener('click', loadSummary);
+  document.getElementById('btn-refresh-report').addEventListener('click', loadReport);
+</script>
+</body>
+</html>
