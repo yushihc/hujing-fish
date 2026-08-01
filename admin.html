@@ -151,15 +151,27 @@
   .qcount { color: var(--muted); font-size:.85rem; margin-bottom:10px; }
 
   .del-link { background:none; border:0; color:#B4413B; font-size:.82rem; cursor:pointer; text-decoration:underline; padding:4px 0; margin-top:8px; }
-  .del-box { margin-top:10px; padding:12px 14px; border-radius:10px; background:#FBE4E2; border:1px solid #F0C4C0; display:none; }
-  .del-box.show { display:block; }
-  .del-box p { margin:0 0 8px; font-size:.86rem; color:#8E3430; line-height:1.5; }
-  .del-box .code { font-family: var(--font-serif); font-weight:700; font-size:1.25rem; color:#B4413B; letter-spacing:.15em; }
-  .del-box input { margin-bottom:8px; }
-  .del-actions { display:flex; gap:8px; }
-  .del-actions button { flex:1; border:0; border-radius:999px; padding:10px; font:inherit; font-weight:700; font-size:.9rem; cursor:pointer; }
+
+  /* 刪除確認：跳出式小視窗 */
+  .modal-mask { position:fixed; inset:0; background:rgba(30,40,38,.55); display:none; align-items:center; justify-content:center; padding:20px; z-index:100; }
+  .modal-mask.show { display:flex; }
+  .modal { background: var(--paper); border-radius:16px; padding:22px 22px 20px; width:100%; max-width:380px; box-shadow:0 20px 50px rgba(0,0,0,.25); }
+  .modal h3 { font-family: var(--font-serif); font-weight:700; color:#B4413B; margin:0 0 10px; font-size:1.15rem; }
+  .modal p { margin:0 0 10px; font-size:.9rem; color: var(--ink-soft); line-height:1.6; }
+  .modal .target { background: var(--paper-2); border-radius:8px; padding:8px 12px; font-weight:700; color: var(--ink); font-size:.92rem; margin-bottom:12px; }
+  .modal .code { display:block; text-align:center; font-family: var(--font-serif); font-weight:700; font-size:1.7rem; color:#B4413B; letter-spacing:.28em; background:#FBE4E2; border-radius:10px; padding:10px; margin:10px 0 12px; }
+  .modal input { margin-bottom:12px; text-align:center; font-size:18px; letter-spacing:.2em; }
+  .modal .err { display:none; color:#B4413B; font-size:.85rem; margin:0 0 10px; }
+  .modal .err.show { display:block; }
+  .del-actions { display:flex; gap:10px; }
+  .del-actions button { flex:1; border:0; border-radius:999px; padding:12px; font:inherit; font-weight:700; font-size:.94rem; cursor:pointer; }
   .del-actions .yes { background:#B4413B; color:#fff; }
   .del-actions .no { background: var(--paper-2); color: var(--ink-soft); }
+
+  .filter-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+  .filter-row button { border:1px solid var(--line); background: var(--paper); color: var(--ink-soft); font:inherit; font-size:.86rem; font-weight:600; padding:8px 14px; border-radius:999px; cursor:pointer; }
+  .filter-row button.on { background: var(--sky); color:#fff; border-color: var(--sky); }
+  .restore-link { background:none; border:0; color: var(--sky-ink); font-size:.82rem; cursor:pointer; text-decoration:underline; padding:4px 0; margin-top:8px; }
 
   .login-wrap { max-width: 380px; margin: 15vh auto 0; padding: 0 16px; }
   .logout-link { display:block; text-align:center; margin-top: 20px; color: var(--muted); font-size:.85rem; background:none; border:0; cursor:pointer; text-decoration: underline; }
@@ -214,7 +226,7 @@
         <option value="陳世育">陳世育</option>
         <option value="陳世晏">陳世晏</option>
       </select>
-      <label for="l-phone">密碼</label>
+      <label for="l-phone">密碼（電話號碼）</label>
       <input type="tel" id="l-phone">
       <button type="submit" class="btn">登入</button>
       <div class="msg" id="l-msg"></div>
@@ -235,6 +247,7 @@
     <button role="tab" aria-selected="false" data-target="stock">📦 庫存</button>
     <button role="tab" aria-selected="false" data-target="orders">🔍 訂單查詢</button>
     <button role="tab" aria-selected="false" data-target="report">📈 報表</button>
+    <button role="tab" aria-selected="false" data-target="archive">🗄 封存區</button>
   </nav>
 
   <section class="pane active" id="pane-catch">
@@ -362,8 +375,23 @@
       <p class="hint">全部訂單，最新的排前面。可以打客人姓名、電話或門市來找。</p>
       <input type="text" id="q-search" placeholder="搜尋姓名／電話／門市">
       <button class="btn ghost" id="btn-search" type="button" style="margin-top:12px">🔍 查詢</button>
+      <div class="filter-row" style="margin-top:14px">
+        <button type="button" class="on" data-filter="全部">全部</button>
+        <button type="button" data-filter="未出貨">未出貨</button>
+        <button type="button" data-filter="已出貨">已出貨</button>
+        <button type="button" data-filter="未收款">未收款</button>
+      </div>
     </div>
     <div id="q-list" class="loading">讀取中…</div>
+  </section>
+
+  <section class="pane page" id="pane-archive">
+    <div class="card">
+      <h2>封存區</h2>
+      <p class="hint">刪除掉的資料都會放在這裡，不會真的不見。按「還原」就能救回來。</p>
+      <button class="btn ghost" id="btn-refresh-archive" type="button">🔄 重新整理</button>
+    </div>
+    <div id="ar-list" class="loading">讀取中…</div>
   </section>
 
   <section class="pane" id="pane-report">
@@ -382,6 +410,21 @@
   <button class="logout-link" id="btn-logout" type="button">登出</button>
 </div>
 
+<div class="modal-mask" id="del-modal">
+  <div class="modal">
+    <h3>🗑 確定要刪除嗎？</h3>
+    <div class="target" id="dm-target"></div>
+    <p>資料會移到<strong>封存區</strong>（不會真的不見，之後可以還原）。<br>請輸入下面這組數字確認：</p>
+    <span class="code" id="dm-code"></span>
+    <input type="tel" inputmode="numeric" maxlength="4" id="dm-input">
+    <p class="err" id="dm-err"></p>
+    <div class="del-actions">
+      <button type="button" class="no" id="dm-cancel">取消</button>
+      <button type="button" class="yes" id="dm-ok">確定刪除</button>
+    </div>
+  </div>
+</div>
+
 <script>
   var API_URL = 'https://script.google.com/macros/s/AKfycbzWsIIe9jZXdLXe2q2XqsB4S83FrDNAU9zDMu-Vqqam63vhNnqrIrEi8G4CavTVLvBxaw/exec';
 
@@ -395,6 +438,7 @@
       if (btn.dataset.target === 'stock') { loadSummary(); loadAdjusts(); }
       if (btn.dataset.target === 'report') loadReport();
       if (btn.dataset.target === 'orders') loadOrders();
+      if (btn.dataset.target === 'archive') loadArchive();
     });
   });
 
@@ -760,62 +804,81 @@
 
   function money(n) { return '$' + (Number(n) || 0).toLocaleString(); }
 
-  // 刪除防呆：畫面顯示一組隨機 4 位數字，要打對才能刪
+  // 刪除防呆：跳出小視窗，輸入隨機 4 位數字才會刪（資料會進封存區）
+  var dmMask = document.getElementById('del-modal');
+  var dmInput = document.getElementById('dm-input');
+  var dmErr = document.getElementById('dm-err');
+  var dmOk = document.getElementById('dm-ok');
+  var dmCode = '', dmOpts = null;
+
+  function openDeleteModal(opts) {
+    dmOpts = opts;
+    dmCode = String(Math.floor(1000 + Math.random() * 9000));
+    document.getElementById('dm-target').textContent = opts.label;
+    document.getElementById('dm-code').textContent = dmCode;
+    dmInput.value = '';
+    dmErr.classList.remove('show');
+    dmOk.disabled = false; dmOk.textContent = '確定刪除';
+    dmMask.classList.add('show');
+    setTimeout(function () { dmInput.focus(); }, 100);
+  }
+  function closeDeleteModal() { dmMask.classList.remove('show'); dmOpts = null; }
+
+  document.getElementById('dm-cancel').addEventListener('click', closeDeleteModal);
+  dmMask.addEventListener('click', function (e) { if (e.target === dmMask) closeDeleteModal(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && dmMask.classList.contains('show')) closeDeleteModal();
+  });
+
+  dmOk.addEventListener('click', function () {
+    if (!dmOpts) return;
+    if (dmInput.value.trim() !== dmCode) {
+      dmErr.textContent = '數字不對，請輸入 ' + dmCode;
+      dmErr.classList.add('show');
+      return;
+    }
+    dmOk.disabled = true; dmOk.textContent = '刪除中…';
+    var opts = dmOpts;
+    postAction({ action: opts.action, rowIndex: opts.rowIndex }).then(function (res) {
+      if (res.ok) { closeDeleteModal(); opts.onDone(); }
+      else {
+        dmErr.textContent = res.error; dmErr.classList.add('show');
+        dmOk.disabled = false; dmOk.textContent = '確定刪除';
+      }
+    }).catch(function (err) {
+      dmErr.textContent = '刪除失敗：' + err; dmErr.classList.add('show');
+      dmOk.disabled = false; dmOk.textContent = '確定刪除';
+    });
+  });
+
   function attachDelete(container, opts) {
     var link = document.createElement('button');
     link.type = 'button';
     link.className = 'del-link';
     link.textContent = '🗑 刪除這筆';
-
-    var box = document.createElement('div');
-    box.className = 'del-box';
-    var code = String(Math.floor(1000 + Math.random() * 9000));
-    box.innerHTML =
-      '<p>確定要刪除「<strong>' + opts.label + '</strong>」嗎？<br>刪掉就救不回來了。請輸入下面這組數字確認：<br><span class="code">' + code + '</span></p>' +
-      '<input type="tel" inputmode="numeric" maxlength="4">' +
-      '<div class="del-actions"><button type="button" class="no">取消</button><button type="button" class="yes">確定刪除</button></div>' +
-      '<p class="err" style="display:none;margin-top:8px"></p>';
-
-    var input = box.querySelector('input');
-    var errP = box.querySelector('.err');
-
-    link.addEventListener('click', function () {
-      box.classList.toggle('show');
-      if (box.classList.contains('show')) input.focus();
-    });
-    box.querySelector('.no').addEventListener('click', function () {
-      box.classList.remove('show'); input.value = ''; errP.style.display = 'none';
-    });
-    box.querySelector('.yes').addEventListener('click', function () {
-      if (input.value.trim() !== code) {
-        errP.textContent = '數字不對，請重新輸入 ' + code;
-        errP.style.display = 'block';
-        return;
-      }
-      var yes = box.querySelector('.yes');
-      yes.disabled = true; yes.textContent = '刪除中…';
-      postAction({ action: opts.action, rowIndex: opts.rowIndex }).then(function (res) {
-        if (res.ok) { opts.onDone(); }
-        else { errP.textContent = res.error; errP.style.display = 'block'; yes.disabled = false; yes.textContent = '確定刪除'; }
-      }).catch(function (err) {
-        errP.textContent = '刪除失敗：' + err; errP.style.display = 'block';
-        yes.disabled = false; yes.textContent = '確定刪除';
-      });
-    });
-
+    link.addEventListener('click', function () { openDeleteModal(opts); });
     container.appendChild(link);
-    container.appendChild(box);
   }
+
+  var orderFilter = '全部';
+  document.querySelectorAll('.filter-row button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.filter-row button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      orderFilter = b.dataset.filter;
+      loadOrders();
+    });
+  });
 
   function loadOrders() {
     var box = document.getElementById('q-list');
     box.className = 'loading';
     box.textContent = '讀取中…';
-    postAction({ action: '訂單清單', 關鍵字: document.getElementById('q-search').value }).then(function (res) {
+    postAction({ action: '訂單清單', 關鍵字: document.getElementById('q-search').value, 篩選: orderFilter }).then(function (res) {
       box.className = '';
       if (!res.ok) { box.innerHTML = '<div class="empty">' + res.error + '</div>'; return; }
       if (!res.訂單.length) { box.innerHTML = '<div class="empty">找不到訂單</div>'; return; }
-      box.innerHTML = '<div class="qcount">共 ' + res.筆數 + ' 筆</div>';
+      box.innerHTML = '<div class="qcount">共 ' + res.筆數 + ' 筆　'
+        + res.合計公斤 + ' 公斤　' + money(res.合計金額) + '</div>';
       res.訂單.forEach(function (o) {
         var div = document.createElement('div');
         div.className = 'ocard';
@@ -949,6 +1012,43 @@
       box.innerHTML = '<div class="empty">讀取失敗：' + err + '</div>';
     });
   }
+
+  function loadArchive() {
+    var box = document.getElementById('ar-list');
+    box.className = 'loading';
+    box.textContent = '讀取中…';
+    postAction({ action: '封存清單' }).then(function (res) {
+      box.className = '';
+      if (!res.ok) { box.innerHTML = '<div class="empty">' + res.error + '</div>'; return; }
+      if (!res.封存.length) { box.innerHTML = '<div class="empty">封存區是空的</div>'; return; }
+      box.innerHTML = '<div class="qcount">共 ' + res.總筆數 + ' 筆</div>';
+      res.封存.forEach(function (a) {
+        var div = document.createElement('div');
+        div.className = 'ocard';
+        div.innerHTML =
+          '<div class="oh"><span class="who">' + a.說明 + '</span><span class="tag unshipped">' + a.來源 + '</span></div>' +
+          '<div class="line">原始日期：' + (a.原日期 || '—') + '</div>' +
+          '<div class="line">封存於 ' + a.封存時間 + (a.封存者 ? '　由 ' + a.封存者 : '') + '</div>';
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'restore-link';
+        btn.textContent = '↩ 還原這筆';
+        btn.addEventListener('click', function () {
+          btn.disabled = true; btn.textContent = '還原中…';
+          postAction({ action: '還原封存', 來源: a.來源, rowIndex: a.rowIndex }).then(function (r) {
+            if (r.ok) { loadArchive(); loadSummary(); loadCatches(); loadAdjusts(); }
+            else { btn.textContent = r.error; btn.disabled = false; }
+          }).catch(function (e) { btn.textContent = '失敗：' + e; btn.disabled = false; });
+        });
+        div.appendChild(btn);
+        box.appendChild(div);
+      });
+    }).catch(function (err) {
+      box.className = '';
+      box.innerHTML = '<div class="empty">讀取失敗：' + err + '</div>';
+    });
+  }
+  document.getElementById('btn-refresh-archive').addEventListener('click', loadArchive);
 
   document.getElementById('btn-search').addEventListener('click', loadOrders);
   document.getElementById('q-search').addEventListener('keydown', function (e) {
