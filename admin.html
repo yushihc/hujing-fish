@@ -163,6 +163,36 @@
 
   .login-wrap { max-width: 380px; margin: 15vh auto 0; padding: 0 16px; }
   .logout-link { display:block; text-align:center; margin-top: 20px; color: var(--muted); font-size:.85rem; background:none; border:0; cursor:pointer; text-decoration: underline; }
+
+  /* ---- 平板／電腦版面 ---- */
+  @media (min-width: 820px) {
+    .wrap { max-width: 1080px; padding-left: 32px; padding-right: 32px; }
+    header.top { padding: 28px 34px; }
+    header.top h1 { font-size: 1.85rem; }
+    nav.tabs { gap: 10px; margin-bottom: 22px; overflow-x: visible; flex-wrap: wrap; }
+    nav.tabs button { font-size: .98rem; padding: 11px 20px; }
+
+    /* 表單類欄位不要拉得太寬，難讀又難按 */
+    #pane-catch .card form, #pane-order .card form,
+    #stocktake-box, #q-search { max-width: 520px; }
+    #pane-catch .card form .btn, #pane-order .card form .btn,
+    #stocktake-box .btn { max-width: 320px; }
+
+    /* 兩欄並排：左邊表單、右邊清單 */
+    .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+    .cols2 > * { margin-bottom: 0; }
+    .stat-row { max-width: 460px; }
+    .two-btn { max-width: 460px; }
+    .mgrid { grid-template-columns: repeat(3, 1fr); }
+    .stock-pill { min-width: 130px; }
+    .btn { width: auto; min-width: 200px; }
+    .list-item button.btn, .del-actions button { min-width: 0; }
+    .batch-bar .go { min-width: 0; }
+  }
+  @media (min-width: 1100px) {
+    .cols3 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+    .cols3 > * { margin-bottom: 0; }
+  }
 </style>
 </head>
 <body>
@@ -184,7 +214,7 @@
         <option value="陳世育">陳世育</option>
         <option value="陳世晏">陳世晏</option>
       </select>
-      <label for="l-phone">電話號碼（當密碼）</label>
+      <label for="l-phone">密碼</label>
       <input type="tel" id="l-phone">
       <button type="submit" class="btn">登入</button>
       <div class="msg" id="l-msg"></div>
@@ -208,6 +238,7 @@
   </nav>
 
   <section class="pane active" id="pane-catch">
+    <div class="cols2">
     <div class="card">
       <h2>回報漁獲</h2>
       <p class="hint">記一下這趟釣了多少。</p>
@@ -227,11 +258,12 @@
         <button type="submit" class="btn">送出漁獲回報</button>
         <div class="msg" id="c-msg"></div>
       </form>
-    </div>
-    <div class="card">
-      <h2>最近的漁獲紀錄</h2>
-      <p class="hint">記錯的話可以在這裡刪掉。</p>
-      <div id="c-list" class="loading">讀取中…</div>
+      </div>
+      <div class="card">
+        <h2>最近的漁獲紀錄</h2>
+        <p class="hint">記錯的話可以在這裡刪掉。</p>
+        <div id="c-list" class="loading">讀取中…</div>
+      </div>
     </div>
   </section>
 
@@ -274,25 +306,28 @@
       <div class="stat"><div class="n" id="s-pay">–</div><div class="l">待收款筆數</div></div>
     </div>
 
-    <div class="card">
-      <h2>待出貨</h2>
-      <p class="hint">這次要寄的清單，可以複製貼到 LINE，或下載成 Excel。</p>
-      <div class="two-btn">
-        <button class="btn ghost" id="btn-copy-ship" type="button">📋 複製清單</button>
-        <button class="btn ghost" id="btn-csv-ship" type="button">📥 下載 Excel</button>
+    <div class="cols2">
+      <div class="card">
+        <h2>待出貨</h2>
+        <p class="hint">這次要寄的清單，可以複製貼到 LINE，或下載成 Excel。</p>
+        <div class="two-btn">
+          <button class="btn ghost" id="btn-copy-ship" type="button">📋 複製清單</button>
+          <button class="btn ghost" id="btn-csv-ship" type="button">📥 下載 Excel</button>
+        </div>
+        <div id="s-ship-list" class="loading" style="margin-top:14px">讀取中…</div>
       </div>
-      <div id="s-ship-list" class="loading" style="margin-top:14px">讀取中…</div>
+
+      <div class="card">
+        <h2>待收款</h2>
+        <div id="s-pay-list" class="loading">讀取中…</div>
+      </div>
     </div>
 
-    <div class="card">
-      <h2>待收款</h2>
-      <div id="s-pay-list" class="loading">讀取中…</div>
-    </div>
-
-    <button class="btn ghost" id="btn-refresh" type="button">🔄 重新整理</button>
+    <button class="btn ghost" id="btn-refresh" type="button" style="margin-top:18px">🔄 重新整理</button>
   </section>
 
   <section class="pane" id="pane-stock">
+    <div class="cols2">
     <div class="card">
       <h2>現有庫存</h2>
       <div id="s-stock-list" class="loading">讀取中…</div>
@@ -316,8 +351,9 @@
       <p class="hint">盤點與人工修正的紀錄。</p>
       <div id="a-list" class="loading">讀取中…</div>
     </div>
+    </div>
 
-    <button class="btn ghost" id="btn-refresh-stock" type="button">🔄 重新整理</button>
+    <button class="btn ghost" id="btn-refresh-stock" type="button" style="margin-top:18px">🔄 重新整理</button>
   </section>
 
   <section class="pane" id="pane-orders">
