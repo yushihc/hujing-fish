@@ -299,7 +299,9 @@
         </div>
         <label id="o-addr-label" for="o-addr">7-11 門市名稱</label>
         <input type="text" id="o-addr">
-        <label for="o-cost">出貨成本（運費＋紙箱）</label>
+        <label for="o-fee">運費（向客人收）</label>
+        <input type="number" id="o-fee" inputmode="numeric" step="10" min="0" value="200">
+        <label for="o-cost">出貨成本（我們實付：運費＋紙箱）</label>
         <input type="number" id="o-cost" inputmode="numeric" step="10" min="0" value="220">
         <p class="cost-hint" id="o-cost-hint">7-11 冷凍交貨便：運費 200 ＋ S90 紙箱 20</p>
         <button type="submit" class="btn">送出訂單登記</button>
@@ -395,6 +397,12 @@
       <div id="r-total" class="loading">讀取中…</div>
     </div>
     <div class="card">
+      <h2>每月趨勢</h2>
+      <p class="hint">營業額與成本的變化。</p>
+      <div id="r-chart" class="loading">讀取中…</div>
+    </div>
+
+    <div class="card">
       <h2>每月報表</h2>
       <p class="hint">依月份看漁獲、賣出與收益。</p>
       <div id="r-months" class="loading">讀取中…</div>
@@ -437,22 +445,31 @@
     });
   });
 
+  var ROUND_DOWN_TO = 10; // 去零頭：無條件捨去到十位（要改 50/100 跟我說）
+  function roundDown(n) { return Math.floor(n / ROUND_DOWN_TO) * ROUND_DOWN_TO; }
+
   function updateCalc() {
     var kg = parseFloat(document.getElementById('o-kg').value);
     var price = parseFloat(document.getElementById('o-price').value);
+    var fee = parseFloat(document.getElementById('o-fee').value) || 0;
     var cost = parseFloat(document.getElementById('o-cost').value) || 0;
     var box = document.getElementById('o-calc');
     if (kg > 0 && price > 0) {
       var amount = Math.round(kg * price);
-      box.innerHTML = '金額：$' + amount.toLocaleString() + '（' + kg + ' 公斤 × ' + price + ' 元）' +
-        (cost > 0 ? '<br><span style="font-weight:500;font-size:.88rem">扣掉出貨成本 $' + cost.toLocaleString() + ' → 實賺 $' + (amount - cost).toLocaleString() + '</span>' : '');
+      var raw = amount + fee;
+      var due = roundDown(raw);
+      var html = '魚 $' + amount.toLocaleString() + '（' + kg + ' 公斤 × ' + price + '）＋ 運費 $' + fee.toLocaleString();
+      html += '<br><span style="font-size:1.05rem">應收 $' + due.toLocaleString() + '</span>';
+      if (raw !== due) html += '<span style="font-weight:500;font-size:.82rem">（去零頭 −$' + (raw - due) + '）</span>';
+      html += '<br><span style="font-weight:500;font-size:.85rem">實際成本 $' + cost.toLocaleString() + ' → 淨賺 $' + (due - cost).toLocaleString() + '</span>';
+      box.innerHTML = html;
     } else {
       box.textContent = '金額：－';
     }
   }
-  document.getElementById('o-kg').addEventListener('input', updateCalc);
-  document.getElementById('o-price').addEventListener('input', updateCalc);
-  document.getElementById('o-cost').addEventListener('input', updateCalc);
+  ['o-kg', 'o-price', 'o-fee', 'o-cost'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', updateCalc);
+  });
 
   document.querySelectorAll('input[name="o-ship"]').forEach(function (r) {
     r.addEventListener('change', function () {
@@ -462,11 +479,11 @@
       var hint = document.getElementById('o-cost-hint');
       if (this.value === '7-11交貨便') {
         label.textContent = '7-11 門市名稱'; input.placeholder = '';
-        cost.value = 220;
-        hint.textContent = '7-11 冷凍交貨便：運費 200 ＋ S90 紙箱 20（活動期間運費可能是 129）';
+        cost.value = 220; document.getElementById('o-fee').value = 200;
+        hint.textContent = '7-11 冷凍交貨便：我們實付運費 200 ＋ S90 紙箱 20（活動期間運費可能是 129）';
       } else {
         label.textContent = '完整地址'; input.placeholder = '';
-        cost.value = 260;
+        cost.value = 260; document.getElementById('o-fee').value = 260;
         hint.textContent = '黑貓低溫宅配：澎湖屬離島，60cm 約 260、90cm 約 340（本島互寄則是 150／210）';
       }
       updateCalc();
@@ -593,6 +610,7 @@
       公斤數: document.getElementById('o-kg').value,
       單價: document.getElementById('o-price').value,
       出貨成本: document.getElementById('o-cost').value,
+      運費: document.getElementById('o-fee').value,
       出貨方式: ship,
       門市或地址: document.getElementById('o-addr').value
     }).then(function (res) {
@@ -600,6 +618,8 @@
       if (res.ok) {
         document.getElementById('form-order').reset();
         document.getElementById('o-price').value = 650;
+        document.getElementById('o-fee').value = 200;
+        document.getElementById('o-cost').value = 220;
         document.getElementById('o-item-other').style.display = 'none';
         updateCalc();
       }
@@ -724,6 +744,7 @@
   // 可勾選的清單（待出貨／待收款共用）
   function renderPickList(opts) {
     var box = document.getElementById(opts.boxId);
+    box.className = ''; // 移除「讀取中」的置中樣式，否則整塊文字會被置中
     var items = opts.items || [];
     if (!items.length) { box.innerHTML = '<div class="empty">' + opts.emptyText + '</div>'; return; }
     box.innerHTML = '';
@@ -793,10 +814,14 @@
       boxId: 's-ship-list', items: items, emptyText: '目前沒有待出貨的訂單',
       goText: '✅ 批次標記已出貨', field: '出貨狀態', value: '已出',
       rowHtml: function (o) {
-        return '<div class="top"><span class="name">' + o.客人姓名 + '</span><span>' + o.品項 + ' ' + o.公斤數 + ' 公斤</span></div>' +
+        var paid = o.收款狀態 === '已收';
+        return '<div class="top"><span class="name">' + o.客人姓名 + '</span>' +
+          '<span class="amt">' + money(o.金額) + '</span></div>' +
+          '<div class="meta">' + o.品項 + ' ' + o.公斤數 + ' 公斤'
+            + (o.運費 ? '　＋運費 ' + money(o.運費) : '') + '</div>' +
           (o.電話 ? '<div class="meta">☎ ' + o.電話 + '</div>' : '') +
           '<div class="meta">' + o.出貨方式 + '　' + o.門市或地址 + '</div>' +
-          '<div class="meta">' + money(o.金額) + '（' + o.收款狀態 + '）</div>';
+          '<div class="tags"><span class="tag ' + (paid ? 'paid' : 'unpaid') + '">' + (paid ? '已收款' : '未收款') + '</span></div>';
       }
     });
   }
@@ -806,8 +831,10 @@
       boxId: 's-pay-list', items: items, emptyText: '目前沒有待收款的訂單',
       goText: '💰 批次標記已收款', field: '收款狀態', value: '已收',
       rowHtml: function (o) {
-        return '<div class="top"><span class="name">' + o.客人姓名 + '</span><span>' + money(o.金額) + '</span></div>' +
-          '<div class="meta">' + o.品項 + ' ' + o.公斤數 + ' 公斤</div>';
+        return '<div class="top"><span class="name">' + o.客人姓名 + '</span>' +
+          '<span class="amt">' + money(o.金額) + '</span></div>' +
+          '<div class="meta">' + o.品項 + ' ' + o.公斤數 + ' 公斤'
+            + (o.運費 ? '（含運費 ' + money(o.運費) + '）' : '') + '</div>';
       }
     });
   }
@@ -1065,23 +1092,83 @@
     if (e.key === 'Enter') { e.preventDefault(); loadOrders(); }
   });
 
+  // 折線圖（純 SVG，不用外部套件）
+  function renderChart(months) {
+    var box = document.getElementById('r-chart');
+    box.className = '';
+    var data = months.slice().reverse(); // 由舊到新
+    if (data.length < 1) { box.innerHTML = '<div class="empty">還沒有資料</div>'; return; }
+    if (data.length === 1) {
+      var d = data[0];
+      box.innerHTML = '<div class="empty">只有 ' + d.月份 + ' 一個月的資料，等有兩個月以上就會畫出趨勢線。</div>';
+      return;
+    }
+
+    var W = 640, H = 260, padL = 56, padR = 16, padT = 18, padB = 34;
+    var innerW = W - padL - padR, innerH = H - padT - padB;
+    var maxV = 0;
+    data.forEach(function (d) { maxV = Math.max(maxV, d.營業額, d.總成本 || 0); });
+    if (maxV <= 0) maxV = 1;
+    var niceMax = Math.ceil(maxV / 500) * 500;
+
+    function x(i) { return padL + (data.length === 1 ? innerW / 2 : innerW * i / (data.length - 1)); }
+    function y(v) { return padT + innerH - (v / niceMax) * innerH; }
+
+    function pathOf(key) {
+      return data.map(function (d, i) { return (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(d[key] || 0).toFixed(1); }).join(' ');
+    }
+    function dotsOf(key, color) {
+      return data.map(function (d, i) {
+        return '<circle cx="' + x(i).toFixed(1) + '" cy="' + y(d[key] || 0).toFixed(1) + '" r="4" fill="' + color + '"/>';
+      }).join('');
+    }
+
+    var grid = '', labels = '';
+    for (var g = 0; g <= 4; g++) {
+      var v = niceMax * g / 4, gy = y(v);
+      grid += '<line x1="' + padL + '" y1="' + gy.toFixed(1) + '" x2="' + (W - padR) + '" y2="' + gy.toFixed(1) + '" stroke="#ECE3D2" stroke-width="1"/>';
+      labels += '<text x="' + (padL - 8) + '" y="' + (gy + 4).toFixed(1) + '" text-anchor="end" font-size="11" fill="#97A199">' + (v >= 1000 ? (v / 1000) + 'k' : v) + '</text>';
+    }
+    var xlabels = data.map(function (d, i) {
+      return '<text x="' + x(i).toFixed(1) + '" y="' + (H - 12) + '" text-anchor="middle" font-size="11" fill="#97A199">' + d.月份.slice(2) + '</text>';
+    }).join('');
+
+    box.innerHTML =
+      '<div style="overflow-x:auto"><svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" style="min-width:320px" role="img" aria-label="每月營業額與成本折線圖">' +
+      grid + labels + xlabels +
+      '<path d="' + pathOf('營業額') + '" fill="none" stroke="#1683C9" stroke-width="2.5" stroke-linejoin="round"/>' +
+      '<path d="' + pathOf('總成本') + '" fill="none" stroke="#F0A268" stroke-width="2.5" stroke-linejoin="round" stroke-dasharray="5 4"/>' +
+      dotsOf('營業額', '#1683C9') + dotsOf('總成本', '#F0A268') +
+      '</svg></div>' +
+      '<div style="display:flex;gap:16px;justify-content:center;margin-top:10px;font-size:.84rem">' +
+      '<span style="color:#124F86">━ 營業額</span><span style="color:#A85416">┅ 成本</span></div>';
+  }
+
   function loadReport() {
     document.getElementById('r-total').textContent = '讀取中…';
     document.getElementById('r-months').textContent = '讀取中…';
+    document.getElementById('r-chart').textContent = '讀取中…';
     postAction({ action: '報表' }).then(function (res) {
       if (!res.ok) { document.getElementById('r-total').textContent = res.error; return; }
       var t = res.總計;
-      document.getElementById('r-total').innerHTML =
+      var totalBox = document.getElementById('r-total');
+      totalBox.className = '';
+      totalBox.innerHTML =
         '<div class="mgrid">' +
         '<div><span class="k">總漁獲</span><span class="v">' + t.漁獲公斤 + ' 公斤</span></div>' +
         '<div><span class="k">總賣出</span><span class="v">' + t.賣出公斤 + ' 公斤</span></div>' +
-        '<div><span class="k">總營業額</span><span class="v money">' + money(t.營業額) + '</span></div>' +
         '<div><span class="k">訂單數</span><span class="v">' + t.訂單數 + ' 筆</span></div>' +
-        '<div><span class="k">已收款</span><span class="v">' + money(t.已收) + '</span></div>' +
+        '<div><span class="k">總營業額</span><span class="v money">' + money(t.營業額) + '</span></div>' +
+        '<div><span class="k">其中運費</span><span class="v">' + money(t.運費收入 || 0) + '</span></div>' +
+        '<div><span class="k">總成本</span><span class="v unpaid">' + money(t.總成本 || 0) + '</span></div>' +
+        '<div><span class="k">毛利</span><span class="v money">' + money(t.毛利 || 0) + '</span></div>' +
+        '<div><span class="k">毛利率</span><span class="v">' + (t.毛利率 || 0) + '%</span></div>' +
         '<div><span class="k">未收款</span><span class="v unpaid">' + money(t.未收) + '</span></div>' +
         '</div>';
+      renderChart(res.月報表);
 
       var box = document.getElementById('r-months');
+      box.className = '';
       if (!res.月報表.length) { box.innerHTML = '<div class="empty">還沒有任何紀錄</div>'; return; }
       box.innerHTML = '';
       res.月報表.forEach(function (m) {
@@ -1092,6 +1179,9 @@
           '<div><span class="k">賣出</span><span class="v">' + m.賣出公斤 + ' 公斤</span></div>' +
           '<div><span class="k">營業額</span><span class="v money">' + money(m.營業額) + '</span></div>' +
           '<div><span class="k">訂單數</span><span class="v">' + m.訂單數 + ' 筆</span></div>' +
+          '<div><span class="k">成本</span><span class="v unpaid">' + money(m.總成本 || 0) + '</span></div>' +
+          '<div><span class="k">毛利</span><span class="v money">' + money(m.毛利 || 0) + '</span></div>' +
+          '<div><span class="k">毛利率</span><span class="v">' + (m.毛利率 || 0) + '%</span></div>' +
           '<div><span class="k">已收</span><span class="v">' + money(m.已收) + '</span></div>' +
           '<div><span class="k">未收</span><span class="v unpaid">' + money(m.未收) + '</span></div>' +
           '</div>';
