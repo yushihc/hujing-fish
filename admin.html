@@ -127,6 +127,7 @@
   .loading { text-align:center; color: var(--muted); font-size:.9rem; padding: 18px 0; }
 
   .calc { margin-top:10px; padding:10px 14px; border-radius:10px; background: var(--coral-soft); color: var(--coral-ink); font-weight:700; font-size:.95rem; }
+  .cost-hint { margin:6px 0 0; font-size:.79rem; color: var(--muted); line-height:1.5; }
 
   .mrow { border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:12px; background: var(--paper-2); }
   .mrow .m { font-family: var(--font-serif); font-weight:700; color: var(--sky-ink); font-size:1.1rem; margin-bottom:8px; }
@@ -178,32 +179,21 @@
 
   /* ---- 平板／電腦版面 ---- */
   @media (min-width: 820px) {
-    .wrap { max-width: 1080px; padding-left: 32px; padding-right: 32px; }
-    header.top { padding: 28px 34px; }
-    header.top h1 { font-size: 1.85rem; }
-    nav.tabs { gap: 10px; margin-bottom: 22px; overflow-x: visible; flex-wrap: wrap; }
-    nav.tabs button { font-size: .98rem; padding: 11px 20px; }
+    .wrap { max-width: 1060px; padding-left: 28px; padding-right: 28px; }
+    header.top { padding: 26px 32px; }
+    header.top h1 { font-size: 1.75rem; }
 
-    /* 表單類欄位不要拉得太寬，難讀又難按 */
-    #pane-catch .card form, #pane-order .card form,
-    #stocktake-box, #q-search { max-width: 520px; }
-    #pane-catch .card form .btn, #pane-order .card form .btn,
-    #stocktake-box .btn { max-width: 320px; }
+    /* 分頁列置中 */
+    nav.tabs { justify-content: center; flex-wrap: wrap; overflow-x: visible; gap: 10px; margin-bottom: 22px; }
+    nav.tabs button { font-size: .96rem; padding: 11px 20px; }
 
-    /* 兩欄並排：左邊表單、右邊清單 */
+    /* 兩欄並排，兩欄都從最上面對齊 */
     .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
-    .cols2 > * { margin-bottom: 0; }
-    .stat-row { max-width: 460px; }
-    .two-btn { max-width: 460px; }
+    .cols2 > * { margin-bottom: 0; height: 100%; }
+
+    /* 統計數字撐滿整列 */
+    .stat-row { grid-template-columns: repeat(2, 1fr); }
     .mgrid { grid-template-columns: repeat(3, 1fr); }
-    .stock-pill { min-width: 130px; }
-    .btn { width: auto; min-width: 200px; }
-    .list-item button.btn, .del-actions button { min-width: 0; }
-    .batch-bar .go { min-width: 0; }
-  }
-  @media (min-width: 1100px) {
-    .cols3 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
-    .cols3 > * { margin-bottom: 0; }
   }
 </style>
 </head>
@@ -266,6 +256,8 @@
         <input type="date" id="c-date">
         <label for="c-kg">公斤數</label>
         <input type="number" id="c-kg" inputmode="decimal" step="0.1" min="0">
+        <label for="c-cost">出海成本（油錢等，不用填也可以）</label>
+        <input type="number" id="c-cost" inputmode="numeric" step="50" min="0">
         <label for="c-note">備註（不用填也可以）</label>
         <input type="text" id="c-note">
         <button type="submit" class="btn">送出漁獲回報</button>
@@ -307,6 +299,9 @@
         </div>
         <label id="o-addr-label" for="o-addr">7-11 門市名稱</label>
         <input type="text" id="o-addr">
+        <label for="o-cost">出貨成本（運費＋紙箱）</label>
+        <input type="number" id="o-cost" inputmode="numeric" step="10" min="0" value="220">
+        <p class="cost-hint" id="o-cost-hint">7-11 冷凍交貨便：運費 200 ＋ S90 紙箱 20</p>
         <button type="submit" class="btn">送出訂單登記</button>
         <div class="msg" id="o-msg"></div>
       </form>
@@ -445,22 +440,36 @@
   function updateCalc() {
     var kg = parseFloat(document.getElementById('o-kg').value);
     var price = parseFloat(document.getElementById('o-price').value);
+    var cost = parseFloat(document.getElementById('o-cost').value) || 0;
     var box = document.getElementById('o-calc');
     if (kg > 0 && price > 0) {
-      box.textContent = '金額：$' + Math.round(kg * price).toLocaleString() + '（' + kg + ' 公斤 × ' + price + ' 元）';
+      var amount = Math.round(kg * price);
+      box.innerHTML = '金額：$' + amount.toLocaleString() + '（' + kg + ' 公斤 × ' + price + ' 元）' +
+        (cost > 0 ? '<br><span style="font-weight:500;font-size:.88rem">扣掉出貨成本 $' + cost.toLocaleString() + ' → 實賺 $' + (amount - cost).toLocaleString() + '</span>' : '');
     } else {
       box.textContent = '金額：－';
     }
   }
   document.getElementById('o-kg').addEventListener('input', updateCalc);
   document.getElementById('o-price').addEventListener('input', updateCalc);
+  document.getElementById('o-cost').addEventListener('input', updateCalc);
 
   document.querySelectorAll('input[name="o-ship"]').forEach(function (r) {
     r.addEventListener('change', function () {
       var label = document.getElementById('o-addr-label');
       var input = document.getElementById('o-addr');
-      if (this.value === '7-11交貨便') { label.textContent = '7-11 門市名稱'; input.placeholder = ''; }
-      else { label.textContent = '完整地址'; input.placeholder = ''; }
+      var cost = document.getElementById('o-cost');
+      var hint = document.getElementById('o-cost-hint');
+      if (this.value === '7-11交貨便') {
+        label.textContent = '7-11 門市名稱'; input.placeholder = '';
+        cost.value = 220;
+        hint.textContent = '7-11 冷凍交貨便：運費 200 ＋ S90 紙箱 20（活動期間運費可能是 129）';
+      } else {
+        label.textContent = '完整地址'; input.placeholder = '';
+        cost.value = 260;
+        hint.textContent = '黑貓低溫宅配：澎湖屬離島，60cm 約 260、90cm 約 340（本島互寄則是 150／210）';
+      }
+      updateCalc();
     });
   });
 
@@ -561,7 +570,7 @@
     var date = document.getElementById('c-date').value || todayStr();
     var item = pickedItem('c-item', 'c-item-other');
     var msg = document.getElementById('c-msg');
-    postAction({ action: '回報漁獲', 品項: item, 日期: date, 公斤數: kg, 備註: note }).then(function (res) {
+    postAction({ action: '回報漁獲', 品項: item, 日期: date, 公斤數: kg, 出海成本: document.getElementById('c-cost').value, 備註: note }).then(function (res) {
       showMsg(msg, res.ok, res.ok ? res.message : res.error);
       if (res.ok) {
         document.getElementById('form-catch').reset();
@@ -583,6 +592,7 @@
       電話: document.getElementById('o-phone').value,
       公斤數: document.getElementById('o-kg').value,
       單價: document.getElementById('o-price').value,
+      出貨成本: document.getElementById('o-cost').value,
       出貨方式: ship,
       門市或地址: document.getElementById('o-addr').value
     }).then(function (res) {
