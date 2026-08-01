@@ -180,6 +180,10 @@
   /* ---- 平板／電腦版面 ---- */
   @media (min-width: 820px) {
     .wrap { max-width: 1060px; padding-left: 28px; padding-right: 28px; }
+    /* 登入畫面要維持窄版，不然會被上面那條 .wrap 撐到超寬 */
+    .wrap.login-wrap { max-width: 420px; }
+    .login-wrap header.top { padding: 22px 26px; }
+    .login-wrap header.top h1 { font-size: 1.45rem; }
     header.top { padding: 26px 32px; }
     header.top h1 { font-size: 1.75rem; }
 
@@ -256,8 +260,6 @@
         <input type="date" id="c-date">
         <label for="c-kg">公斤數</label>
         <input type="number" id="c-kg" inputmode="decimal" step="0.1" min="0">
-        <label for="c-cost">出海成本（油錢等，不用填也可以）</label>
-        <input type="number" id="c-cost" inputmode="numeric" step="50" min="0">
         <label for="c-note">備註（不用填也可以）</label>
         <input type="text" id="c-note">
         <button type="submit" class="btn">送出漁獲回報</button>
@@ -396,6 +398,21 @@
       <h2>累計總計</h2>
       <div id="r-total" class="loading">讀取中…</div>
     </div>
+    <div class="card">
+      <h2>每月固定成本</h2>
+      <p class="hint">每個月的油錢等固定支出，填一次就好，報表會自動扣掉算毛利。</p>
+      <label for="mc-month">月份</label>
+      <input type="month" id="mc-month">
+      <label for="mc-fuel">油錢</label>
+      <input type="number" id="mc-fuel" inputmode="numeric" step="100" min="0">
+      <label for="mc-other">其他成本（不用填也可以）</label>
+      <input type="number" id="mc-other" inputmode="numeric" step="100" min="0">
+      <label for="mc-note">備註（不用填也可以）</label>
+      <input type="text" id="mc-note">
+      <button class="btn" id="btn-mc-save" type="button">儲存這個月的成本</button>
+      <div class="msg" id="mc-msg"></div>
+    </div>
+
     <div class="card">
       <h2>每月趨勢</h2>
       <p class="hint">營業額與成本的變化。</p>
@@ -587,7 +604,7 @@
     var date = document.getElementById('c-date').value || todayStr();
     var item = pickedItem('c-item', 'c-item-other');
     var msg = document.getElementById('c-msg');
-    postAction({ action: '回報漁獲', 品項: item, 日期: date, 公斤數: kg, 出海成本: document.getElementById('c-cost').value, 備註: note }).then(function (res) {
+    postAction({ action: '回報漁獲', 品項: item, 日期: date, 公斤數: kg, 備註: note }).then(function (res) {
       showMsg(msg, res.ok, res.ok ? res.message : res.error);
       if (res.ok) {
         document.getElementById('form-catch').reset();
@@ -1144,6 +1161,40 @@
       '<span style="color:#124F86">━ 營業額</span><span style="color:#A85416">┅ 成本</span></div>';
   }
 
+  function thisMonthStr() {
+    var d = new Date();
+    return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2);
+  }
+  document.getElementById('mc-month').value = thisMonthStr();
+
+  var monthlyCostCache = {};
+  document.getElementById('mc-month').addEventListener('change', function () {
+    var mc = monthlyCostCache[this.value];
+    document.getElementById('mc-fuel').value = mc ? mc.油錢 : '';
+    document.getElementById('mc-other').value = mc ? mc.其他成本 : '';
+    document.getElementById('mc-note').value = mc ? mc.備註 : '';
+  });
+
+  document.getElementById('btn-mc-save').addEventListener('click', function () {
+    var btn = this, msg = document.getElementById('mc-msg');
+    var month = document.getElementById('mc-month').value;
+    if (!month) { showMsg(msg, false, '請選月份'); return; }
+    btn.disabled = true; btn.textContent = '儲存中…';
+    postAction({
+      action: '設定月成本', 月份: month,
+      油錢: document.getElementById('mc-fuel').value,
+      其他成本: document.getElementById('mc-other').value,
+      備註: document.getElementById('mc-note').value
+    }).then(function (res) {
+      showMsg(msg, res.ok, res.ok ? res.message : res.error);
+      btn.disabled = false; btn.textContent = '儲存這個月的成本';
+      if (res.ok) loadReport();
+    }).catch(function (err) {
+      showMsg(msg, false, '儲存失敗：' + err);
+      btn.disabled = false; btn.textContent = '儲存這個月的成本';
+    });
+  });
+
   function loadReport() {
     document.getElementById('r-total').textContent = '讀取中…';
     document.getElementById('r-months').textContent = '讀取中…';
@@ -1166,6 +1217,13 @@
         '<div><span class="k">未收款</span><span class="v unpaid">' + money(t.未收) + '</span></div>' +
         '</div>';
       renderChart(res.月報表);
+      monthlyCostCache = res.每月成本 || {};
+      var curMc = monthlyCostCache[document.getElementById('mc-month').value];
+      if (curMc) {
+        document.getElementById('mc-fuel').value = curMc.油錢 || '';
+        document.getElementById('mc-other').value = curMc.其他成本 || '';
+        document.getElementById('mc-note').value = curMc.備註 || '';
+      }
 
       var box = document.getElementById('r-months');
       box.className = '';
