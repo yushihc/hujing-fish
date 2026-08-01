@@ -53,7 +53,7 @@
 
   label { display:block; font-size:.88rem; font-weight:600; color: var(--ink); margin: 12px 0 6px; }
   label:first-of-type { margin-top:0; }
-  input[type=text], input[type=number], input[type=tel], input[type=date], select {
+  input[type=text], input[type=number], input[type=tel], input[type=date], input[type=month], select {
     width:100%; max-width:100%; font: inherit; font-size:16px; padding:11px 14px; border-radius:10px;
     border:1px solid var(--line); background: var(--paper-2); color: var(--ink);
     -webkit-appearance: none; appearance: none;
@@ -62,8 +62,11 @@
   input[type=date] {
     min-height: 46px; line-height: 1.2; display: block; text-align: left;
   }
-  input[type=date]::-webkit-date-and-time-value { text-align: left; margin: 0; }
-  input[type=date]::-webkit-calendar-picker-indicator { margin-left: auto; }
+  input[type=month] { min-height: 46px; line-height: 1.2; display: block; text-align: left; }
+  input[type=date]::-webkit-date-and-time-value,
+  input[type=month]::-webkit-date-and-time-value { text-align: left; margin: 0; }
+  input[type=date]::-webkit-calendar-picker-indicator,
+  input[type=month]::-webkit-calendar-picker-indicator { margin-left: auto; }
   select { background-image: none; }
   input:focus, select:focus { border-color: var(--sky); outline: none; }
   .radio-row { display:flex; gap:10px; }
@@ -399,21 +402,6 @@
       <div id="r-total" class="loading">讀取中…</div>
     </div>
     <div class="card">
-      <h2>每月固定成本</h2>
-      <p class="hint">每個月的油錢等固定支出，填一次就好，報表會自動扣掉算毛利。</p>
-      <label for="mc-month">月份</label>
-      <input type="month" id="mc-month">
-      <label for="mc-fuel">油錢</label>
-      <input type="number" id="mc-fuel" inputmode="numeric" step="100" min="0">
-      <label for="mc-other">其他成本（不用填也可以）</label>
-      <input type="number" id="mc-other" inputmode="numeric" step="100" min="0">
-      <label for="mc-note">備註（不用填也可以）</label>
-      <input type="text" id="mc-note">
-      <button class="btn" id="btn-mc-save" type="button">儲存這個月的成本</button>
-      <div class="msg" id="mc-msg"></div>
-    </div>
-
-    <div class="card">
       <h2>每月趨勢</h2>
       <p class="hint">營業額與成本的變化。</p>
       <div id="r-chart" class="loading">讀取中…</div>
@@ -424,6 +412,25 @@
       <p class="hint">依月份看漁獲、賣出與收益。</p>
       <div id="r-months" class="loading">讀取中…</div>
     </div>
+
+    <div class="card">
+      <h2>每月固定成本</h2>
+      <p class="hint">每個月的油錢等固定支出，填一次就好，報表會自動扣掉算毛利。</p>
+      <button class="btn ghost" id="btn-mc-toggle" type="button" style="margin-top:0">⛽ 填寫／修改這個月的成本</button>
+      <div id="mc-box" class="take-box">
+        <label for="mc-month">月份</label>
+        <input type="month" id="mc-month">
+        <label for="mc-fuel">油錢</label>
+        <input type="number" id="mc-fuel" inputmode="numeric" step="100" min="0">
+        <label for="mc-other">其他成本（不用填也可以）</label>
+        <input type="number" id="mc-other" inputmode="numeric" step="100" min="0">
+        <label for="mc-note">備註（不用填也可以）</label>
+        <input type="text" id="mc-note">
+        <button class="btn" id="btn-mc-save" type="button">儲存這個月的成本</button>
+        <div class="msg" id="mc-msg"></div>
+      </div>
+    </div>
+
     <button class="btn ghost" id="btn-refresh-report" type="button">🔄 重新整理報表</button>
   </section>
 
@@ -1166,6 +1173,12 @@
     return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2);
   }
   document.getElementById('mc-month').value = thisMonthStr();
+
+  document.getElementById('btn-mc-toggle').addEventListener('click', function () {
+    var box = document.getElementById('mc-box');
+    box.classList.toggle('show');
+    if (box.classList.contains('show')) document.getElementById('mc-fuel').focus();
+  });
 
   var monthlyCostCache = {};
   document.getElementById('mc-month').addEventListener('change', function () {
