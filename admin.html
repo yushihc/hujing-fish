@@ -94,6 +94,8 @@
   .stock-pill .l { font-size:.78rem; margin-top:2px; }
   .stock-pill.neg { background:#FBE4E2; color:#B4413B; }
   .stock-note { margin-top:12px; font-size:.83rem; color:#8E3430; background:#FBE4E2; border-radius:10px; padding:10px 12px; line-height:1.5; }
+  .two-btn { display:flex; gap:8px; }
+  .two-btn .btn { margin-top:0; }
   .take-box { display:none; margin-top:14px; padding-top:16px; border-top:1px dashed var(--line); }
   .take-box.show { display:block; }
   .adj { border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:10px; background: var(--paper-2); }
@@ -287,7 +289,12 @@
 
     <div class="card">
       <h2>待出貨</h2>
-      <div id="s-ship-list" class="loading">讀取中…</div>
+      <p class="hint">這次要寄的清單，可以複製貼到 LINE，或下載成 Excel。</p>
+      <div class="two-btn">
+        <button class="btn ghost" id="btn-copy-ship" type="button">📋 複製清單</button>
+        <button class="btn ghost" id="btn-csv-ship" type="button">📥 下載 Excel</button>
+      </div>
+      <div id="s-ship-list" class="loading" style="margin-top:14px">讀取中…</div>
     </div>
 
     <div class="card">
@@ -533,15 +540,93 @@
     }
   }
 
+  // 出貨清單：目前待出貨的訂單，複製與下載都用這份
+  var shipRows = [];
+
+  function shipAsText() {
+    if (!shipRows.length) return '目前沒有待出貨的訂單';
+    var d = new Date();
+    var head = '🐟 虎井嶼手釣魚 出貨清單（' + d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + '）\n共 ' + shipRows.length + ' 筆\n';
+    var body = shipRows.map(function (o, i) {
+      return '\n' + (i + 1) + '. ' + o.客人姓名 + '　' + o.電話 +
+        '\n　　' + o.品項 + ' ' + o.公斤數 + ' 公斤　' + money(o.金額) + '（' + o.收款狀態 + '）' +
+        '\n　　' + o.出貨方式 + '　' + o.門市或地址;
+    }).join('\n');
+    var totalKg = shipRows.reduce(function (s, o) { return s + o.公斤數; }, 0);
+    return head + body + '\n\n合計 ' + (Math.round(totalKg * 100) / 100) + ' 公斤';
+  }
+
+  function downloadShipCsv() {
+    if (!shipRows.length) return;
+    var cols = ['日期', '客人姓名', '電話', '品項', '公斤數', '出貨方式', '門市或地址', '金額', '收款狀態'];
+    function esc(v) {
+      var s = (v === null || v === undefined) ? '' : v.toString();
+      return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }
+    var lines = [cols.join(',')];
+    shipRows.forEach(function (o) {
+      // 電話前面加 tab，Excel 才不會又把開頭的 0 吃掉
+      lines.push([
+        esc(o.日期), esc(o.客人姓名), '="' + o.電話 + '"', esc(o.品項), esc(o.公斤數),
+        esc(o.出貨方式), esc(o.門市或地址), esc(o.金額), esc(o.收款狀態)
+      ].join(','));
+    });
+    var csv = '﻿' + lines.join('\r\n'); // BOM：讓 Excel 正確顯示中文
+    var d = new Date();
+    var name = '出貨清單_' + d.getFullYear() + ('0' + (d.getMonth() + 1)).slice(-2) + ('0' + d.getDate()).slice(-2) + '.csv';
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  }
+
+  function flashBtn(btn, text) {
+    var old = btn.textContent;
+    btn.textContent = text;
+    setTimeout(function () { btn.textContent = old; }, 1800);
+  }
+
+  document.getElementById('btn-copy-ship').addEventListener('click', function () {
+    var btn = this;
+    var text = shipAsText();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { flashBtn(btn, '✅ 已複製'); })
+        .catch(function () { fallbackCopy(text, btn); });
+    } else { fallbackCopy(text, btn); }
+  });
+
+  function fallbackCopy(text, btn) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); flashBtn(btn, '✅ 已複製'); }
+    catch (e) { flashBtn(btn, '複製失敗'); }
+    document.body.removeChild(ta);
+  }
+
+  document.getElementById('btn-csv-ship').addEventListener('click', function () {
+    if (!shipRows.length) { flashBtn(this, '沒有待出貨'); return; }
+    downloadShipCsv();
+    flashBtn(this, '✅ 已下載');
+  });
+
   function renderShip(items) {
+    shipRows = items || [];
     var box = document.getElementById('s-ship-list');
     if (!items.length) { box.innerHTML = '<div class="empty">目前沒有待出貨的訂單</div>'; return; }
     box.innerHTML = '';
     items.forEach(function (o) {
       var div = document.createElement('div');
       div.className = 'list-item';
-      div.innerHTML = '<div class="top"><span class="name">' + o.客人姓名 + '</span><span>' + o.公斤數 + ' 公斤</span></div>' +
-        '<div class="meta">' + o.出貨方式 + '　' + o.門市或地址 + (o.電話 ? '　' + o.電話 : '') + '</div>';
+      div.innerHTML = '<div class="top"><span class="name">' + o.客人姓名 + '</span><span>' + o.品項 + ' ' + o.公斤數 + ' 公斤</span></div>' +
+        (o.電話 ? '<div class="meta">☎ ' + o.電話 + '</div>' : '') +
+        '<div class="meta">' + o.出貨方式 + '　' + o.門市或地址 + '</div>' +
+        '<div class="meta">' + money(o.金額) + '（' + o.收款狀態 + '）</div>';
       var btn = document.createElement('button');
       btn.className = 'btn ghost'; btn.textContent = '✅ 標記已出貨';
       btn.addEventListener('click', function () {
