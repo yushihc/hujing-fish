@@ -123,7 +123,13 @@
     <p class="hint">輸入姓名和電話號碼。</p>
     <form id="form-login">
       <label for="l-name">姓名</label>
-      <input type="text" id="l-name">
+      <select id="l-name">
+        <option value="">請選擇</option>
+        <option value="江佩芳">江佩芳</option>
+        <option value="陳蒼峰">陳蒼峰</option>
+        <option value="陳世育">陳世育</option>
+        <option value="陳世晏">陳世晏</option>
+      </select>
       <label for="l-phone">電話號碼（當密碼）</label>
       <input type="tel" id="l-phone">
       <button type="submit" class="btn">登入</button>
@@ -332,6 +338,8 @@
     var name = document.getElementById('l-name').value.trim();
     var phone = document.getElementById('l-phone').value.trim();
     var msg = document.getElementById('l-msg');
+    if (!name) { showMsg(msg, false, '請先選擇姓名'); return; }
+    if (!phone) { showMsg(msg, false, '請輸入電話號碼'); return; }
     fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
