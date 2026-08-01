@@ -183,9 +183,9 @@
     header.top { padding: 26px 32px; }
     header.top h1 { font-size: 1.75rem; }
 
-    /* 分頁列置中 */
-    nav.tabs { justify-content: center; flex-wrap: wrap; overflow-x: visible; gap: 10px; margin-bottom: 22px; }
-    nav.tabs button { font-size: .96rem; padding: 11px 20px; }
+    /* 分頁列跟上面的標題列一樣寬，平均分配 */
+    nav.tabs { overflow-x: visible; gap: 10px; margin-bottom: 22px; }
+    nav.tabs button { flex: 1; justify-content: center; text-align: center; font-size: .95rem; padding: 12px 8px; }
 
     /* 兩欄並排，兩欄都從最上面對齊 */
     .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
