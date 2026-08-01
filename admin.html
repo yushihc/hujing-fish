@@ -94,6 +94,14 @@
   .stock-pill .l { font-size:.78rem; margin-top:2px; }
   .stock-pill.neg { background:#FBE4E2; color:#B4413B; }
   .stock-note { margin-top:12px; font-size:.83rem; color:#8E3430; background:#FBE4E2; border-radius:10px; padding:10px 12px; line-height:1.5; }
+  .take-box { display:none; margin-top:14px; padding-top:16px; border-top:1px dashed var(--line); }
+  .take-box.show { display:block; }
+  .adj { border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:10px; background: var(--paper-2); }
+  .adj .oh { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .adj .d { font-family: var(--font-serif); font-weight:700; }
+  .adj .d.plus { color: var(--ok); }
+  .adj .d.minus { color:#B4413B; }
+  .adj .line { font-size:.84rem; color: var(--ink-soft); margin-top:3px; }
   .stat { background: var(--paper); border:1px solid var(--line); border-radius:12px; padding:14px 10px; text-align:center; box-shadow: var(--shadow); }
   .stat .n { font-family: var(--font-serif); font-weight:700; font-size:1.35rem; color: var(--sky-ink); }
   .stat .l { font-size:.76rem; color: var(--muted); margin-top:2px; }
@@ -251,6 +259,25 @@
     <div class="card">
       <h2>現有庫存</h2>
       <div id="s-stock-list" class="loading">讀取中…</div>
+      <button class="btn ghost" id="btn-stocktake" type="button" style="margin-top:14px">📦 盤點・修正庫存</button>
+      <div id="stocktake-box" class="take-box">
+        <p class="hint" style="margin-bottom:12px">數一數實際還剩多少，直接填進去就好。系統會自動補上差額，不用自己算。</p>
+        <label for="t-item">品項</label>
+        <select id="t-item"></select>
+        <input type="text" id="t-item-other" placeholder="請輸入品項名稱" style="display:none; margin-top:8px;">
+        <label for="t-kg">現在實際剩下（公斤）</label>
+        <input type="number" id="t-kg" inputmode="decimal" step="0.1" min="0">
+        <label for="t-reason">原因（不用填也可以）</label>
+        <input type="text" id="t-reason" placeholder="例：自己吃掉、送人、漏記">
+        <button class="btn" id="btn-stocktake-submit" type="button">送出盤點</button>
+        <div class="msg" id="t-msg"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>庫存調整紀錄</h2>
+      <p class="hint">盤點與人工修正的紀錄。</p>
+      <div id="a-list" class="loading">讀取中…</div>
     </div>
 
     <div class="stat-row">
@@ -306,7 +333,7 @@
     btn.addEventListener('click', function () {
       tabs.forEach(function (b) { b.setAttribute('aria-selected', b === btn); });
       panes.forEach(function (p) { p.classList.toggle('active', p.id === 'pane-' + btn.dataset.target); });
-      if (btn.dataset.target === 'summary') loadSummary();
+      if (btn.dataset.target === 'summary') { loadSummary(); loadAdjusts(); }
       if (btn.dataset.target === 'report') loadReport();
       if (btn.dataset.target === 'orders') loadOrders();
     });
@@ -383,6 +410,7 @@
     document.getElementById('app-screen').style.display = 'block';
     loadSummary();
     loadCatches();
+    loadAdjusts();
   }
 
   document.getElementById('form-login').addEventListener('submit', function (e) {
@@ -471,6 +499,7 @@
     document.getElementById('s-pay-list').textContent = '讀取中…';
     postAction({ action: '總覽' }).then(function (res) {
       if (!res.ok) { document.getElementById('s-stock-list').textContent = res.error; return; }
+      currentStock = res.庫存明細 || [];
       renderStock(res.庫存明細);
       document.getElementById('s-ship').textContent = res.待出貨.length;
       document.getElementById('s-pay').textContent = res.待收款.length;
@@ -628,6 +657,85 @@
       box.innerHTML = '<div class="empty">讀取失敗：' + err + '</div>';
     });
   }
+  // 盤點：把目前庫存的品項填進下拉選單，並記住最新庫存供顯示
+  var currentStock = [];
+  function fillStocktakeItems() {
+    var sel = document.getElementById('t-item');
+    var prev = sel.value;
+    var names = currentStock.map(function (s) { return s.品項; });
+    if (names.indexOf('小卷') === -1) names.unshift('小卷');
+    sel.innerHTML = names.map(function (n) {
+      return '<option value="' + n + '">' + n + '</option>';
+    }).join('') + '<option value="其他">其他</option>';
+    if (prev && names.concat(['其他']).indexOf(prev) !== -1) sel.value = prev;
+  }
+  wireItemSelect('t-item', 't-item-other');
+
+  document.getElementById('btn-stocktake').addEventListener('click', function () {
+    var box = document.getElementById('stocktake-box');
+    box.classList.toggle('show');
+    if (box.classList.contains('show')) {
+      fillStocktakeItems();
+      document.getElementById('t-kg').focus();
+    }
+  });
+
+  document.getElementById('btn-stocktake-submit').addEventListener('click', function () {
+    var btn = this;
+    var msg = document.getElementById('t-msg');
+    var kg = document.getElementById('t-kg').value;
+    if (kg === '') { showMsg(msg, false, '請填現在實際剩下幾公斤'); return; }
+    btn.disabled = true; btn.textContent = '送出中…';
+    postAction({
+      action: '盤點',
+      品項: pickedItem('t-item', 't-item-other'),
+      實際公斤: kg,
+      原因: document.getElementById('t-reason').value
+    }).then(function (res) {
+      showMsg(msg, res.ok, res.ok ? res.message : res.error);
+      btn.disabled = false; btn.textContent = '送出盤點';
+      if (res.ok) {
+        document.getElementById('t-kg').value = '';
+        document.getElementById('t-reason').value = '';
+        loadSummary();
+        loadAdjusts();
+      }
+    }).catch(function (err) {
+      showMsg(msg, false, '送出失敗：' + err);
+      btn.disabled = false; btn.textContent = '送出盤點';
+    });
+  });
+
+  function loadAdjusts() {
+    var box = document.getElementById('a-list');
+    box.className = 'loading';
+    box.textContent = '讀取中…';
+    postAction({ action: '庫存調整清單' }).then(function (res) {
+      box.className = '';
+      if (!res.ok) { box.innerHTML = '<div class="empty">' + res.error + '</div>'; return; }
+      if (!res.調整.length) { box.innerHTML = '<div class="empty">還沒有任何調整紀錄</div>'; return; }
+      box.innerHTML = '';
+      res.調整.forEach(function (a) {
+        var div = document.createElement('div');
+        div.className = 'adj';
+        var sign = a.調整公斤 > 0 ? '+' : '';
+        div.innerHTML =
+          '<div class="oh"><span>' + a.品項 + '</span><span class="d ' + (a.調整公斤 > 0 ? 'plus' : 'minus') + '">' + sign + a.調整公斤 + ' 公斤</span></div>' +
+          '<div class="line">' + a.日期 + '　' + a.原因 + '</div>';
+        attachDelete(div, {
+          label: a.日期 + '　' + a.品項 + ' ' + sign + a.調整公斤 + ' 公斤',
+          action: '刪除庫存調整',
+          rowIndex: a.rowIndex,
+          onDone: function () { loadAdjusts(); loadSummary(); }
+        });
+        box.appendChild(div);
+      });
+    }).catch(function (err) {
+      box.className = '';
+      box.innerHTML = '<div class="empty">讀取失敗：' + err + '</div>';
+    });
+  }
+
   function loadCatches() {
     var box = document.getElementById('c-list');
     box.className = 'loading';
