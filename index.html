@@ -1,547 +1,333 @@
-<title>虎井嶼手釣魚 · 給媽媽的內容報告</title>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>虎井嶼手釣魚 · 一支釣竿，一座小島</title>
+<meta name="description" content="澎湖虎井嶼產地直送手釣魚，手釣、三去、真空、冷凍宅配到府。來源清楚、無藥水、肉質純淨。">
+<meta property="og:title" content="虎井嶼手釣魚 · 一支釣竿，一座小島">
+<meta property="og:description" content="澎湖虎井嶼產地直送手釣魚，急凍鎖鮮、宅配到你家餐桌。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://yushihc.github.io/hujing-fish/assets/photos/hero.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #FBF6E4;
-    --paper: #FFFDF9;
-    --paper-2: #F6F0E2;
-    --ink: #45514D;
-    --ink-soft: #67726B;
-    --muted: #97A199;
-    --line: #ECE3D2;
-    --sea: #6FB4C0;
-    --sea-deep: #2C7E93;
-    --coral: #F0A268;
-    --coral-ink: #A85416;
-    --on-coral: #4A2C10;
-    --coral-soft: #FCEBD8;
-    --sand: #F2E6CC;
-    --sky: #1683C9;
-    --sky-soft: #D6EAF7;
-    --sky-ink: #124F86;
-    --on-sky: #FFFFFF;
-    --gold: #B8842E;
-    --ok: #4E9E86;
-    --shadow: 0 1px 2px rgba(69,81,77,.04), 0 10px 30px rgba(69,81,77,.07);
-    --radius: 16px;
+    --bg: #FBF6E4; --paper: #FFFDF9; --paper-2: #F6F0E2;
+    --ink: #45514D; --ink-soft: #67726B; --muted: #97A199; --line: #ECE3D2;
+    --sky: #1683C9; --sky-ink: #124F86; --sky-soft: #D6EAF7; --sea: #6FB4C0;
+    --coral: #F0A268; --coral-ink: #A85416; --on-coral: #4A2C10; --coral-soft: #FCEBD8;
+    --sand: #F2E6CC; --gold: #B8842E;
+    --r-card: 16px; --r-lg: 20px;
+    --shadow: 0 1px 2px rgba(69,81,77,.04), 0 10px 30px rgba(69,81,77,.08);
+    --sbw: 256px;
+    --font-serif: "Noto Serif TC", "Songti TC", serif;
+    --font-sans: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", "Segoe UI", Roboto, sans-serif;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #FBF6E4;
-      --paper: #FFFDF9;
-      --paper-2: #F6F0E2;
-      --ink: #45514D;
-      --ink-soft: #67726B;
-      --muted: #97A199;
-      --line: #ECE3D2;
-      --sea: #7FBBB0;
-      --sea-deep: #3F8478;
-      --coral: #F0A268;
-      --coral-ink: #A85416;
-      --on-coral: #4A2C10;
-      --coral-soft: #FCEBD8;
-      --sand: #F2E6CC;
-      --gold: #B8842E;
-      --ok: #4E9E86;
-      --shadow: 0 1px 2px rgba(69,81,77,.04), 0 10px 30px rgba(69,81,77,.07);
-    }
-  }
-  :root[data-theme="light"] {
-    --bg: #FBF6E4; --paper: #FFFDF9; --paper-2: #F6F0E2; --ink: #45514D;
-    --ink-soft: #67726B; --muted: #97A199; --line: #ECE3D2; --sea: #7FBBB0;
-    --sea-deep: #3F8478; --coral: #F0A268; --coral-ink: #A85416; --on-coral: #4A2C10;
-    --coral-soft: #FCEBD8; --sand: #F2E6CC;
-    --gold: #B8842E; --ok: #4E9E86; --shadow: 0 1px 2px rgba(69,81,77,.04), 0 10px 30px rgba(69,81,77,.07);
-  }
-  :root[data-theme="dark"] {
-    --bg: #FBF6E4; --paper: #FFFDF9; --paper-2: #F6F0E2; --ink: #45514D;
-    --ink-soft: #67726B; --muted: #97A199; --line: #ECE3D2; --sea: #7FBBB0;
-    --sea-deep: #3F8478; --coral: #F0A268; --coral-ink: #A85416; --on-coral: #4A2C10;
-    --coral-soft: #FCEBD8; --sand: #F2E6CC;
-    --gold: #B8842E; --ok: #4E9E86; --shadow: 0 1px 2px rgba(69,81,77,.04), 0 10px 30px rgba(69,81,77,.07);
-  }
-
   * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", "Segoe UI", Roboto, sans-serif;
-    line-height: 1.75;
-    -webkit-font-smoothing: antialiased;
-  }
-  .eyebrow {
-    font-family: Georgia, "Times New Roman", serif;
-    font-style: italic;
-    letter-spacing: .02em;
-  }
-  .wrap { max-width: 780px; margin: 0 auto; padding: clamp(20px, 5vw, 56px) clamp(16px, 4vw, 28px) 72px; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-sans); line-height: 1.75; -webkit-font-smoothing: antialiased; }
+  img { max-width: 100%; display: block; }
+  :focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; border-radius: 4px; }
 
-  /* ---------- header ---------- */
-  .masthead {
-    background: linear-gradient(158deg, var(--sky-ink), var(--sky));
-    color: #FFFFFF;
-    border: none;
-    border-radius: var(--radius);
-    padding: clamp(30px, 6vw, 52px) clamp(24px, 5vw, 46px);
-    position: relative;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-  }
-  .masthead::before {
-    content: "";
-    position: absolute; top: 0; left: 0; right: 0; height: 4px;
-    background: linear-gradient(90deg, var(--gold), var(--coral));
-  }
-  .masthead::after {
-    content: "";
-    position: absolute; right: -40px; bottom: -50px; width: 180px; height: 180px;
-    border-radius: 50%; background: var(--coral-soft); z-index: 0;
-  }
-  .kicker {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-family: Georgia, serif; font-style: italic;
-    font-size: .9rem; color: #FFFFFF;
-    background: rgba(255,255,255,.15);
-    border: 1px solid rgba(255,255,255,.25);
-    padding: 5px 14px; border-radius: 999px; margin-bottom: 20px;
-    position: relative; z-index: 1;
-  }
-  .masthead h1 {
-    margin: 0 0 14px; font-size: clamp(1.7rem, 5.5vw, 2.5rem);
-    line-height: 1.25; letter-spacing: -.01em; text-wrap: balance; font-weight: 800;
-    color: #FFFFFF; position: relative; z-index: 1;
-  }
-  .masthead p { margin: 0; color: rgba(255,255,255,.9); font-size: 1.05rem; max-width: 46ch; position: relative; z-index: 1; }
-  .meta-row {
-    display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 22px;
-    font-size: .84rem; color: rgba(255,255,255,.8); position: relative; z-index: 1;
-  }
-  .meta-row b { color: #FFFFFF; font-weight: 600; }
+  /* sidebar */
+  .sidebar { position: fixed; top:0; left:0; bottom:0; width: var(--sbw); z-index:60; background: linear-gradient(180deg, var(--sky-ink), var(--sky)); color:#fff; display:flex; flex-direction:column; padding: 26px 20px 14px; overflow-y:auto; }
+  .sidebar::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background: var(--gold); z-index:2; }
+  .s-brand { font-family: var(--font-serif); font-weight:700; font-size:1.6rem; letter-spacing:.06em; display:flex; align-items:center; gap:8px; }
+  .s-brand .mk { font-size:24px; }
+  .s-tag { font-family: Georgia, serif; font-style: italic; font-size:.82rem; color: rgba(255,255,255,.78); margin:6px 0 26px; }
+  .nav { display:flex; flex-direction:column; gap:4px; }
+  .nav button { appearance:none; text-align:left; background:transparent; border:0; color: rgba(255,255,255,.84); font: inherit; font-size:1.02rem; padding:11px 14px; border-radius:10px; cursor:pointer; display:flex; align-items:center; gap:10px; transition: background .15s, color .15s; }
+  .nav button .ico { font-size:1.05rem; width:20px; text-align:center; }
+  .nav button:hover { background: rgba(255,255,255,.10); color:#fff; }
+  .nav button[aria-current="page"] { background: rgba(255,255,255,.17); color:#fff; font-weight:700; box-shadow: inset 3px 0 0 var(--gold); }
+  .s-cta { appearance:none; border:0; cursor:pointer; font:inherit; font-weight:800; font-size:.98rem; margin-top:18px; background: var(--coral); color: var(--on-coral); padding:12px 16px; border-radius:12px; display:flex; flex-direction:column; align-items:center; gap:1px; text-decoration:none; }
+  .s-cta small { font-weight:500; font-size:.72rem; opacity:.8; }
+  .s-spacer { flex:1 1 auto; min-height:18px; }
+  .s-cat { width:150px; margin:8px auto -6px; filter: drop-shadow(0 6px 10px rgba(0,0,0,.28)); }
 
-  /* ---------- intro letter ---------- */
-  .letter {
-    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
-    padding: clamp(22px, 4vw, 32px); margin-top: 22px; box-shadow: var(--shadow);
-    font-size: 1.06rem; color: var(--ink-soft);
-  }
-  .letter p { margin: 0 0 14px; }
-  .letter p:last-child { margin-bottom: 0; }
-  .letter strong { color: var(--ink); }
+  main { margin-left: var(--sbw); min-height:100vh; }
+  .page { max-width: 940px; margin:0 auto; padding: clamp(26px,4vw,52px) clamp(20px,4vw,44px) 80px; }
+  .pane { display:none; }
+  .pane.active { display:block; animation: fade .3s ease; }
+  @keyframes fade { from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
 
-  /* ---------- section scaffold ---------- */
-  section { margin-top: 46px; }
-  .sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 20px; }
-  .sec-num {
-    font-family: Georgia, serif; font-size: 1.05rem; color: var(--on-sky); background: var(--sky);
-    width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center;
-    flex: 0 0 auto; font-weight: 700; transform: translateY(2px);
-  }
-  .sec-head h2 { margin: 0; font-size: clamp(1.25rem, 3.6vw, 1.5rem); letter-spacing: -.01em; line-height: 1.3; }
-  .sec-head .sub { display: block; font-size: .9rem; color: var(--muted); font-weight: 400; margin-top: 2px; }
+  .eyebrow { font-family: Georgia, serif; font-style:italic; color: var(--coral-ink); font-size:.95rem; margin:0 0 8px; }
+  h2.title { font-family: var(--font-serif); font-weight:700; margin:0 0 8px; font-size: clamp(1.6rem,4vw,2.1rem); letter-spacing:.01em; text-wrap:balance; color: var(--sky-ink); }
+  .sub { margin:0 0 30px; color: var(--ink-soft); max-width:56ch; }
+  .btn { display:inline-flex; align-items:center; gap:8px; background: var(--coral); color: var(--on-coral); font-weight:800; padding:13px 26px; border-radius:999px; text-decoration:none; border:0; cursor:pointer; font-size:1rem; box-shadow: 0 6px 18px rgba(240,162,104,.35); transition: transform .12s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn small { font-weight:500; opacity:.8; font-size:.8rem; }
 
-  /* ---------- inventory cards ---------- */
-  .files { display: grid; gap: 12px; }
-  .file {
-    background: var(--paper); border: 1px solid var(--line); border-left: 4px solid var(--sea);
-    border-radius: 12px; padding: 15px 18px; box-shadow: var(--shadow);
-  }
-  .file .top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .file .name { font-weight: 700; color: var(--ink); font-size: 1.02rem; }
-  .badge {
-    font-size: .72rem; font-weight: 700; letter-spacing: .04em; padding: 2px 9px; border-radius: 999px;
-    background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok);
-    border: 1px solid color-mix(in srgb, var(--ok) 35%, transparent);
-  }
-  .badge.core { background: var(--sky-soft); color: var(--sky-ink); border-color: color-mix(in srgb, var(--sky) 45%, transparent); }
-  .file .desc { margin: 8px 0 0; color: var(--ink-soft); font-size: .96rem; }
+  /* home photo hero */
+  .hero { position:relative; border-radius:0; overflow:hidden; height: 100dvh; min-height: 480px; display:flex; align-items:center; padding-bottom: 16vh; }
+  #pane-home.active { display:flex; flex-direction:column; }
+  .hero img.bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .hero .veil { position:absolute; inset:0; background: rgba(15,52,88,.30); }
+  .hero::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; z-index:2; background: var(--gold); }
+  .hero .inner { position:relative; z-index:1; color:#fff; padding: clamp(28px,5vw,48px); }
+  .hero .kicker { display:inline-flex; align-items:center; gap:8px; font-family:Georgia,serif; font-style:italic; font-size:.9rem; color:#fff; background: rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.3); padding:5px 14px; border-radius:999px; margin-bottom:18px; }
+  .hero h1 { font-family: var(--font-serif); font-weight:700; margin:0 0 14px; font-size: clamp(2rem,6vw,3.4rem); line-height:1.18; text-wrap:balance; text-shadow: 0 2px 18px rgba(0,0,0,.55); }
+  .hero p.lead { margin:0 0 26px; font-size: clamp(1rem,2.3vw,1.2rem); color: rgba(255,255,255,.96); max-width:34ch; text-shadow: 0 1px 12px rgba(0,0,0,.55); }
+  .home-foot { color: var(--muted); font-size:.82rem; margin-top:22px; }
 
-  /* ---------- highlight strip ---------- */
-  .highlights { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .hl {
-    background: var(--paper-2); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px;
-  }
-  .hl .h { font-weight: 700; color: var(--sea-deep); margin: 0 0 4px; font-size: 1rem; display: flex; gap: 8px; align-items: center; }
-  .hl p { margin: 0; font-size: .92rem; color: var(--ink-soft); }
-  @media (max-width: 560px){ .highlights { grid-template-columns: 1fr; } }
+  /* points */
+  .points { display:grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap:16px; }
+  .point { background: var(--paper); border:1px solid var(--line); border-radius: var(--r-card); padding:22px; box-shadow: var(--shadow); }
+  .point .n { display:inline-grid; place-items:center; width:34px; height:34px; border-radius:10px; background: var(--sky); color:#fff; font-family:Georgia,serif; font-weight:700; margin-bottom:12px; }
+  .point h3 { margin:0 0 6px; font-size:1.12rem; }
+  .point p { margin:0; color: var(--ink-soft); font-size:.96rem; }
 
-  /* ---------- checklist ---------- */
-  .todo { display: grid; gap: 12px; }
-  .item {
-    display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;
-    background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow);
-  }
-  .tick {
-    width: 26px; height: 26px; border-radius: 8px; border: 2px dashed var(--coral);
-    display: grid; place-items: center; color: var(--coral-ink); font-weight: 800; font-size: .95rem; flex: 0 0 auto;
-  }
-  .item h3 { margin: 0 0 3px; font-size: 1.04rem; display: flex; gap: 9px; align-items: center; flex-wrap: wrap; }
-  .item p { margin: 0; color: var(--ink-soft); font-size: .95rem; }
-  .when {
-    font-size: .7rem; font-weight: 700; letter-spacing: .03em; padding: 2px 9px; border-radius: 999px; white-space: nowrap;
-  }
-  .when.now { background: var(--coral-soft); color: var(--coral-ink); }
-  .when.later { background: color-mix(in srgb, var(--gold) 16%, transparent); color: var(--gold); border: 1px solid color-mix(in srgb, var(--gold) 34%, transparent); }
-  .star { color: var(--coral-ink); }
+  /* fish */
+  .fish { display:grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap:16px; }
+  .fcard { background: var(--paper); border:1px solid var(--line); border-radius: var(--r-card); overflow:hidden; box-shadow: var(--shadow); }
+  .fcard .pic { background: linear-gradient(160deg, var(--sky-soft), var(--paper-2)); height:150px; display:grid; place-items:center; padding:12px; }
+  .fcard .pic img { max-height:124px; width:auto; filter: drop-shadow(0 4px 8px rgba(69,81,77,.18)); }
+  .fcard .body { padding:14px 18px 18px; }
+  .fcard .top { display:flex; align-items:center; gap:8px; margin-bottom:6px; flex-wrap:wrap; }
+  .fcard h3 { margin:0; font-size:1.12rem; }
+  .season { font-size:.72rem; font-weight:700; padding:2px 9px; border-radius:999px; background: var(--sky-soft); color: var(--sky-ink); }
+  .fcard p { margin:0; color: var(--ink-soft); font-size:.92rem; }
+  .fcard .ph { text-align:center; color:var(--muted); font-size:.84rem; line-height:1.4; }
+  .fcard .ph .e { font-size:2rem; display:block; margin-bottom:2px; opacity:.55; }
 
-  /* ---------- webpage preview ---------- */
-  .preview-grid { display: grid; grid-template-columns: 200px 1fr; gap: 26px; align-items: start; }
-  @media (max-width: 620px){ .preview-grid { grid-template-columns: 1fr; } .phone { margin: 0 auto; } }
-  .phone {
-    width: 200px; background: var(--ink); border-radius: 26px; padding: 10px;
-    box-shadow: var(--shadow); position: sticky; top: 20px;
-  }
-  .phone .screen { background: var(--paper); border-radius: 18px; overflow: hidden; }
-  .band { padding: 12px 12px; border-bottom: 1px solid var(--line); font-size: .72rem; line-height: 1.4; }
-  .band:last-child { border-bottom: 0; }
-  .band .t { font-weight: 700; color: var(--ink); font-size: .78rem; }
-  .band.hero { background: var(--sky); color: #fff; padding: 16px 12px; }
-  .band.hero .t { color: #fff; font-size: .84rem; }
-  .band.hero .s { color: rgba(255,255,255,.85); }
-  .band .s { color: var(--muted); }
-  .band.cta { background: var(--coral); color: var(--on-coral); text-align: center; font-weight: 800; font-size: .82rem; }
-  .dot { display:inline-block; width:7px; height:7px; border-radius:50%; background: var(--sky); margin-right: 5px; vertical-align: middle; }
+  /* about */
+  .story { display:grid; gap:16px; max-width:60ch; margin-bottom:26px; }
+  .story p { margin:0; }
+  .story .hl { background: var(--coral-soft); border-left:4px solid var(--coral); border-radius:0 12px 12px 0; padding:14px 18px; color: var(--ink); font-weight:500; }
+  .photos { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:14px; margin: 8px 0 30px; }
+  figure { margin:0; border-radius: var(--r-card); overflow:hidden; box-shadow: var(--shadow); background: var(--paper); }
+  figure img { width:100%; height:210px; object-fit:cover; }
+  figure figcaption { padding:10px 14px; font-size:.85rem; color: var(--ink-soft); }
+  .about-h3 { font-family: var(--font-serif); font-weight:700; color: var(--sky-ink); font-size:1.35rem; margin: 10px 0 6px; }
+  .note-card { margin-top:20px; background: var(--paper); border:1px dashed var(--line); border-radius:12px; padding:16px 18px; color: var(--muted); font-size:.9rem; }
 
-  .map { display: grid; gap: 10px; counter-reset: step; }
-  .map .row {
-    display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: start;
-    padding: 12px 0; border-bottom: 1px dashed var(--line);
-  }
-  .map .row:last-child { border-bottom: 0; }
-  .map .n {
-    counter-increment: step; font-family: Georgia, serif; color: var(--sea-deep); font-weight: 700;
-    font-size: 1.05rem; text-align: center;
-  }
-  .map .n::before { content: counter(step); }
-  .map .row .title { font-weight: 700; color: var(--ink); font-size: 1rem; }
-  .map .row .from { font-size: .86rem; color: var(--muted); margin-top: 2px; }
-  .map .row .from b { color: var(--sea-deep); font-weight: 600; }
-  .arrow { color: var(--sky-ink); font-weight: 700; }
+  /* order */
+  .order-card { position:relative; overflow:hidden; background: linear-gradient(158deg, var(--sky-ink), var(--sky)); color:#fff; border-radius: var(--r-lg); padding: clamp(30px,5vw,52px); box-shadow: var(--shadow); text-align:center; }
+  .order-card::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background: linear-gradient(90deg, var(--gold), var(--coral)); }
+  .order-card h2 { font-family: var(--font-serif); font-weight:700; margin:0 0 10px; font-size: clamp(1.5rem,4vw,2rem); color:#fff; }
+  .order-card p { margin:0 0 22px; color: rgba(255,255,255,.92); }
+  .thanks { display:none; margin-top:18px; background: rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.3); border-radius:12px; padding:14px 18px; color:#fff; font-weight:600; }
+  .thanks.show { display:block; animation: fade .3s ease; }
+  .order-foot { color: var(--muted); font-size:.82rem; margin-top:20px; text-align:center; }
 
-  /* ---------- next steps ---------- */
-  .next {
-    background: linear-gradient(160deg, var(--paper-2), var(--paper));
-    border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(22px,4vw,30px); box-shadow: var(--shadow);
+  /* mobile */
+  .mtop { display:none; }
+  .backdrop { display:none; }
+  @media (max-width: 860px) {
+    .sidebar { transform: translateX(-100%); transition: transform .25s ease; box-shadow: 0 0 40px rgba(0,0,0,.25); }
+    .sidebar.open { transform:none; }
+    main { margin-left:0; padding-top:58px; }
+    .hero { height: calc(100dvh - 58px); }
+    .mtop { display:flex; align-items:center; gap:12px; position:fixed; top:0; left:0; right:0; height:58px; z-index:40; background: var(--sky); color:#fff; padding:0 16px; box-shadow: var(--shadow); }
+    .mtop .burger { appearance:none; background:transparent; border:0; color:#fff; font-size:1.5rem; cursor:pointer; line-height:1; padding:4px; }
+    .mtop .mt-brand { font-family: var(--font-serif); font-weight:700; letter-spacing:.05em; font-size:1.2rem; }
+    .backdrop.show { display:block; position:fixed; inset:0; background: rgba(0,0,0,.35); z-index:55; }
   }
-  .next h2 { margin: 0 0 14px; font-size: 1.35rem; }
-  .next ol { margin: 0; padding-left: 20px; }
-  .next li { margin-bottom: 10px; color: var(--ink-soft); }
-  .next li strong { color: var(--ink); }
-
-  .foot { text-align: center; color: var(--muted); font-size: .82rem; margin-top: 40px; }
-  .foot .eyebrow { color: var(--sea); }
-  hr.rule { border: 0; border-top: 1px solid var(--line); margin: 0; }
-
-  /* ---------- positioning ---------- */
-  .stance { display: grid; gap: 12px; }
-  .stance-row {
-    display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start;
-    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
-    padding: 16px 18px; box-shadow: var(--shadow);
-  }
-  .stance-row .ic { font-size: 1.35rem; line-height: 1.3; }
-  .stance-row.yes { border-left: 4px solid var(--ok); }
-  .stance-row.no { border-left: 4px solid var(--coral); }
-  .stance-row.strategy { border-left: 4px solid var(--sea); }
-  .stance-row h3 { margin: 0 0 8px; font-size: 1.06rem; color: var(--ink); }
-  .stance-row ul { margin: 0; padding-left: 18px; color: var(--ink-soft); font-size: .95rem; display: grid; gap: 5px; }
-  .stance-row p { color: var(--ink-soft); font-size: .95rem; }
-  .stance-row strong { color: var(--ink); }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip { background: var(--paper-2); border: 1px solid var(--line); border-radius: 999px; padding: 6px 13px; font-size: .86rem; color: var(--ink-soft); }
-
-  /* ---------- name vote ---------- */
-  .name-fam { margin-top: 18px; }
-  .name-fam > .lbl { font-size: .82rem; letter-spacing: .03em; color: var(--muted); font-weight: 700; margin-bottom: 10px; }
-  .names { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
-  .name {
-    background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
-    cursor: pointer; position: relative; transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
-  }
-  .name:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--sea); }
-  .name .place { font-size: .78rem; color: var(--muted); }
-  .name .sub { font-size: 1.16rem; font-weight: 800; color: var(--ink); letter-spacing: .01em; }
-  .name.top { border-color: color-mix(in srgb, var(--coral) 45%, transparent); }
-  .name.selected { border-color: var(--coral); box-shadow: 0 0 0 3px var(--coral-soft); }
-  .name .pick-flag { position: absolute; top: 10px; right: 12px; font-size: .7rem; font-weight: 800; color: var(--coral); opacity: 0; transition: opacity .12s ease; }
-  .name.selected .pick-flag { opacity: 1; }
-  .rec { display: inline-block; font-size: .66rem; font-weight: 800; letter-spacing: .04em; color: var(--on-coral); background: var(--coral); padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+  .twrap { overflow-x:auto; margin-bottom:24px; }
+  .dtable { width:100%; border-collapse:collapse; font-size:.94rem; }
+  .dtable th { background: var(--sky); color:#fff; font-weight:700; text-align:left; padding:10px 14px; font-size:.9rem; }
+  .dtable td { padding:10px 14px; border-top:1px solid var(--line); background: var(--paper); color: var(--ink-soft); }
+  .dtable tr:first-child th:first-child { border-top-left-radius: var(--r-card); }
+  .dtable tr:first-child th:last-child { border-top-right-radius: var(--r-card); }
+  .dtable td:first-child { color: var(--ink); font-weight:600; white-space:nowrap; }
+  .steps { display:grid; gap:14px; counter-reset:s; margin:0 0 26px; }
+  .step { display:grid; grid-template-columns:auto 1fr; gap:14px; background:var(--paper); border:1px solid var(--line); border-radius:var(--r-card); padding:16px 18px; box-shadow:var(--shadow); }
+  .step .sn { counter-increment:s; width:32px; height:32px; border-radius:9px; background:var(--coral); color:var(--on-coral); display:grid; place-items:center; font-family:Georgia,serif; font-weight:700; }
+  .step .sn::before { content:counter(s); }
+  .step h3 { margin:0 0 3px; font-size:1.05rem; }
+  .step p { margin:0; color:var(--ink-soft); font-size:.94rem; }
 </style>
+</head>
+<body>
 
-<div class="wrap">
-
-  <header class="masthead">
-    <span class="kicker">🎣 澎湖 · 虎井嶼</span>
-    <h1>虎井嶼手釣魚<br>內容盤點 &amp; 網頁預覽</h1>
-    <p>媽媽，這是我把你給的資料整理後的報告——先看你給的內容有多好、還缺什麼，再看它會變成什麼樣的網頁。</p>
-    <div class="meta-row">
-      <span>給：<b>媽媽</b></span>
-      <span>階段：<b>構想中（還沒開賣）</b></span>
-      <span>日期：<b>2026 / 07 / 19</b></span>
-    </div>
-  </header>
-
-  <div class="letter">
-    <p>媽媽，先跟你說——<strong>你整理的內容真的很專業</strong>。魚種按四季分、每種寫肉質、還有解凍步驟、保存期限、澎湖海鮮月曆，這些都是<strong>內行人才講得出來的東西</strong>，客人一看就知道我們是真的懂海、真的在地。</p>
-    <p>這份報告有幾個部分：<strong>你給了什麼</strong>、<strong>內容最強的地方</strong>、<strong>我們想賣給誰</strong>、<strong>幫品牌取個名字</strong>（可以圈選）、<strong>還想麻煩你補的</strong>、以及<strong>網頁長什麼樣</strong>。慢慢看，有想改的地方都可以跟我說。</p>
-  </div>
-
-  <!-- 1. 盤點 -->
-  <section>
-    <div class="sec-head">
-      <span class="sec-num" style="font-family:Georgia,serif">1</span>
-      <h2>你給了什麼<span class="sub">六份檔案，全部收到，內容都很扎實</span></h2>
-    </div>
-    <div class="files">
-      <div class="file">
-        <div class="top"><span class="name">自家釣的魚（依季節分類）</span><span class="badge core">核心</span></div>
-        <p class="desc">春夏秋冬＋全年，共 11 種魚（水針、小管、黑點魚、黃雞魚、鸚哥魚、青嘴魚、石斑、石老魚、臭肚魚、雀鯛…），每一種都寫了肉質特色。這是整個網頁的靈魂。</p>
-      </div>
-      <div class="file">
-        <div class="top"><span class="name">完美解凍與烹調指南</span><span class="badge core">核心</span></div>
-        <p class="desc">解凍 3 步驟（不拆袋流水解凍／擦乾去腥／不重複冷凍）＋各魚推薦煮法（清蒸、香煎、川燙分類）。讓客人收到不會手足無措。</p>
-      </div>
-      <div class="file">
-        <div class="top"><span class="name">澎湖手釣魚與市場魚差異</span><span class="badge">賣點素材</span></div>
-        <p class="desc">從捕撈、處理、冷凍、便利四個角度，說清楚手釣 + 三去 + 急凍為什麼贏市場魚。這份會變成網頁的「為什麼選我們」。</p>
-      </div>
-      <div class="file">
-        <div class="top"><span class="name">澎湖 1～12 月當季海鮮月曆</span><span class="badge">信任素材</span></div>
-        <p class="desc">逐月列出當季魚種與推薦料理，證明我們跟著海走、當季才出。</p>
-      </div>
-      <div class="file">
-        <div class="top"><span class="name">新鮮魚獲冷凍保存與料理建議</span><span class="badge">信任素材</span></div>
-        <p class="desc">黃金賞味期（3 個月最佳／半年內吃完）＋為什麼家用冰箱不能放太久，很專業。</p>
-      </div>
-      <div class="file">
-        <div class="top"><span class="name">自家釣的魚保存期限</span><span class="badge">信任素材</span></div>
-        <p class="desc">各魚種真空急凍保存期限表（4～12 個月），可以直接做成一張表放上網頁。</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 2. 最強的地方 -->
-  <section>
-    <div class="sec-head">
-      <span class="sec-num" style="font-family:Georgia,serif">2</span>
-      <h2>你內容最強的三個地方<span class="sub">這些是別人抄不走的優勢</span></h2>
-    </div>
-    <div class="highlights">
-      <div class="hl">
-        <p class="h">🐟 講得出魚的「個性」</p>
-        <p>每種魚的肉質、口感、最佳吃法都寫得出來——這是攤販講不出來的專業，客人會信任。</p>
-      </div>
-      <div class="hl">
-        <p class="h">⚖️ 賣點有憑有據</p>
-        <p>手釣 vs 網撈、急凍不出水、三去截斷腥味——不是空喊「新鮮」，而是說得出道理。</p>
-      </div>
-      <div class="hl">
-        <p class="h">📅 在地感十足</p>
-        <p>虎井嶼海域、澎湖月曆、季節限定——濃濃的產地故事，這正是宅配海鮮最缺的東西。</p>
-      </div>
-      <div class="hl">
-        <p class="h">🍽️ 貼心到收貨之後</p>
-        <p>連解凍、保存、怎麼煮都教了。客人不會踩雷，回購率自然高。</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3. 客群與定位 -->
-  <section>
-    <div class="sec-head">
-      <span class="sec-num" style="font-family:Georgia,serif">3</span>
-      <h2>我們想賣給誰<span class="sub">走品質路線，不打價格戰</span></h2>
-    </div>
-    <div class="stance">
-      <div class="stance-row yes">
-        <span class="ic">🎯</span>
-        <div>
-          <h3>主要客群：重視「吃得安心、吃得好」的人</h3>
-          <ul>
-            <li>自己下廚、講究食材的家庭</li>
-            <li>在意來源、怕藥水、重視新鮮與健康的人</li>
-            <li>想吃到澎湖在地真味、回不去菜市場的老饕</li>
-            <li>送禮——送給懂吃的人，有面子也放心</li>
-          </ul>
-        </div>
-      </div>
-      <div class="stance-row no">
-        <span class="ic">🚫</span>
-        <div>
-          <h3>我們不搶：只比價、貪便宜的低價客</h3>
-          <p style="margin:0">手釣一竿一線，成本本來就比網撈、大量冷凍貨高。跟他們拚便宜一定輸，還會把品牌做壞。<strong>我們賣的是品質與故事，不是最低價</strong>——只想撿便宜的客人，本來就不是我們的人。</p>
-        </div>
-      </div>
-      <div class="stance-row strategy">
-        <span class="ic">📣</span>
-        <div>
-          <h3>怎麼讓對的人找到我們</h3>
-          <p style="margin:0 0 12px">用<strong>短影音 ＆ 做菜教學</strong>，讓大家看到「一條魚怎麼從虎井嶼上到你家餐桌」——教解凍、教料理，降低嘗試門檻、慢慢建立信任。有畫面、有故事，對的客人自己會分享。</p>
-          <div class="chips">
-            <span class="chip">🎬 產地／出海短片</span>
-            <span class="chip">🍳 一魚一煮法教學</span>
-            <span class="chip">❄️ 解凍小撇步</span>
-            <span class="chip">📅 本週上什麼魚</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. 取名字 -->
-  <section>
-    <div class="sec-head">
-      <span class="sec-num" style="font-family:Georgia,serif">4</span>
-      <h2>幫品牌取個名字<span class="sub">主品牌固定用「虎井嶼」，副標挑一個最喜歡的</span></h2>
-    </div>
-    <p style="margin:0 0 16px;color:var(--ink-soft)">「<strong style="color:var(--ink)">虎井嶼</strong>」是我們最大的資產——澎湖、少見、有畫面又好唸，拿來當招牌大字。後面接一句副標定調性（以後還能隨季節換，例如「虎井嶼・秋釣手帖」）。<br><span style="font-size:.9rem;color:var(--muted)">👉 電腦或手機上都能直接<strong style="color:var(--coral)">點一下卡片圈起來</strong>，再跟我說你們選哪個。</span></p>
-
-    <div class="name-fam">
-      <div class="lbl">🖋 日記／手記家族（敘事、有溫度）</div>
-      <div class="names">
-        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">討海日記</div></div>
-        <div class="name top"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">討海手帖<span class="rec">推薦</span></div></div>
-        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">潮汐手記</div></div>
-        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">海味手札</div></div>
-      </div>
-    </div>
-
-    <div class="name-fam">
-      <div class="lbl">🍽 餐桌／食堂家族（好懂、有畫面）</div>
-      <div class="names">
-        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">海邊餐桌</div></div>
-        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">島嶼食堂</div></div>
-        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">這片海的味道</div></div>
-      </div>
-    </div>
-
-    <div class="name-fam">
-      <div class="lbl">🎣 一竿／手釣家族（強調差異）</div>
-      <div class="names">
-        <div class="name top"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">一竿日記<span class="rec">最推</span></div></div>
-        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">手釣手記</div></div>
-        <div class="name"><span class="pick-flag">✓ 選這個</span><div class="place">虎井嶼・</div><div class="sub">釣海人家</div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. 補件清單 -->
-  <section>
-    <div class="sec-head">
-      <span class="sec-num" style="font-family:Georgia,serif">5</span>
-      <h2>還想麻煩你補的<span class="sub">不多，最重要的是照片</span></h2>
-    </div>
-    <div class="todo">
-      <div class="item">
-        <span class="tick">★</span>
-        <div>
-          <h3>真實照片 <span class="when now">現在就能準備</span></h3>
-          <p><strong class="star">最重要！</strong>網頁上文字再好，沒有照片都少一半說服力。最想要的幾張：①虎井嶼海邊／爸爸釣魚的畫面 ②真空包裝好的魚 ③煮好上桌的一道菜。手機拍就很夠，自然、真實最好。</p>
-        </div>
-      </div>
-      <div class="item">
-        <span class="tick">2</span>
-        <div>
-          <h3>爸爸／你們的一句話 <span class="when now">現在就能準備</span></h3>
-          <p>想放一小段「為什麼想做這個」的心裡話，讓客人認識背後的人。一兩句就好，你平常怎麼想就怎麼說。</p>
-        </div>
-      </div>
-      <div class="item">
-        <span class="tick">3</span>
-        <div>
-          <h3>價格與規格 <span class="when later">決定開賣再補</span></h3>
-          <p>怎麼賣（單一魚種／綜合箱／幾斤一份）、一份多少錢。現在還在構想階段，這個可以之後再想。</p>
-        </div>
-      </div>
-      <div class="item">
-        <span class="tick">4</span>
-        <div>
-          <h3>怎麼寄、怎麼下單 <span class="when later">決定開賣再補</span></h3>
-          <p>冷凍宅配、運費、幾天到、用 LINE 還是電話訂。網頁現在會先放一顆「有興趣・敲碗預購」的按鈕佔位，等你們決定了再接上。</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. 網頁預覽 -->
-  <section>
-    <div class="sec-head">
-      <span class="sec-num" style="font-family:Georgia,serif">6</span>
-      <h2>你的內容會變成這樣的網頁<span class="sub">從上往下滑，每一段都對應你給的檔案</span></h2>
-    </div>
-    <div class="preview-grid">
-      <div class="phone" aria-hidden="true">
-        <div class="screen">
-          <div class="band hero">
-            <div class="t">一支釣竿、一座小島</div>
-            <div class="s">把虎井嶼的海味送到你家餐桌</div>
-          </div>
-          <div class="band"><span class="dot"></span><span class="t">為什麼選我們</span><div class="s">手釣 · 三去 · 急凍 4 大理由</div></div>
-          <div class="band"><span class="dot"></span><span class="t">當季有什麼魚</span><div class="s">春夏秋冬 11 種</div></div>
-          <div class="band"><span class="dot"></span><span class="t">這樣煮最好吃</span><div class="s">清蒸 / 香煎 / 川燙</div></div>
-          <div class="band"><span class="dot"></span><span class="t">收到怎麼保存</span><div class="s">解凍 3 步驟 · 保存期限表</div></div>
-          <div class="band"><span class="dot"></span><span class="t">澎湖海鮮月曆</span><div class="s">1～12 月</div></div>
-          <div class="band cta">有興趣・敲碗預購</div>
-        </div>
-      </div>
-
-      <div class="map">
-        <div class="row">
-          <div class="n"></div>
-          <div><div class="title">開場橫幅</div><div class="from"><span class="arrow">→</span> 大標「一支釣竿、一座小島」＋<b>虎井嶼海邊照片</b>（要補照片）</div></div>
-        </div>
-        <div class="row">
-          <div class="n"></div>
-          <div><div class="title">為什麼選我們（4 個賣點卡）</div><div class="from"><span class="arrow">→</span> 來自 <b>手釣 vs 市場魚差異</b></div></div>
-        </div>
-        <div class="row">
-          <div class="n"></div>
-          <div><div class="title">當季有什麼魚（春夏秋冬）</div><div class="from"><span class="arrow">→</span> 來自 <b>自家釣的魚（依季節分類）</b></div></div>
-        </div>
-        <div class="row">
-          <div class="n"></div>
-          <div><div class="title">這樣煮最好吃</div><div class="from"><span class="arrow">→</span> 來自 <b>完美解凍與烹調指南</b></div></div>
-        </div>
-        <div class="row">
-          <div class="n"></div>
-          <div><div class="title">收到後怎麼保存</div><div class="from"><span class="arrow">→</span> 來自 <b>解凍指南 ＋ 保存期限表</b></div></div>
-        </div>
-        <div class="row">
-          <div class="n"></div>
-          <div><div class="title">澎湖海鮮月曆</div><div class="from"><span class="arrow">→</span> 來自 <b>1～12 月當季海鮮月曆</b></div></div>
-        </div>
-        <div class="row">
-          <div class="n"></div>
-          <div><div class="title">敲碗預購（按鈕）</div><div class="from"><span class="arrow">→</span> 先放佔位，等決定怎麼賣再接 LINE／電話</div></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- next -->
-  <section class="next">
-    <h2>接下來怎麼走</h2>
-    <ol>
-      <li><strong>選一個品牌名字</strong>——上面圈一個，或跟我說你們想到的。</li>
-      <li><strong>你看完這份</strong>——有想加、想改、想拿掉的內容都跟我說。</li>
-      <li><strong>照片有了就傳給我</strong>——這是讓網頁「活起來」最關鍵的一步。</li>
-      <li><strong>我做出網頁初版</strong>給你看，先不接訂購、純介紹，確認方向對不對。</li>
-      <li><strong>等你們決定要開賣</strong>，再補價格、宅配、下單方式，正式上線。</li>
-    </ol>
-  </section>
-
-  <p class="foot"><span class="eyebrow">Hujing Island · hand-line caught</span><br>虎井嶼手釣魚 · 內容報告 · 2026.07.19</p>
-
+<div class="mtop">
+  <button class="burger" aria-label="開關選單" onclick="toggleNav()">☰</button>
+  <span class="mt-brand">🐟 虎井嶼</span>
 </div>
+<div class="backdrop" id="backdrop" onclick="toggleNav(false)"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="s-brand"><span class="mk" aria-hidden="true">🐟</span> 虎井嶼</div>
+  <div class="s-tag">Hujing Island · hand-line caught</div>
+  <nav class="nav" id="nav" aria-label="主選單">
+    <button data-target="home" aria-current="page"><span class="ico" aria-hidden="true">🌊</span> 首頁</button>
+    <button data-target="why"><span class="ico" aria-hidden="true">⚓</span> 為什麼選我們</button>
+    <button data-target="fish"><span class="ico" aria-hidden="true">🐟</span> 當季魚種</button>
+    <button data-target="cook"><span class="ico" aria-hidden="true">🍳</span> 料理與保存</button>
+    <button data-target="calendar"><span class="ico" aria-hidden="true">📅</span> 海鮮月曆</button>
+    <button data-target="about"><span class="ico" aria-hidden="true">🏝️</span> 關於我們</button>
+  </nav>
+  <a class="s-cta" href="#order" data-target="order">有興趣・敲碗預購 <small>（籌備中）</small></a>
+  <div class="s-spacer"></div>
+  <img class="s-cat" src="assets/cat.png" alt="虎井嶼港邊貓插畫">
+</aside>
+
+<main>
+
+  <section class="pane active" id="pane-home">
+    <div class="hero">
+      <img class="bg" src="assets/photos/hero.jpg" alt="虎井嶼的玄武岩海岸與漁港">
+      <div class="veil"></div>
+      <div class="inner">
+        <span class="kicker">🎣 澎湖 · 虎井嶼直送</span>
+        <h1>一支釣竿，<br>一座小島</h1>
+        <p class="lead">把虎井嶼的海味，鎖鮮宅配到你家餐桌。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pane page" id="pane-why">
+    <p class="eyebrow">why us</p>
+    <h2 class="title">為什麼選我們的魚</h2>
+    <p class="sub">手釣、三去、真空、冷凍——不是空喊「新鮮」，而是每一步都說得出道理。</p>
+    <div class="points">
+      <div class="point"><span class="n">1</span><h3>手釣一竿一線</h3><p>逐隻釣上，沒有網具擠壓、沒有掙扎乳酸，魚體完整、肉質純淨緊實。</p></div>
+      <div class="point"><span class="n">2</span><h3>靠岸即三去＋真空</h3><p>去鱗、去鰓、去內臟並洗淨血水，真空隔絕空氣，截斷九成腥味來源。</p></div>
+      <div class="point"><span class="n">3</span><h3>低溫冷凍鎖鮮</h3><p>上岸即處理、冷凍保存，解凍不易出水，口感接近現撈。</p></div>
+      <div class="point"><span class="n">4</span><h3>料理超方便</h3><p>連袋沖水解凍、擦乾就能下鍋，免去鱗掏內臟的髒亂，新手也不怕。</p></div>
+    </div>
+  </section>
+
+  <section class="pane page" id="pane-fish">
+    <p class="eyebrow">in season</p>
+    <h2 class="title">當季有什麼魚</h2>
+    <p class="sub">跟著澎湖的海走，當季才出。每種魚的肉質、吃法我們都講得出來。</p>
+    <div class="fish">
+      <div class="fcard"><div class="pic"><img src="assets/squid.png" alt="小管"></div>
+        <div class="body"><div class="top"><h3>小管</h3><span class="season">春末～夏</span></div>
+        <p>盛產期肉質最脆甜，川燙冰鎮、快炒或夜釣現吃都對味。</p></div></div>
+      <div class="fcard"><div class="pic"><img src="assets/grouper.png" alt="石斑"></div>
+        <div class="body"><div class="top"><h3>石斑</h3><span class="season">秋</span></div>
+        <p>秋季水溫適中，肉質Ｑ彈、魚皮膠質豐厚，清蒸或煮湯最能吃到鮮甜。</p></div></div>
+      <div class="fcard"><div class="pic"><img src="assets/grunt.png" alt="黃雞魚"></div>
+        <div class="body"><div class="top"><h3>黃雞魚</h3><span class="season">夏</span></div>
+        <p>夏季產季，肉質細軟鮮甜；乾淨的白肉，鹽烤、香煎特別香。</p></div></div>
+      <div class="fcard"><div class="pic"><img src="assets/wrasse.png" alt="石老魚"></div>
+        <div class="body"><div class="top"><h3>石老魚</h3><span class="season">秋</span></div>
+        <p>又名寒鯛，肉質清甜、肉多刺少，魚頭富含膠質，煮薑絲魚湯一絕。</p></div></div>
+      <div class="fcard"><div class="pic"><img src="assets/hind.png" alt="橫紋九刺鮨"></div>
+        <div class="body"><div class="top"><h3>橫紋九刺鮨</h3><span class="season">全年</span></div>
+        <p>澎湖俗名「黑青貓仔」，一支釣釣上的小型石斑；肉質鮮美細緻，煮薑絲湯或清蒸最能吃到那股鮮。</p></div></div>
+      <div class="fcard"><div class="pic"><img src="assets/sergeant.png" alt="條紋豆娘魚（花翎仔）"></div>
+        <div class="body"><div class="top"><h3>條紋豆娘魚</h3><span class="season">全年</span></div>
+        <p>澎湖俗名「花翎仔」，礁岩區常見小魚、體側五條橫帶；適合酥炸、乾煎或煮味噌湯，鹹香下飯。</p></div></div>
+    </div>
+  </section>
+
+  <section class="pane page" id="pane-cook">
+    <p class="eyebrow">cook &amp; keep</p>
+    <h2 class="title">料理與保存</h2>
+    <p class="sub">收到魚之後這樣做，鮮度與口感不打折。</p>
+    <div class="steps">
+      <div class="step"><span class="sn"></span><div><h3>不拆真空袋，流水解凍</h3><p>整包未拆封直接泡自來水、開微小水流，約 15 分鐘就退冰（約 10–20 分鐘，最推薦）。</p></div></div>
+      <div class="step"><span class="sn"></span><div><h3>擦乾水分（去腥關鍵）</h3><p>拆封後用廚房紙巾把魚體表面與腹腔血水徹底擦乾，去掉大部分腥味來源。</p></div></div>
+      <div class="step"><span class="sn"></span><div><h3>切勿重複冷凍</h3><p>解凍後當天料理完畢，別再丟回冷凍庫，否則細菌倍增、肉質變柴。</p></div></div>
+    </div>
+    <h3 class="about-h3">這樣煮最內行</h3>
+    <div class="twrap"><table class="dtable">
+      <tr><th>煮法</th><th>推薦魚種</th></tr>
+      <tr><td>清蒸 / 煮湯</td><td>石斑、青嘴魚、鸚哥魚、石老魚（肉質細嫩鮮甜）</td></tr>
+      <tr><td>香煎 / 鹽烤</td><td>黃雞魚、黑點魚、雀鯛、水針（油脂適中、肉質扎實）</td></tr>
+      <tr><td>川燙 / 快炒</td><td>小管（水滾關火川燙 30 秒、撈起冰鎮最 Q）</td></tr>
+      <tr><td>煮湯 / 乾煎</td><td>臭肚魚（薑絲酸菜湯或乾煎）</td></tr>
+    </table></div>
+    <h3 class="about-h3">保存期限（−18°C 冷凍、真空未拆）</h3>
+    <div class="twrap"><table class="dtable">
+      <tr><th>魚種</th><th>建議保存</th></tr>
+      <tr><td>石斑魚</td><td>8–12 個月</td></tr>
+      <tr><td>石老魚</td><td>8–12 個月</td></tr>
+      <tr><td>臭肚魚</td><td>6–8 個月</td></tr>
+      <tr><td>鸚哥魚</td><td>6–8 個月</td></tr>
+      <tr><td>雀鯛</td><td>6–8 個月</td></tr>
+      <tr><td>水針魚</td><td>4–6 個月</td></tr>
+      <tr><td>小管</td><td>1–2 個月內優先吃完（軟體易變韌）</td></tr>
+    </table></div>
+    <div class="note-card">🥇 黃金賞味期：3 個月內最佳、半年內吃完；家用冰箱頻繁開關，別放到一年（會凍燒變柴）。</div>
+  </section>
+
+  <section class="pane page" id="pane-calendar">
+    <p class="eyebrow">seasonal calendar</p>
+    <h2 class="title">澎湖海鮮月曆</h2>
+    <p class="sub">跟著海走、當季才出。以下依虎井海域的季節整理。</p>
+    <div class="twrap"><table class="dtable">
+      <tr><th>月份</th><th>當季推薦</th></tr>
+      <tr><td>1 月</td><td>石斑、黃雞魚</td></tr>
+      <tr><td>2 月</td><td>石斑、黃雞魚</td></tr>
+      <tr><td>3 月</td><td>小管、水針、黃雞魚</td></tr>
+      <tr><td>4 月</td><td>小管、石斑、黃雞魚</td></tr>
+      <tr><td>5 月</td><td>小管、水針、黃雞魚</td></tr>
+      <tr><td>6 月</td><td>小管、石斑、臭肚、雀鯛、石老魚、青嘴</td></tr>
+      <tr><td>7 月</td><td>小管、黑點魚、黃雞魚、鸚哥魚、青嘴</td></tr>
+      <tr><td>8 月</td><td>小管、黑點魚、黃雞魚、鸚哥魚</td></tr>
+      <tr><td>9 月</td><td>石斑、石老魚、黃雞魚、黑點魚</td></tr>
+      <tr><td>10 月</td><td>石斑、石老魚、黑點魚</td></tr>
+      <tr><td>11 月</td><td>石斑、石老魚、黃雞魚</td></tr>
+      <tr><td>12 月</td><td>臭肚魚、石斑</td></tr>
+    </table></div>
+    <div class="note-card">📅 實際漁獲會隨天候與季風調整，當週上什麼魚以出貨為準。</div>
+  </section>
+
+  <section class="pane page" id="pane-about">
+    <p class="eyebrow">about us</p>
+    <h2 class="title">關於虎井嶼手釣魚</h2>
+    <div class="story">
+      <p>虎井嶼，是澎湖南方一座小島。這裡的海乾淨、礁岩多，養出一身好肉的魚。</p>
+      <p>爸爸一支釣竿，在虎井海域一尾一尾手釣；媽媽把每一批漁獲三去、真空、冷凍，仔細整理好，宅配到你家。</p>
+      <p class="hl">我們想做的，是把「虎井嶼海邊最鮮的那一刻」，原封不動送給你——來源清楚、無藥水、魚體完整。</p>
+    </div>
+    <div class="photos">
+      <figure><img src="assets/photos/harbour.jpg" alt="虎井嶼漁港"><figcaption>虎井漁港——魚上岸的地方</figcaption></figure>
+      <figure><img src="assets/photos/village.jpg" alt="虎井嶼村落與海"><figcaption>小島與環抱它的海</figcaption></figure>
+    </div>
+    <h3 class="about-h3">虎井嶼，也是有名的貓島 🐈</h3>
+    <div class="story"><p>島上巷弄、港邊到處是曬太陽的貓，還有一整排陶土貓看著海。我們的吉祥物「虎井港邊貓」，就是牠們——一隻虎斑貓，陪著這片海。</p></div>
+    <div class="photos">
+      <figure><img src="assets/photos/cat-alley.jpg" alt="虎井嶼巷弄裡的橘貓"><figcaption>巷子口曬太陽的橘貓</figcaption></figure>
+      <figure><img src="assets/photos/cat-wall.jpg" alt="虎井嶼港邊的陶土貓"><figcaption>港邊看海的陶土貓</figcaption></figure>
+    </div>
+    <div class="note-card">📷 爸爸出海釣魚、魚貨與家常料理的照片正在籌備中。媽媽的手作澎湖高麗菜酸也在規劃，之後會一起端上來。</div>
+  </section>
+
+  <section class="pane page" id="pane-order">
+    <div class="order-card">
+      <h2>喜歡這片海的味道嗎？</h2>
+      <p>我們還在籌備中——先按下「敲碗」，開賣第一時間通知你。</p>
+      <button class="btn" style="background:#fff;color:var(--sky-ink);box-shadow:none" onclick="knock()">敲碗，通知我 🔔</button>
+      <div class="thanks" id="thanks">謝謝你的敲碗！開賣會第一時間通知你 🐟</div>
+    </div>
+    <p class="order-foot">目前無價格與訂購連結，僅為構想階段的品牌介紹。</p>
+  </section>
+
+</main>
 
 <script>
-  (function () {
-    var cards = document.querySelectorAll('.name');
-    cards.forEach(function (el) {
-      el.addEventListener('click', function () {
-        var wasSelected = el.classList.contains('selected');
-        cards.forEach(function (n) { n.classList.remove('selected'); });
-        if (!wasSelected) { el.classList.add('selected'); }
-      });
+  var panes = document.querySelectorAll('.pane');
+  var navButtons = document.querySelectorAll('#nav button');
+  function show(id){
+    if(!document.getElementById('pane-'+id)) id='home';
+    panes.forEach(function(p){ p.classList.toggle('active', p.id==='pane-'+id); });
+    navButtons.forEach(function(b){ if(b.dataset.target===id){ b.setAttribute('aria-current','page'); } else { b.removeAttribute('aria-current'); } });
+    window.scrollTo(0,0);
+    toggleNav(false);
+  }
+  function route(){ show((location.hash||'#home').replace('#','')); }
+  document.querySelectorAll('[data-target]').forEach(function(el){
+    el.addEventListener('click', function(e){
+      if(el.tagName!=='A'){ e.preventDefault(); }
+      location.hash = '#'+el.dataset.target;
+      if(el.tagName!=='A'){ route(); }
     });
-  })();
+  });
+  window.addEventListener('hashchange', route);
+  route();
+  function toggleNav(force){
+    var sb=document.getElementById('sidebar'), bd=document.getElementById('backdrop');
+    var open=(typeof force==='boolean')?force:!sb.classList.contains('open');
+    sb.classList.toggle('open', open); bd.classList.toggle('show', open);
+  }
+  function knock(){ document.getElementById('thanks').classList.add('show'); }
 </script>
+</body>
+</html>
