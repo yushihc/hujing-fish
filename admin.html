@@ -1035,9 +1035,12 @@
   }
   function closeEdit() { editMask.classList.remove('show'); editRow = null; }
   document.getElementById('e-cancel').addEventListener('click', closeEdit);
-  editMask.addEventListener('click', function (e) { if (e.target === editMask) closeEdit(); });
+  // ⚠️ 編輯視窗「不」支援點外面關閉——裡面有打到一半的資料，太容易誤觸關掉。
+  // 只能按「取消」離開；按 Esc 也要再確認一次。
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && editMask.classList.contains('show')) closeEdit();
+    if (e.key === 'Escape' && editMask.classList.contains('show')) {
+      if (confirm('要放棄這次的修改嗎？')) closeEdit();
+    }
   });
 
   document.getElementById('e-save').addEventListener('click', function () {
