@@ -166,6 +166,11 @@
   .modal .code { display:block; text-align:center; font-family: var(--font-serif); font-weight:700; font-size:1.7rem; color:#B4413B; letter-spacing:.28em; background:#FBE4E2; border-radius:10px; padding:10px; margin:10px 0 12px; }
   .modal input { margin-bottom:12px; text-align:center; font-size:18px; letter-spacing:.2em; }
   .modal .err { display:none; color:#B4413B; font-size:.85rem; margin:0 0 10px; }
+  .modal.ok-modal { text-align:center; }
+  .modal.ok-modal .ok-icon { font-size:2.6rem; line-height:1; margin-bottom:6px; }
+  .modal.ok-modal h3 { color: var(--ok); font-size:1.25rem; margin-bottom:10px; }
+  .modal.ok-modal p { font-size:1rem; color: var(--ink); line-height:1.7; margin-bottom:4px; }
+  .modal.ok-modal .btn { margin-top:16px; }
   .modal .err.show { display:block; }
   .del-actions { display:flex; gap:10px; }
   .del-actions button { flex:1; border:0; border-radius:999px; padding:12px; font:inherit; font-weight:700; font-size:.94rem; cursor:pointer; }
@@ -262,7 +267,7 @@
         <label for="c-date">日期</label>
         <input type="date" id="c-date">
         <label for="c-kg">公斤數</label>
-        <input type="number" id="c-kg" inputmode="decimal" step="0.1" min="0">
+        <input type="number" id="c-kg" inputmode="decimal" step="any" min="0">
         <label for="c-note">備註（不用填也可以）</label>
         <input type="text" id="c-note">
         <button type="submit" class="btn">送出漁獲回報</button>
@@ -293,9 +298,9 @@
         <label for="o-phone">電話</label>
         <input type="tel" id="o-phone">
         <label for="o-kg">公斤數</label>
-        <input type="number" id="o-kg" inputmode="decimal" step="0.1" min="0">
+        <input type="number" id="o-kg" inputmode="decimal" step="any" min="0">
         <label for="o-price">單價（元／公斤）</label>
-        <input type="number" id="o-price" inputmode="numeric" step="10" min="0" value="650">
+        <input type="number" id="o-price" inputmode="numeric" step="any" min="0" value="650">
         <div class="calc" id="o-calc">金額：－</div>
         <label>出貨方式</label>
         <div class="radio-row">
@@ -305,9 +310,9 @@
         <label id="o-addr-label" for="o-addr">7-11 門市名稱</label>
         <input type="text" id="o-addr">
         <label for="o-fee">運費（向客人收）</label>
-        <input type="number" id="o-fee" inputmode="numeric" step="10" min="0" value="129">
+        <input type="number" id="o-fee" inputmode="numeric" step="any" min="0" value="129">
         <label for="o-cost">出貨成本（我們實付：運費＋紙箱）</label>
-        <input type="number" id="o-cost" inputmode="numeric" step="10" min="0" value="149">
+        <input type="number" id="o-cost" inputmode="numeric" step="any" min="0" value="149">
         <p class="cost-hint" id="o-cost-hint">7-11 冷凍交貨便（本島互寄活動價）：運費 129 ＋ S90 紙箱 20</p>
         <button type="submit" class="btn">送出訂單登記</button>
         <div class="msg" id="o-msg"></div>
@@ -353,7 +358,7 @@
         <select id="t-item"></select>
         <input type="text" id="t-item-other" placeholder="請輸入品項名稱" style="display:none; margin-top:8px;">
         <label for="t-kg">現在實際剩下（公斤）</label>
-        <input type="number" id="t-kg" inputmode="decimal" step="0.1" min="0">
+        <input type="number" id="t-kg" inputmode="decimal" step="any" min="0">
         <label for="t-reason">原因（不用填也可以）</label>
         <input type="text" id="t-reason" placeholder="例：自己吃掉、送人、漏記">
         <button class="btn" id="btn-stocktake-submit" type="button">送出盤點</button>
@@ -421,9 +426,9 @@
         <label for="mc-month">月份</label>
         <input type="month" id="mc-month">
         <label for="mc-fuel">油錢</label>
-        <input type="number" id="mc-fuel" inputmode="numeric" step="100" min="0">
+        <input type="number" id="mc-fuel" inputmode="numeric" step="any" min="0">
         <label for="mc-other">其他成本（不用填也可以）</label>
-        <input type="number" id="mc-other" inputmode="numeric" step="100" min="0">
+        <input type="number" id="mc-other" inputmode="numeric" step="any" min="0">
         <label for="mc-note">備註（不用填也可以）</label>
         <input type="text" id="mc-note">
         <button class="btn" id="btn-mc-save" type="button">儲存這個月的成本</button>
@@ -435,6 +440,15 @@
   </section>
 
   <button class="logout-link" id="btn-logout" type="button">登出</button>
+</div>
+
+<div class="modal-mask" id="ok-modal">
+  <div class="modal ok-modal">
+    <div class="ok-icon">✅</div>
+    <h3 id="om-title">完成</h3>
+    <p id="om-msg"></p>
+    <button type="button" class="btn" id="om-close">知道了</button>
+  </div>
 </div>
 
 <div class="modal-mask" id="del-modal">
@@ -542,6 +556,19 @@
     el.textContent = text;
   }
 
+  var okMask = document.getElementById('ok-modal');
+  function showOk(title, msg) {
+    document.getElementById('om-title').textContent = title;
+    document.getElementById('om-msg').textContent = msg;
+    okMask.classList.add('show');
+  }
+  function closeOk() { okMask.classList.remove('show'); }
+  document.getElementById('om-close').addEventListener('click', closeOk);
+  okMask.addEventListener('click', function (e) { if (e.target === okMask) closeOk(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && okMask.classList.contains('show')) closeOk();
+  });
+
   function getAuth() {
     var raw = localStorage.getItem('hujing_auth');
     return raw ? JSON.parse(raw) : null;
@@ -614,6 +641,7 @@
     postAction({ action: '回報漁獲', 品項: item, 日期: date, 公斤數: kg, 備註: note }).then(function (res) {
       showMsg(msg, res.ok, res.ok ? res.message : res.error);
       if (res.ok) {
+        showOk('漁獲回報成功', res.message);
         document.getElementById('form-catch').reset();
         document.getElementById('c-date').value = todayStr();
         document.getElementById('c-item-other').style.display = 'none';
@@ -640,6 +668,7 @@
     }).then(function (res) {
       showMsg(msg, res.ok, res.ok ? res.message : res.error);
       if (res.ok) {
+        showOk('訂單登記成功', res.message);
         document.getElementById('form-order').reset();
         document.getElementById('o-price').value = 650;
         document.getElementById('o-fee').value = 129;
@@ -1004,6 +1033,7 @@
       showMsg(msg, res.ok, res.ok ? res.message : res.error);
       btn.disabled = false; btn.textContent = '送出盤點';
       if (res.ok) {
+        showOk('盤點完成', res.message);
         document.getElementById('t-kg').value = '';
         document.getElementById('t-reason').value = '';
         loadSummary();
@@ -1201,7 +1231,7 @@
     }).then(function (res) {
       showMsg(msg, res.ok, res.ok ? res.message : res.error);
       btn.disabled = false; btn.textContent = '儲存這個月的成本';
-      if (res.ok) loadReport();
+      if (res.ok) { showOk('成本已儲存', res.message); loadReport(); }
     }).catch(function (err) {
       showMsg(msg, false, '儲存失敗：' + err);
       btn.disabled = false; btn.textContent = '儲存這個月的成本';
