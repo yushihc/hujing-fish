@@ -153,6 +153,9 @@
   .tag.shipped { background: var(--ok-soft); color: var(--ok); }
   .tag.unshipped { background: var(--sky-soft); color: var(--sky-ink); }
   .qcount { color: var(--muted); font-size:.85rem; margin-bottom:10px; }
+  .wait { display:inline-block; font-size:.74rem; font-weight:700; padding:2px 9px; border-radius:999px; background: var(--paper-2); color: var(--muted); }
+  .wait.warn { background: var(--coral-soft); color: var(--coral-ink); }
+  .wait.bad { background:#FBE4E2; color:#B4413B; }
 
   .del-link { background:none; border:0; color:#B4413B; font-size:.82rem; cursor:pointer; text-decoration:underline; padding:4px 0; margin-top:8px; }
 
@@ -922,6 +925,7 @@
         var paid = o.收款狀態 === '已收';
         return '<div class="top"><span class="name">' + o.客人姓名 + '</span>' +
           '<span class="amt">' + money(o.金額) + '</span></div>' +
+          '<div class="meta">' + (o.日期 || '') + '　' + waitTag(o.日期) + '</div>' +
           '<div class="meta">' + o.品項 + ' ' + o.公斤數 + ' 公斤'
             + (o.運費 ? '　＋運費 ' + money(o.運費) : '') + '</div>' +
           (o.電話 ? '<div class="meta">☎ ' + o.電話 + '</div>' : '') +
@@ -938,6 +942,7 @@
       rowHtml: function (o) {
         return '<div class="top"><span class="name">' + o.客人姓名 + '</span>' +
           '<span class="amt">' + money(o.金額) + '</span></div>' +
+          '<div class="meta">' + (o.日期 || '') + '　' + waitTag(o.日期) + '</div>' +
           '<div class="meta">' + o.品項 + ' ' + o.公斤數 + ' 公斤'
             + (o.運費 ? '（含運費 ' + money(o.運費) + '）' : '') + '</div>';
       }
@@ -945,6 +950,24 @@
   }
 
   function money(n) { return '$' + (Number(n) || 0).toLocaleString(); }
+
+  // 距今幾天（用來提醒別拖太久）
+  function daysAgo(dateStr) {
+    if (!dateStr) return null;
+    var d = new Date(dateStr + 'T00:00:00');
+    if (isNaN(d.getTime())) return null;
+    var t = new Date();
+    var today = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+    return Math.round((today - d) / 86400000);
+  }
+  // 回傳「日期 + 已等 N 天」的標籤 HTML
+  function waitTag(dateStr) {
+    var n = daysAgo(dateStr);
+    if (n === null) return '';
+    var label = n <= 0 ? '今天' : (n === 1 ? '昨天' : '已等 ' + n + ' 天');
+    var cls = n >= 5 ? 'wait bad' : (n >= 3 ? 'wait warn' : 'wait');
+    return '<span class="' + cls + '">' + label + '</span>';
+  }
 
   // 刪除防呆：跳出小視窗，輸入隨機 4 位數字才會刪（資料會進封存區）
   var dmMask = document.getElementById('del-modal');
