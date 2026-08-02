@@ -305,10 +305,10 @@
         <label id="o-addr-label" for="o-addr">7-11 門市名稱</label>
         <input type="text" id="o-addr">
         <label for="o-fee">運費（向客人收）</label>
-        <input type="number" id="o-fee" inputmode="numeric" step="10" min="0" value="200">
+        <input type="number" id="o-fee" inputmode="numeric" step="10" min="0" value="129">
         <label for="o-cost">出貨成本（我們實付：運費＋紙箱）</label>
-        <input type="number" id="o-cost" inputmode="numeric" step="10" min="0" value="220">
-        <p class="cost-hint" id="o-cost-hint">7-11 冷凍交貨便：運費 200 ＋ S90 紙箱 20</p>
+        <input type="number" id="o-cost" inputmode="numeric" step="10" min="0" value="149">
+        <p class="cost-hint" id="o-cost-hint">7-11 冷凍交貨便（本島互寄活動價）：運費 129 ＋ S90 紙箱 20</p>
         <button type="submit" class="btn">送出訂單登記</button>
         <div class="msg" id="o-msg"></div>
       </form>
@@ -503,8 +503,8 @@
       var hint = document.getElementById('o-cost-hint');
       if (this.value === '7-11交貨便') {
         label.textContent = '7-11 門市名稱'; input.placeholder = '';
-        cost.value = 220; document.getElementById('o-fee').value = 200;
-        hint.textContent = '7-11 冷凍交貨便：我們實付運費 200 ＋ S90 紙箱 20（活動期間運費可能是 129）';
+        cost.value = 149; document.getElementById('o-fee').value = 129;
+        hint.textContent = '7-11 冷凍交貨便（本島互寄活動價）：我們實付運費 129 ＋ S90 紙箱 20。活動結束會恢復 200';
       } else {
         label.textContent = '完整地址'; input.placeholder = '';
         cost.value = 260; document.getElementById('o-fee').value = 260;
@@ -642,8 +642,8 @@
       if (res.ok) {
         document.getElementById('form-order').reset();
         document.getElementById('o-price').value = 650;
-        document.getElementById('o-fee').value = 200;
-        document.getElementById('o-cost').value = 220;
+        document.getElementById('o-fee').value = 129;
+        document.getElementById('o-cost').value = 149;
         document.getElementById('o-item-other').style.display = 'none';
         updateCalc();
       }
