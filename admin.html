@@ -226,15 +226,16 @@
   </header>
   <div class="card">
     <h2>登入</h2>
-    <p class="hint">輸入姓名和電話號碼。</p>
+    <p class="hint">選一個人，輸入電話號碼。</p>
     <form id="form-login">
-      <label for="l-name">姓名</label>
+      <!-- ⚠️ 這裡只放暱稱，不要放本名。這個檔案是公開的，任何人打開就看得到。 -->
+      <label for="l-name">你是誰</label>
       <select id="l-name">
         <option value="">請選擇</option>
-        <option value="江佩芳">江佩芳</option>
-        <option value="陳蒼峰">陳蒼峰</option>
-        <option value="陳世育">陳世育</option>
-        <option value="陳世晏">陳世晏</option>
+        <option value="媽媽">媽媽</option>
+        <option value="爸爸">爸爸</option>
+        <option value="世育">世育</option>
+        <option value="晏晏">晏晏</option>
       </select>
       <label for="l-phone">密碼（電話號碼）</label>
       <input type="tel" id="l-phone">
