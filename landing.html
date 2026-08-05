@@ -48,8 +48,9 @@
   /* LINE 標記：綠底白字，跟 LINE 的品牌綠一致 */
   .line-mark { background:#06C755; color:#fff; font-family: Arial, Helvetica, sans-serif; font-weight:800;
     font-size:.62rem; letter-spacing:.04em; padding:3px 6px; border-radius:7px; line-height:1; }
-  .btn-line { background:#06C755 !important; color:#fff !important; box-shadow:0 6px 18px rgba(6,199,85,.35) !important; }
-  .btn-line .line-mark { background:#fff; color:#06C755; font-size:.7rem; padding:4px 7px; }
+  /* 訂購頁的按鈕：白底，讓綠色的 LINE 標記自己跳出來 */
+  .btn-line { background:#fff !important; color:#1F3D2E !important; box-shadow:0 6px 18px rgba(6,199,85,.28) !important; }
+  .btn-line .line-mark { font-size:.78rem; padding:5px 9px; border-radius:8px; }
   .s-spacer { flex:1 1 auto; min-height:18px; }
   .s-cat { width:150px; margin:8px auto -6px; filter: drop-shadow(0 6px 10px rgba(0,0,0,.28)); }
 
@@ -114,6 +115,16 @@
   figure { margin:0; border-radius: var(--r-card); overflow:hidden; box-shadow: var(--shadow); background: var(--paper); }
   figure img { width:100%; height:210px; object-fit:cover; }
   figure figcaption { padding:10px 14px; font-size:.85rem; color: var(--ink-soft); }
+
+  /* 料理頁的子分頁 */
+  .subtabs { display:flex; gap:8px; flex-wrap:wrap; margin:0 0 26px; border-bottom:2px solid var(--line); padding-bottom:0; }
+  .subtabs button { appearance:none; border:0; background:transparent; font:inherit; font-weight:700; font-size:1rem;
+    color: var(--ink-soft); padding:10px 18px; cursor:pointer; border-radius:10px 10px 0 0; position:relative; top:2px;
+    border-bottom:3px solid transparent; transition: color .15s, border-color .15s, background .15s; }
+  .subtabs button:hover { background: var(--paper-2); color: var(--sky-ink); }
+  .subtabs button.on { color: var(--sky-ink); border-bottom-color: var(--coral); background: var(--paper); }
+  .ctab { display:none; }
+  .ctab.on { display:block; animation: fade .25s ease; }
   .about-h3 { font-family: var(--font-serif); font-weight:700; color: var(--sky-ink); font-size:1.35rem; margin: 10px 0 6px; }
   .note-card { margin-top:20px; background: var(--paper); border:1px dashed var(--line); border-radius:12px; padding:16px 18px; color: var(--muted); font-size:.9rem; }
 
@@ -174,7 +185,7 @@
     <button data-target="about"><span class="ico" aria-hidden="true">🏝️</span> 關於我們</button>
   </nav>
   <a class="s-cta" id="cta" href="#order" data-target="order">
-    <span class="cta-row"><span class="line-mark" aria-hidden="true">LINE</span>加入官方帳號</span>
+    <span class="cta-row">加入<span class="line-mark" aria-hidden="true">LINE</span>官方帳號</span>
     <small>🦑 小管盛產中</small>
   </a>
   <div class="s-spacer"></div>
@@ -256,25 +267,27 @@
   <section class="pane page" id="pane-cook">
     <p class="eyebrow">cook &amp; keep</p>
     <h2 class="title">料理與保存</h2>
-    <p class="sub">收到魚之後這樣做，鮮度與口感不打折。</p>
-    <div class="steps">
-      <div class="step"><span class="sn"></span><div><h3>不拆真空袋，流水解凍</h3><p>整包未拆封直接泡自來水、開微小水流，約 15 分鐘就退冰（約 10–20 分鐘，最推薦）。</p></div></div>
-      <div class="step"><span class="sn"></span><div><h3>擦乾水分（去腥關鍵）</h3><p>拆封後用廚房紙巾把魚體表面與腹腔血水徹底擦乾，去掉大部分腥味來源。</p></div></div>
-      <div class="step"><span class="sn"></span><div><h3>切勿重複冷凍</h3><p>解凍後當天料理完畢，別再丟回冷凍庫，否則細菌倍增、肉質變柴。</p></div></div>
+    <p class="sub">收到之後這樣做，鮮度與口感不打折。選一個看：</p>
+
+    <div class="subtabs" role="tablist">
+      <button class="on" data-ct="squid">🦑 小管</button>
+      <button data-ct="fish">🐟 魚類</button>
+      <button data-ct="keep">❄️ 保存期限</button>
     </div>
-    <h3 class="about-h3">小管：先退冰、再處理，然後才下鍋 🦑</h3>
-    <p class="sub" style="margin-top:-4px">這一段最重要。<strong>沒清乾淨就下鍋，再新鮮也會有腥味</strong>；而那片像塑膠的東西是牠的軟骨，一定要抽掉。</p>
-    <div class="steps">
+
+    <div class="ctab on" id="ct-squid">
+      <h3 class="about-h3">先退冰、再處理，然後才下鍋</h3>
+      <p class="sub" style="margin-top:-4px">這一段最重要。<strong>沒清乾淨就下鍋，再新鮮也會有腥味</strong>；而那片像塑膠的東西是牠的軟骨，一定要抽掉。</p>
+      <div class="steps">
       <div class="step"><span class="sn"></span><div><h3>退冰：不拆袋，流水沖 10–15 分鐘</h3><p>整包未拆封泡在自來水下、開小小的水流。<strong>不要泡熱水、不要用微波</strong>，會把外層燙熟、肉質變韌。趕時間也請忍住。</p></div></div>
       <div class="step"><span class="sn"></span><div><h3>拉頭部：內臟會一起帶出來</h3><p>一手抓身體、一手抓頭（有觸腳那端），慢慢往外拉，<strong>內臟和墨囊會連著頭一起出來</strong>。想留墨汁就小心別弄破。</p></div></div>
       <div class="step"><span class="sn"></span><div><h3>抽掉那片「塑膠」</h3><p>身體裡面有一片<strong>透明、硬硬的長條</strong>，摸起來很像塑膠片——那是小管的軟骨（俗稱透明骨）。<strong>從開口摸到後直接抽出來丟掉</strong>，這不是包裝材料，是牠身體的一部分。</p></div></div>
       <div class="step"><span class="sn"></span><div><h3>沖洗、擦乾</h3><p>身體內側翻一下沖掉殘留內臟，外皮想吃更白可以撕掉（不撕也沒關係）。<strong>下鍋前務必擦乾</strong>，濕的會噴油、也炒不香。</p></div></div>
     </div>
-    <div class="note-card">✂️ 眼睛與嘴巴（中間那顆硬硬的）要剪掉丟棄；觸腳很好吃，留著一起煮。</div>
-
-    <h3 class="about-h3">處理好之後，這樣煮</h3>
-    <p class="sub" style="margin-top:-4px">重點只有一個：<strong>別煮過頭</strong>。時間依大小調整。</p>
-    <div class="twrap"><table class="dtable">
+      <div class="note-card">✂️ 眼睛與嘴巴（中間那顆硬硬的）要剪掉丟棄；觸腳很好吃，留著一起煮。</div>
+      <h3 class="about-h3">處理好之後，這樣煮</h3>
+      <p class="sub" style="margin-top:-4px">重點只有一個：<strong>別煮過頭</strong>。時間依大小調整。</p>
+      <div class="twrap"><table class="dtable">
       <tr><th>煮法</th><th>時間</th><th>訣竅</th></tr>
       <tr><td>川燙冰鎮</td><td><strong>2–3 分鐘</strong><br><span style="font-size:.86em;color:var(--muted)">小隻的 40–60 秒</span></td><td>清好內臟才下鍋。水滾再下，變白捲起、摸起來有彈性就撈，立刻冰鎮 30 秒，最脆最甜。</td></tr>
       <tr><td>清蒸</td><td>5–7 分</td><td>鋪薑絲蔥段，大火蒸，起鍋淋一點醬油與麻油。</td></tr>
@@ -284,18 +297,29 @@
       <tr><td>沙茶炒</td><td>2–3 分</td><td>沙茶醬先化開再下鍋，避免糊底。</td></tr>
       <tr><td>米粉湯</td><td>最後 1 分</td><td>湯頭煮好、米粉快熟時才下小管，久煮會變硬。</td></tr>
     </table></div>
-    <div class="note-card">🥢 沾醬：五味醬、蒜蓉醬油、哇沙米醬油都好。不過好的小管，沾一點醬油或撒點海鹽就很夠了。</div>
+      <div class="note-card">🥢 沾醬：五味醬、蒜蓉醬油、哇沙米醬油都好。不過好的小管，沾一點醬油或撒點海鹽就很夠了。</div>
+    </div>
 
-    <h3 class="about-h3">其他魚這樣煮最內行</h3>
-    <div class="twrap"><table class="dtable">
+    <div class="ctab" id="ct-fish">
+      <h3 class="about-h3">解凍三步驟</h3>
+      <div class="steps">
+      <div class="step"><span class="sn"></span><div><h3>不拆真空袋，流水解凍</h3><p>整包未拆封直接泡自來水、開微小水流，約 15 分鐘就退冰（約 10–20 分鐘，最推薦）。</p></div></div>
+      <div class="step"><span class="sn"></span><div><h3>擦乾水分（去腥關鍵）</h3><p>拆封後用廚房紙巾把魚體表面與腹腔血水徹底擦乾，去掉大部分腥味來源。</p></div></div>
+      <div class="step"><span class="sn"></span><div><h3>切勿重複冷凍</h3><p>解凍後當天料理完畢，別再丟回冷凍庫，否則細菌倍增、肉質變柴。</p></div></div>
+    </div>
+      <h3 class="about-h3">這樣煮最內行</h3>
+      <div class="twrap"><table class="dtable">
       <tr><th>煮法</th><th>推薦魚種</th></tr>
       <tr><td>清蒸 / 煮湯</td><td>石斑、青嘴魚、鸚哥魚、石老魚（肉質細嫩鮮甜）</td></tr>
       <tr><td>香煎 / 鹽烤</td><td>黃雞魚、黑點魚、雀鯛、水針（油脂適中、肉質扎實）</td></tr>
       <tr><td>酥炸 / 乾煎</td><td>水針、條紋豆娘魚、雀鯛（小型魚，連骨都酥）</td></tr>
       <tr><td>煮湯 / 乾煎</td><td>臭肚魚（薑絲酸菜湯或乾煎）</td></tr>
     </table></div>
-    <h3 class="about-h3">保存期限（−18°C 冷凍、真空未拆）</h3>
-    <div class="twrap"><table class="dtable">
+    </div>
+
+    <div class="ctab" id="ct-keep">
+      <h3 class="about-h3">保存期限（−18°C 冷凍、真空未拆）</h3>
+      <div class="twrap"><table class="dtable">
       <tr><th>魚種</th><th>建議保存</th></tr>
       <tr><td>石斑魚</td><td>8–12 個月</td></tr>
       <tr><td>石老魚</td><td>8–12 個月</td></tr>
@@ -305,7 +329,9 @@
       <tr><td>水針魚</td><td>4–6 個月</td></tr>
       <tr><td>小管</td><td>1–2 個月內優先吃完（軟體易變韌）</td></tr>
     </table></div>
-    <div class="note-card">🥇 黃金賞味期：3 個月內最佳、半年內吃完；家用冰箱頻繁開關，別放到一年（會凍燒變柴）。</div>
+      <div class="note-card">🥇 黃金賞味期：3 個月內最佳、半年內吃完；家用冰箱頻繁開關，別放到一年（會凍燒變柴）。</div>
+      <div class="note-card">🧊 已經解凍的就當天吃完，<strong>不要再放回冷凍庫</strong> － 反覆結凍會讓細菌倍增、肉質變柴。</div>
+    </div>
   </section>
 
   <section class="pane page" id="pane-calendar">
@@ -356,7 +382,7 @@
     <div class="order-card">
       <h2>🦑 小管盛產中，開賣了！</h2>
       <p>加入我們的 LINE，跟我們說要幾斤就好。<br>當週有什麼魚、什麼時候出海，也都會在 LINE 上先講。</p>
-      <a class="btn btn-line" id="line-btn" href="#"><span class="line-mark" aria-hidden="true">LINE</span>加入官方帳號</a>
+      <a class="btn btn-line" id="line-btn" href="#">加入<span class="line-mark" aria-hidden="true">LINE</span>官方帳號</a>
       <div class="thanks" id="thanks">LINE 官方帳號建置中，這幾天就好 🐟</div>
     </div>
     <p class="order-foot">出貨方式：7-11 冷凍交貨便（滿 2,000 免運）或黑貓低溫宅配（滿 3,600 免運）。</p>
@@ -391,6 +417,14 @@
     var open=(typeof force==='boolean')?force:!sb.classList.contains('open');
     sb.classList.toggle('open', open); bd.classList.toggle('show', open);
   }
+  // 料理頁的子分頁切換
+  document.querySelectorAll('.subtabs button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.subtabs button').forEach(function(x){ x.classList.toggle('on', x===b); });
+      document.querySelectorAll('.ctab').forEach(function(t){ t.classList.toggle('on', t.id==='ct-'+b.dataset.ct); });
+    });
+  });
+
   // ★★★ LINE 官方帳號開好之後，把網址填進這一行就好，其他都不用動 ★★★
   // 例：var LINE_URL = 'https://lin.ee/xxxxxxx';
   var LINE_URL = '';
