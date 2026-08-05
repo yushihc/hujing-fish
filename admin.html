@@ -312,16 +312,17 @@
         <div class="calc" id="o-calc">金額：－</div>
         <label>出貨方式</label>
         <div class="radio-row">
-          <label class="opt"><input type="radio" name="o-ship" value="7-11交貨便" checked> 7-11 冷凍交貨便</label>
+          <label class="opt"><input type="radio" name="o-ship" value="7-11取貨付款" checked> 7-11 取貨付款</label>
+          <label class="opt"><input type="radio" name="o-ship" value="7-11先匯款"> 7-11 先匯款</label>
           <label class="opt"><input type="radio" name="o-ship" value="宅配"> 冷凍宅配</label>
         </div>
         <label id="o-addr-label" for="o-addr">7-11 門市名稱</label>
         <input type="text" id="o-addr">
         <label for="o-fee">運費（向客人收）</label>
-        <input type="number" id="o-fee" inputmode="numeric" step="any" min="0" value="129">
+        <input type="number" id="o-fee" inputmode="numeric" step="any" min="0" value="120">
         <label for="o-cost">出貨成本（我們實付：運費＋紙箱）</label>
         <input type="number" id="o-cost" inputmode="numeric" step="any" min="0" value="149">
-        <p class="cost-hint" id="o-cost-hint">7-11 冷凍交貨便（本島互寄活動價）：運費 129 ＋ S90 紙箱 20</p>
+        <p class="cost-hint" id="o-cost-hint">向客人收 120，我們實付 129 ＋ S90 紙箱 20 ＝ 149。滿 2,000 免運</p>
         <button type="submit" class="btn">送出訂單登記</button>
         <div class="msg" id="o-msg"></div>
       </form>
@@ -471,7 +472,8 @@
     <input type="number" id="e-cost" inputmode="numeric" step="any" min="0">
     <label>出貨方式</label>
     <div class="radio-row">
-      <label class="opt"><input type="radio" name="e-ship" value="7-11交貨便"> 7-11 交貨便</label>
+      <label class="opt"><input type="radio" name="e-ship" value="7-11取貨付款"> 7-11 取貨付款</label>
+      <label class="opt"><input type="radio" name="e-ship" value="7-11先匯款"> 7-11 先匯款</label>
       <label class="opt"><input type="radio" name="e-ship" value="宅配"> 冷凍宅配</label>
     </div>
     <label for="e-addr">門市或地址</label>
@@ -534,20 +536,35 @@
   var ROUND_DOWN_TO = 10; // 去零頭：無條件捨去到十位（要改 50/100 跟我說）
   function roundDown(n) { return Math.floor(n / ROUND_DOWN_TO) * ROUND_DOWN_TO; }
 
+  // 免運門檻與超商代收上限（要跟後端 Code.js 的設定一致）
+  var FREE_SHIP_711 = 2000, FREE_SHIP_HOME = 3600, COD_MAX = 2000;
+  function isStore(ship) { return ship === '7-11取貨付款' || ship === '7-11先匯款' || ship === '7-11交貨便'; }
+  function freeShipAt(ship) { return isStore(ship) ? FREE_SHIP_711 : FREE_SHIP_HOME; }
+
   function updateCalc() {
     var kg = parseFloat(document.getElementById('o-kg').value);
     var price = parseFloat(document.getElementById('o-price').value);
     var fee = parseFloat(document.getElementById('o-fee').value) || 0;
     var cost = parseFloat(document.getElementById('o-cost').value) || 0;
+    var ship = document.querySelector('input[name="o-ship"]:checked').value;
     var box = document.getElementById('o-calc');
     if (kg > 0 && price > 0) {
       var amount = Math.round(kg * price);
+      var freeAt = freeShipAt(ship);
+      var freed = amount >= freeAt;
+      if (freed) fee = 0;
       var raw = amount + fee;
       var due = roundDown(raw);
       var html = '魚 $' + amount.toLocaleString() + '（' + kg + ' 公斤 × ' + price + '）＋ 運費 $' + fee.toLocaleString();
+      if (freed) html += '<span style="font-weight:500;font-size:.82rem">（滿 ' + freeAt.toLocaleString() + ' 免運）</span>';
       html += '<br><span style="font-size:1.05rem">應收 $' + due.toLocaleString() + '</span>';
       if (raw !== due) html += '<span style="font-weight:500;font-size:.82rem">（去零頭 −$' + (raw - due) + '）</span>';
       html += '<br><span style="font-weight:500;font-size:.85rem">實際成本 $' + cost.toLocaleString() + ' → 淨賺 $' + (due - cost).toLocaleString() + '</span>';
+      // 超商代收有 2000 上限（含運費），超過就只能請客人先匯款
+      if (ship === '7-11取貨付款' && due > COD_MAX) {
+        html += '<br><span style="color:#B4413B;font-weight:700">⚠ 超過超商代收上限 $'
+          + COD_MAX.toLocaleString() + '，請改選「7-11 先匯款」</span>';
+      }
       box.innerHTML = html;
     } else {
       box.textContent = '金額：－';
@@ -563,14 +580,16 @@
       var input = document.getElementById('o-addr');
       var cost = document.getElementById('o-cost');
       var hint = document.getElementById('o-cost-hint');
-      if (this.value === '7-11交貨便') {
+      if (isStore(this.value)) {
         label.textContent = '7-11 門市名稱'; input.placeholder = '';
-        cost.value = 149; document.getElementById('o-fee').value = 129;
-        hint.textContent = '7-11 冷凍交貨便（本島互寄活動價）：我們實付運費 129 ＋ S90 紙箱 20。活動結束會恢復 200';
+        cost.value = 149; document.getElementById('o-fee').value = 120;
+        hint.textContent = this.value === '7-11取貨付款'
+          ? '客人在門市付錢。向客人收運費 120，我們實付 129 ＋ 紙箱 20 ＝ 149。滿 2,000 免運。⚠ 應收超過 2,000 就不能代收，要改成先匯款'
+          : '客人先轉帳，確認收到再寄。向客人收運費 120，我們實付 149。滿 2,000 免運。金額沒有上限';
       } else {
         label.textContent = '完整地址'; input.placeholder = '';
         cost.value = 260; document.getElementById('o-fee').value = 260;
-        hint.textContent = '黑貓低溫宅配：澎湖屬離島，60cm 約 260、90cm 約 340（本島互寄則是 150／210）';
+        hint.textContent = '黑貓低溫宅配：澎湖屬離島，60cm 約 260、90cm 約 340（本島互寄則是 150／210）。滿 3,600 免運';
       }
       updateCalc();
     });
@@ -1042,15 +1061,29 @@
     var kg = parseFloat(document.getElementById('e-kg').value) || 0;
     var price = parseFloat(document.getElementById('e-price').value) || 0;
     var fee = parseFloat(document.getElementById('e-fee').value) || 0;
+    var shipEl = document.querySelector('input[name="e-ship"]:checked');
+    var ship = shipEl ? shipEl.value : '7-11先匯款';
     var box = document.getElementById('e-calc');
     if (kg > 0 && price > 0) {
       var amount = Math.round(kg * price);
+      var freeAt = freeShipAt(ship);
+      var freed = amount >= freeAt;
+      if (freed) fee = 0;
       var due = roundDown(amount + fee);
-      box.textContent = '魚 $' + amount.toLocaleString() + ' ＋ 運費 $' + fee.toLocaleString() + ' → 應收 $' + due.toLocaleString();
+      var txt = '魚 $' + amount.toLocaleString() + ' ＋ 運費 $' + fee.toLocaleString()
+        + (freed ? '（滿 ' + freeAt.toLocaleString() + ' 免運）' : '')
+        + ' → 應收 $' + due.toLocaleString();
+      if (ship === '7-11取貨付款' && due > COD_MAX) {
+        txt += '　⚠ 超過超商代收上限，請改選「7-11 先匯款」';
+      }
+      box.textContent = txt;
     } else { box.textContent = '－'; }
   }
   ['e-kg', 'e-price', 'e-fee'].forEach(function (id) {
     document.getElementById(id).addEventListener('input', editCalc);
+  });
+  document.querySelectorAll('input[name="e-ship"]').forEach(function (r) {
+    r.addEventListener('change', editCalc);
   });
 
   function openEdit(o, onDone) {
