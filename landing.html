@@ -165,7 +165,8 @@
     .step .sn { width: 28px; height: 28px; }
     .dtable { font-size: .88rem; }
     .dtable th { padding: 9px 11px; font-size: .85rem; }
-    .dtable td { padding: 9px 11px; }
+    .dtable td { padding: 9px 9px; }
+    .dtable th.nw, .dtable td.nw { padding-left: 7px; padding-right: 7px; }
     .subtabs { gap: 4px; }
     .subtabs button { font-size: .93rem; padding: 9px 12px; }
     .note-card { font-size: .9rem; }
@@ -185,6 +186,8 @@
   .dtable tr:first-child th:first-child { border-top-left-radius: var(--r-card); }
   .dtable tr:first-child th:last-child { border-top-right-radius: var(--r-card); }
   .dtable td:first-child { color: var(--ink); font-weight:600; white-space:nowrap; }
+  /* 時間、產季這種短欄位不要被拆成兩行（手機上最明顯） */
+  .dtable th.nw, .dtable td.nw { white-space:nowrap; }
   .steps { display:grid; gap:14px; counter-reset:s; margin:0 0 26px; }
   .step { display:grid; grid-template-columns:auto 1fr; gap:14px; background:var(--paper); border:1px solid var(--line); border-radius:var(--r-card); padding:16px 18px; box-shadow:var(--shadow); }
   .step .sn { counter-increment:s; width:32px; height:32px; border-radius:9px; background:var(--coral); color:var(--on-coral); display:grid; place-items:center; font-family:Georgia,serif; font-weight:700; }
@@ -281,13 +284,13 @@
 
     <h3 class="about-h3">其他季節魚種</h3>
     <div class="twrap"><table class="dtable">
-      <tr><th>魚種</th><th>產季</th><th>特色與吃法</th></tr>
-      <tr><td>水針魚</td><td>春</td><td>細長銀亮的表層魚，肉質細緻少油；酥炸、鹽烤最對味。</td></tr>
-      <tr><td>青嘴魚（龍占）</td><td>夏～秋</td><td>礁岩高級魚，肉質細嫩鮮甜，清蒸或煮湯最能吃出原味。</td></tr>
-      <tr><td>鸚哥魚</td><td>夏</td><td>色彩鮮豔的珊瑚礁魚，肉厚清甜、油脂少；清蒸、煮湯皆宜。</td></tr>
-      <tr><td>臭肚魚（象魚）</td><td>秋～冬</td><td>澎湖冬季代表魚，帶特殊海藻香；薑絲酸菜湯或乾煎最經典。</td></tr>
-      <tr><td>黑點魚</td><td>夏～秋</td><td>肉質扎實、味道乾淨，香煎、鹽烤都好。</td></tr>
-      <tr><td>雀鯛</td><td>夏</td><td>礁區小型魚，肉質緊實；酥炸或香煎，連骨都酥。</td></tr>
+      <tr><th>魚種</th><th class="nw">產季</th><th>特色與吃法</th></tr>
+      <tr><td>水針魚</td><td class="nw">春</td><td>細長銀亮的表層魚，肉質細緻少油；酥炸、鹽烤最對味。</td></tr>
+      <tr><td>青嘴魚（龍占）</td><td class="nw">夏～秋</td><td>礁岩高級魚，肉質細嫩鮮甜，清蒸或煮湯最能吃出原味。</td></tr>
+      <tr><td>鸚哥魚</td><td class="nw">夏</td><td>色彩鮮豔的珊瑚礁魚，肉厚清甜、油脂少；清蒸、煮湯皆宜。</td></tr>
+      <tr><td>臭肚魚（象魚）</td><td class="nw">秋～冬</td><td>澎湖冬季代表魚，帶特殊海藻香；薑絲酸菜湯或乾煎最經典。</td></tr>
+      <tr><td>黑點魚</td><td class="nw">夏～秋</td><td>肉質扎實、味道乾淨，香煎、鹽烤都好。</td></tr>
+      <tr><td>雀鯛</td><td class="nw">夏</td><td>礁區小型魚，肉質緊實；酥炸或香煎，連骨都酥。</td></tr>
     </table></div>
     <div class="note-card">🎣 這些是虎井海域釣得到的魚種，會依當季海況輪流上場；插畫還在畫，先用文字介紹。</div>
   </section>
@@ -316,14 +319,14 @@
       <h3 class="about-h3">處理好之後，這樣煮</h3>
       <p class="sub" style="margin-top:-4px">重點只有一個：<strong>別煮過頭</strong>。時間依大小調整。</p>
       <div class="twrap"><table class="dtable">
-      <tr><th>煮法</th><th>時間</th><th>訣竅</th></tr>
-      <tr><td>川燙冰鎮</td><td><strong>2–3 分鐘</strong><br><span style="font-size:.86em;color:var(--muted)">小隻的 40–60 秒</span></td><td>清好內臟才下鍋。水滾再下，變白捲起、摸起來有彈性就撈，立刻冰鎮 30 秒，最脆最甜。</td></tr>
-      <tr><td>清蒸</td><td>5–7 分</td><td>鋪薑絲蔥段，大火蒸，起鍋淋一點醬油與麻油。</td></tr>
-      <tr><td>三杯</td><td>3–5 分</td><td>麻油爆薑蒜，下小管快炒，最後放九層塔即起鍋。</td></tr>
-      <tr><td>鹽烤</td><td>6–10 分</td><td>表面擦乾、抹薄鹽，中火兩面各烤一下，別烤到縮水。</td></tr>
-      <tr><td>炒芹菜</td><td>2–3 分</td><td>大火快炒，芹菜斷生就起鍋，保持脆度。</td></tr>
-      <tr><td>沙茶炒</td><td>2–3 分</td><td>沙茶醬先化開再下鍋，避免糊底。</td></tr>
-      <tr><td>米粉湯</td><td>最後 1 分</td><td>湯頭煮好、米粉快熟時才下小管，久煮會變硬。</td></tr>
+      <tr><th>煮法</th><th class="nw">時間</th><th>訣竅</th></tr>
+      <tr><td>川燙冰鎮</td><td class="nw"><strong>2–3 分鐘</strong><br><span style="font-size:.86em;color:var(--muted)">小隻的 40–60 秒</span></td><td>清好內臟才下鍋。水滾再下，變白捲起、摸起來有彈性就撈，立刻冰鎮 30 秒，最脆最甜。</td></tr>
+      <tr><td>清蒸</td><td class="nw">5–7 分</td><td>鋪薑絲蔥段，大火蒸，起鍋淋一點醬油與麻油。</td></tr>
+      <tr><td>三杯</td><td class="nw">3–5 分</td><td>麻油爆薑蒜，下小管快炒，最後放九層塔即起鍋。</td></tr>
+      <tr><td>鹽烤</td><td class="nw">6–10 分</td><td>表面擦乾、抹薄鹽，中火兩面各烤一下，別烤到縮水。</td></tr>
+      <tr><td>炒芹菜</td><td class="nw">2–3 分</td><td>大火快炒，芹菜斷生就起鍋，保持脆度。</td></tr>
+      <tr><td>沙茶炒</td><td class="nw">2–3 分</td><td>沙茶醬先化開再下鍋，避免糊底。</td></tr>
+      <tr><td>米粉湯</td><td class="nw">最後 1 分</td><td>湯頭煮好、米粉快熟時才下小管，久煮會變硬。</td></tr>
     </table></div>
       <div class="note-card">🥢 沾醬：五味醬、蒜蓉醬油、哇沙米醬油都好。不過好的小管，沾一點醬油或撒點海鹽就很夠了。</div>
     </div>
@@ -348,7 +351,7 @@
     <div class="ctab" id="ct-keep">
       <h3 class="about-h3">保存期限（−18°C 冷凍、真空未拆）</h3>
       <div class="twrap"><table class="dtable">
-      <tr><th>魚種</th><th>建議保存</th></tr>
+      <tr><th>魚種</th><th class="nw">建議保存</th></tr>
       <tr><td>石斑魚</td><td>8–12 個月</td></tr>
       <tr><td>石老魚</td><td>8–12 個月</td></tr>
       <tr><td>臭肚魚</td><td>6–8 個月</td></tr>

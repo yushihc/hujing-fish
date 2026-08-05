@@ -89,6 +89,13 @@
   .msg.show { display:block; }
   .msg.ok { background: var(--ok-soft); color: var(--ok); }
   .msg.err { background: var(--coral-soft); color: var(--coral-ink); }
+  .msg.busy { background: var(--sky-soft); color: var(--sky-ink); }
+  /* 按鈕在等待時的樣子：轉圈圈 ＋ 不能重複按 */
+  .btn[disabled] { opacity:.75; cursor: default; }
+  .spin { display:inline-block; width:14px; height:14px; margin-right:8px; vertical-align:-2px;
+    border:2px solid currentColor; border-right-color: transparent; border-radius:50%;
+    animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   .stat-row { display:grid; grid-template-columns: repeat(2,1fr); gap:10px; margin-bottom:16px; }
   .stock-row { display:flex; flex-wrap:wrap; gap:10px; }
@@ -623,6 +630,11 @@
     el.className = 'msg show ' + (ok ? 'ok' : 'err');
     el.textContent = text;
   }
+  // 中性的「處理中」訊息（不是成功也不是失敗）
+  function showBusy(el, text) {
+    el.className = 'msg show busy';
+    el.textContent = text;
+  }
 
   // ⚠️ 瀏覽器預設：滾輪滑過「已點選的數字欄位」會偷偷加減數值
   //（曾造成使用者輸入 2，捲頁面時被改成 1.9／1.6）。這裡把它擋掉。
@@ -663,10 +675,7 @@
     });
   }
 
-  function postAction(payload) {
-    var auth = getAuth();
-    payload.帳號 = auth ? auth.name : '';
-    payload.密碼 = auth ? auth.phone : '';
+  function sendWithRetry(payload) {
     return sendOnce(payload).catch(function () {
       // 隔一下再試一次，多半是 Google 那邊一瞬間的問題
       return new Promise(function (ok) { setTimeout(ok, 1200); })
@@ -676,6 +685,13 @@
           throw '連線暫時有問題，請稍等一下再按一次';
         });
     });
+  }
+
+  function postAction(payload) {
+    var auth = getAuth();
+    payload.帳號 = auth ? auth.name : '';
+    payload.密碼 = auth ? auth.phone : '';
+    return sendWithRetry(payload);
   }
 
   function showApp() {
@@ -691,24 +707,40 @@
     var name = document.getElementById('l-name').value.trim();
     var phone = document.getElementById('l-phone').value.trim();
     var msg = document.getElementById('l-msg');
-    if (!name) { showMsg(msg, false, '請先選擇姓名'); return; }
-    if (!phone) { showMsg(msg, false, '請輸入電話號碼'); return; }
-    fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: '總覽', 帳號: name, 密碼: phone })
-    }).then(function (r) { return r.json(); }).then(function (res) {
+    if (!name) { showMsg(msg, false, '請先選擇你是誰'); return; }
+    if (!phone) { showMsg(msg, false, '請輸入密碼（電話號碼）'); return; }
+
+    // 按下去之後要有反應，不然畫面靜止好幾秒，會以為是壞掉
+    var btn = this.querySelector('button[type="submit"]');
+    var btnText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin"></span>登入中…';
+    showBusy(msg, '正在連線，請稍等一下…');
+
+    function restore() {
+      btn.disabled = false;
+      btn.innerHTML = btnText;
+    }
+
+    sendWithRetry({ action: '總覽', 帳號: name, 密碼: phone }).then(function (res) {
       if (res.ok) {
         localStorage.setItem('hujing_auth', JSON.stringify({ name: name, phone: phone }));
+        showBusy(msg, '登入成功，正在載入資料…');
         showApp();
+        restore();
       } else {
+        restore();
         showMsg(msg, false, res.error);
       }
-    }).catch(function (err) { showMsg(msg, false, '登入失敗：' + err); });
+    }).catch(function (err) {
+      restore();
+      showMsg(msg, false, '登入失敗：' + err);
+    });
   });
 
   document.getElementById('btn-logout').addEventListener('click', function () {
     localStorage.removeItem('hujing_auth');
+    document.getElementById('l-msg').className = 'msg'; // 清掉上次的「登入成功」訊息
     document.getElementById('app-screen').style.display = 'none';
     document.getElementById('login-screen').style.display = 'block';
   });
