@@ -8,7 +8,7 @@
 <meta property="og:title" content="虎井嶼手釣魚 · 一支釣竿，一座小島">
 <meta property="og:description" content="澎湖虎井嶼產地直送手釣魚，當日處理、真空、−18°C 冷凍鎖鮮，宅配到你家餐桌。">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://yushihc.github.io/hujing-fish/assets/photos/hero.jpg">
+<meta property="og:image" content="https://hujingfish.pages.dev/assets/photos/hero.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%9F%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,7 +63,10 @@
 
   .eyebrow { font-family: Georgia, serif; font-style:italic; color: var(--coral-ink); font-size:.95rem; margin:0 0 8px; }
   h2.title { font-family: var(--font-serif); font-weight:700; margin:0 0 8px; font-size: clamp(1.6rem,4vw,2.1rem); letter-spacing:.01em; text-wrap:balance; color: var(--sky-ink); }
-  .sub { margin:0 0 30px; color: var(--ink-soft); max-width:56ch; }
+  /* ⚠️ 這裡原本用 ch。ch 是「半形 0」的寬度，中文一個字等於 2ch －
+     所以 56ch 其實只有 28 個中文字，句子會在很前面就自己折行（看起來像壞掉）。
+     中文要用 em：1em ＝ 一個中文字寬。 */
+  .sub { margin:0 0 30px; color: var(--ink-soft); max-width:42em; text-wrap: pretty; }
   .btn { display:inline-flex; align-items:center; gap:8px; background: var(--coral); color: var(--on-coral); font-weight:800; padding:13px 26px; border-radius:999px; text-decoration:none; border:0; cursor:pointer; font-size:1rem; box-shadow: 0 6px 18px rgba(240,162,104,.35); transition: transform .12s; }
   .btn:hover { transform: translateY(-2px); }
   .btn small { font-weight:500; opacity:.8; font-size:.8rem; }
@@ -77,7 +80,7 @@
   .hero .inner { position:relative; z-index:1; color:#fff; padding: clamp(28px,5vw,48px); }
   .hero .kicker { display:inline-flex; align-items:center; gap:8px; font-family:Georgia,serif; font-style:italic; font-size:.9rem; color:#fff; background: rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.3); padding:5px 14px; border-radius:999px; margin-bottom:18px; }
   .hero h1 { font-family: var(--font-serif); font-weight:700; margin:0 0 14px; font-size: clamp(2rem,6vw,3.4rem); line-height:1.18; text-wrap:balance; text-shadow: 0 2px 18px rgba(0,0,0,.55); }
-  .hero p.lead { margin:0 0 26px; font-size: clamp(1rem,2.3vw,1.2rem); color: rgba(255,255,255,.96); max-width:34ch; text-shadow: 0 1px 12px rgba(0,0,0,.55); }
+  .hero p.lead { margin:0 0 26px; font-size: clamp(1rem,2.3vw,1.2rem); color: rgba(255,255,255,.96); max-width:22em; text-shadow: 0 1px 12px rgba(0,0,0,.55); }
   .home-foot { color: var(--muted); font-size:.82rem; margin-top:22px; }
 
   /* points */
@@ -109,7 +112,7 @@
   .fcard .ph .e { font-size:2rem; display:block; margin-bottom:2px; opacity:.55; }
 
   /* about */
-  .story { display:grid; gap:16px; max-width:60ch; margin-bottom:26px; }
+  .story { display:grid; gap:16px; max-width:40em; margin-bottom:26px; }
   .story p { margin:0; }
   .story .hl { background: var(--coral-soft); border-left:4px solid var(--coral); border-radius:0 12px 12px 0; padding:14px 18px; color: var(--ink); font-weight:500; }
   .photos { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:14px; margin: 8px 0 30px; }
@@ -148,8 +151,32 @@
     .hero { height: calc(100dvh - 58px); }
     .mtop { display:flex; align-items:center; gap:12px; position:fixed; top:0; left:0; right:0; height:58px; z-index:40; background: var(--sky); color:#fff; padding:0 16px; box-shadow: var(--shadow); }
     .mtop .burger { appearance:none; background:transparent; border:0; color:#fff; font-size:1.5rem; cursor:pointer; line-height:1; padding:4px; }
-    .mtop .mt-brand { font-family: var(--font-serif); font-weight:700; letter-spacing:.05em; font-size:1.2rem; }
+    .mtop .mt-brand { font-family: var(--font-serif); font-weight:700; letter-spacing:.03em; font-size:1.1rem; white-space:nowrap; }
     .backdrop.show { display:block; position:fixed; inset:0; background: rgba(0,0,0,.35); z-index:55; }
+
+    /* 手機：把留白收一點，字級縮一級，一頁能看到的東西才夠多 */
+    .page { padding-bottom: 56px; }
+    h2.title { font-size: 1.55rem; }
+    .sub { margin-bottom: 22px; }
+    .about-h3 { font-size: 1.2rem; }
+    .points, .fish { gap: 12px; }
+    .point { padding: 18px; }
+    .step { padding: 14px 15px; gap: 11px; }
+    .step .sn { width: 28px; height: 28px; }
+    .dtable { font-size: .88rem; }
+    .dtable th { padding: 9px 11px; font-size: .85rem; }
+    .dtable td { padding: 9px 11px; }
+    .subtabs { gap: 4px; }
+    .subtabs button { font-size: .93rem; padding: 9px 12px; }
+    .note-card { font-size: .9rem; }
+    /* 表格可以左右滑，給一點提示不要讓人以為被切掉 */
+    .twrap { -webkit-overflow-scrolling: touch; }
+  }
+
+  /* 很窄的手機（iPhone SE 之類） */
+  @media (max-width: 400px) {
+    .subtabs button { font-size: .88rem; padding: 8px 10px; }
+    .dtable td:first-child { white-space: normal; }
   }
   .twrap { overflow-x:auto; margin-bottom:24px; }
   .dtable { width:100%; border-collapse:collapse; font-size:.94rem; }
@@ -170,7 +197,7 @@
 
 <div class="mtop">
   <button class="burger" aria-label="開關選單" onclick="toggleNav()">☰</button>
-  <span class="mt-brand">🐟 虎井嶼</span>
+  <span class="mt-brand">🐟 虎井嶼手釣魚</span>
 </div>
 <div class="backdrop" id="backdrop" onclick="toggleNav(false)"></div>
 
