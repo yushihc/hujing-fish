@@ -629,15 +629,33 @@
     return raw ? JSON.parse(raw) : null;
   }
 
-  function postAction(payload) {
-    var auth = getAuth();
-    payload.帳號 = auth ? auth.name : '';
-    payload.密碼 = auth ? auth.phone : '';
+  // Google 偶爾會回一頁 HTML 錯誤頁而不是資料，這時 r.json() 會噴
+  // 「Unexpected token '<'」把人嚇到。改成：看不懂就自動重試一次，
+  // 再不行就給看得懂的訊息。
+  function sendOnce(payload) {
     return fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload)
-    }).then(function (r) { return r.json(); });
+    }).then(function (r) { return r.text(); }).then(function (txt) {
+      try { return JSON.parse(txt); }
+      catch (e) { throw new Error('BAD_RESPONSE'); }
+    });
+  }
+
+  function postAction(payload) {
+    var auth = getAuth();
+    payload.帳號 = auth ? auth.name : '';
+    payload.密碼 = auth ? auth.phone : '';
+    return sendOnce(payload).catch(function () {
+      // 隔一下再試一次，多半是 Google 那邊一瞬間的問題
+      return new Promise(function (ok) { setTimeout(ok, 1200); })
+        .then(function () { return sendOnce(payload); })
+        .catch(function () {
+          // 丟字串（不是 Error），畫面上就不會多出「Error:」這種怪東西
+          throw '連線暫時有問題，請稍等一下再按一次';
+        });
+    });
   }
 
   function showApp() {
