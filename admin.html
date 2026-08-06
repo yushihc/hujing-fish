@@ -90,6 +90,11 @@
   .msg.ok { background: var(--ok-soft); color: var(--ok); }
   .msg.err { background: var(--coral-soft); color: var(--coral-ink); }
   .msg.busy { background: var(--sky-soft); color: var(--sky-ink); }
+  /* 數量 ＋ 單位 併成一列 */
+  .qty-row { display:flex; gap:8px; align-items:stretch; }
+  .qty-row input { flex:1 1 auto; min-width:0; }
+  .qty-row .unit-sel { flex:0 0 92px; }
+  .stock-pill .sub2 { font-weight:500; opacity:.7; font-size:.85em; }
   /* 按鈕在等待時的樣子：轉圈圈 ＋ 不能重複按 */
   .btn[disabled] { opacity:.75; cursor: default; }
   .spin { display:inline-block; width:14px; height:14px; margin-right:8px; vertical-align:-2px;
@@ -282,8 +287,11 @@
         <input type="text" id="c-item-other" placeholder="請輸入品項名稱" style="display:none; margin-top:8px;">
         <label for="c-date">日期</label>
         <input type="date" id="c-date">
-        <label for="c-kg">公斤數</label>
-        <input type="number" id="c-kg" inputmode="decimal" step="any" min="0">
+        <label for="c-kg">數量</label>
+        <div class="qty-row">
+          <input type="number" id="c-kg" inputmode="decimal" step="any" min="0">
+          <select id="c-unit" class="unit-sel"><option value="台斤" selected>台斤</option><option value="公斤">公斤</option></select>
+        </div>
         <label for="c-note">備註（不用填也可以）</label>
         <input type="text" id="c-note">
         <button type="submit" class="btn">送出漁獲回報</button>
@@ -313,9 +321,12 @@
         <input type="text" id="o-name">
         <label for="o-phone">電話</label>
         <input type="tel" id="o-phone">
-        <label for="o-kg">公斤數</label>
-        <input type="number" id="o-kg" inputmode="decimal" step="any" min="0">
-        <label for="o-price">單價（元／公斤）</label>
+        <label for="o-kg">數量</label>
+        <div class="qty-row">
+          <input type="number" id="o-kg" inputmode="decimal" step="any" min="0">
+          <select id="o-unit" class="unit-sel"><option value="台斤" selected>台斤</option><option value="公斤">公斤</option></select>
+        </div>
+        <label for="o-price" id="o-price-label">單價（元／台斤）</label>
         <input type="number" id="o-price" inputmode="numeric" step="any" min="0" value="650">
         <div class="calc" id="o-calc">金額：－</div>
         <label>出貨方式</label>
@@ -374,8 +385,11 @@
         <label for="t-item">品項</label>
         <select id="t-item"></select>
         <input type="text" id="t-item-other" placeholder="請輸入品項名稱" style="display:none; margin-top:8px;">
-        <label for="t-kg">現在實際剩下（公斤）</label>
-        <input type="number" id="t-kg" inputmode="decimal" step="any" min="0">
+        <label for="t-kg">現在實際剩下</label>
+        <div class="qty-row">
+          <input type="number" id="t-kg" inputmode="decimal" step="any" min="0">
+          <select id="t-unit" class="unit-sel"><option value="台斤" selected>台斤</option><option value="公斤">公斤</option></select>
+        </div>
         <label for="t-reason">原因（不用填也可以）</label>
         <input type="text" id="t-reason" placeholder="例：自己吃掉、送人、漏記">
         <button class="btn" id="btn-stocktake-submit" type="button">送出盤點</button>
@@ -470,8 +484,11 @@
     <input type="tel" id="e-phone">
     <label for="e-item">品項</label>
     <input type="text" id="e-item">
-    <label for="e-kg">公斤數</label>
-    <input type="number" id="e-kg" inputmode="decimal" step="any" min="0">
+    <label for="e-kg">數量</label>
+    <div class="qty-row">
+      <input type="number" id="e-kg" inputmode="decimal" step="any" min="0">
+      <select id="e-unit" class="unit-sel"><option value="台斤" selected>台斤</option><option value="公斤">公斤</option></select>
+    </div>
     <label for="e-price">單價</label>
     <input type="number" id="e-price" inputmode="numeric" step="any" min="0">
     <label for="e-fee">運費</label>
@@ -544,6 +561,20 @@
   var ROUND_DOWN_TO = 10; // 去零頭：無條件捨去到十位（要改 50/100 跟我說）
   function roundDown(n) { return Math.floor(n / ROUND_DOWN_TO) * ROUND_DOWN_TO; }
 
+  // 度量衡：對外賣的是台斤，底層記帳一律公斤（1 台斤 ＝ 0.6 公斤）
+  var TAIJIN_TO_KG = 0.6;
+  function tidy(x) { return Math.round((Number(x) || 0) * 1000) / 1000; }
+  function toKg(q, u) { return u === '台斤' ? tidy((Number(q) || 0) * TAIJIN_TO_KG) : tidy(q); }
+  function unitOf(o) { return o && o.單位 === '台斤' ? '台斤' : '公斤'; }
+  function qtyOf(o) { return o && o.數量 != null ? o.數量 : (o ? o.公斤數 : 0); }
+  // 完整寫法：「2 台斤（1.2 公斤）」；本來就用公斤的就只寫公斤
+  function qtyText(o) {
+    var q = qtyOf(o), u = unitOf(o);
+    return u === '台斤' ? q + ' 台斤（' + toKg(q, u) + ' 公斤）' : q + ' 公斤';
+  }
+  // 短寫法：「2 台斤」
+  function qtyShort(o) { return qtyOf(o) + ' ' + unitOf(o); }
+
   // 免運門檻與超商代收上限（要跟後端 Code.js 的設定一致）
   var FREE_SHIP_711 = 2000, FREE_SHIP_HOME = 3600, COD_MAX = 2000;
   function isStore(ship) { return ship === '7-11取貨付款' || ship === '7-11先匯款' || ship === '7-11交貨便'; }
@@ -551,6 +582,7 @@
 
   function updateCalc() {
     var kg = parseFloat(document.getElementById('o-kg').value);
+    var oUnit = document.getElementById('o-unit').value;
     var price = parseFloat(document.getElementById('o-price').value);
     var fee = parseFloat(document.getElementById('o-fee').value) || 0;
     var cost = parseFloat(document.getElementById('o-cost').value) || 0;
@@ -563,7 +595,7 @@
       if (freed) fee = 0;
       var raw = amount + fee;
       var due = roundDown(raw);
-      var html = '魚 $' + amount.toLocaleString() + '（' + kg + ' 公斤 × ' + price + '）＋ 運費 $' + fee.toLocaleString();
+      var html = '魚 $' + amount.toLocaleString() + '（' + kg + ' ' + oUnit + ' × ' + price + '）＋ 運費 $' + fee.toLocaleString();
       if (freed) html += '<span style="font-weight:500;font-size:.82rem">（滿 ' + freeAt.toLocaleString() + ' 免運）</span>';
       html += '<br><span style="font-size:1.05rem">應收 $' + due.toLocaleString() + '</span>';
       if (raw !== due) html += '<span style="font-weight:500;font-size:.82rem">（去零頭 −$' + (raw - due) + '）</span>';
@@ -578,6 +610,11 @@
       box.textContent = '金額：－';
     }
   }
+  // 換單位時，單價的標籤要跟著換，不然會以為 650 是公斤價
+  document.getElementById('o-unit').addEventListener('change', function () {
+    document.getElementById('o-price-label').textContent = '單價（元／' + this.value + '）';
+    updateCalc();
+  });
   ['o-kg', 'o-price', 'o-fee', 'o-cost'].forEach(function (id) {
     document.getElementById(id).addEventListener('input', updateCalc);
   });
@@ -759,11 +796,12 @@
   document.getElementById('form-catch').addEventListener('submit', function (e) {
     e.preventDefault();
     var kg = document.getElementById('c-kg').value;
+    var cUnit = document.getElementById('c-unit').value;
     var note = document.getElementById('c-note').value;
     var date = document.getElementById('c-date').value || todayStr();
     var item = pickedItem('c-item', 'c-item-other');
     var msg = document.getElementById('c-msg');
-    postAction({ action: '回報漁獲', 品項: item, 日期: date, 公斤數: kg, 備註: note }).then(function (res) {
+    postAction({ action: '回報漁獲', 品項: item, 日期: date, 數量: kg, 單位: cUnit, 備註: note }).then(function (res) {
       showMsg(msg, res.ok, res.ok ? res.message : res.error);
       if (res.ok) {
         showOk('漁獲回報成功', res.message);
@@ -784,7 +822,8 @@
       品項: pickedItem('o-item', 'o-item-other'),
       客人姓名: document.getElementById('o-name').value,
       電話: document.getElementById('o-phone').value,
-      公斤數: document.getElementById('o-kg').value,
+      數量: document.getElementById('o-kg').value,
+      單位: document.getElementById('o-unit').value,
       單價: document.getElementById('o-price').value,
       出貨成本: document.getElementById('o-cost').value,
       運費: document.getElementById('o-fee').value,
@@ -832,7 +871,8 @@
     items.forEach(function (s) {
       var pill = document.createElement('div');
       pill.className = 'stock-pill' + (s.公斤 < 0 ? ' neg' : '');
-      pill.innerHTML = '<div class="n">' + s.公斤 + '</div><div class="l">' + s.品項 + '（公斤）</div>';
+      pill.innerHTML = '<div class="n">' + (s.台斤 != null ? s.台斤 : s.公斤) + '</div>'
+        + '<div class="l">' + s.品項 + '（台斤）<br><span class="sub2">' + s.公斤 + ' 公斤</span></div>';
       if (s.公斤 < 0) hasNegative = true;
       row.appendChild(pill);
     });
@@ -853,16 +893,17 @@
     var head = '🐟 虎井嶼手釣魚 出貨清單（' + d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + '）\n共 ' + shipRows.length + ' 筆\n';
     var body = shipRows.map(function (o, i) {
       return '\n' + (i + 1) + '. ' + o.客人姓名 + '　' + o.電話 +
-        '\n　　' + o.品項 + ' ' + o.公斤數 + ' 公斤　' + money(o.金額) + '（' + o.收款狀態 + '）' +
+        '\n　　' + o.品項 + ' ' + qtyShort(o) + '　' + money(o.金額) + '（' + o.收款狀態 + '）' +
         '\n　　' + o.出貨方式 + '　' + o.門市或地址;
     }).join('\n');
     var totalKg = shipRows.reduce(function (s, o) { return s + o.公斤數; }, 0);
-    return head + body + '\n\n合計 ' + (Math.round(totalKg * 100) / 100) + ' 公斤';
+    return head + body + '\n\n合計 ' + tidy(totalKg / TAIJIN_TO_KG) + ' 台斤（'
+      + (Math.round(totalKg * 100) / 100) + ' 公斤）';
   }
 
   function downloadShipCsv() {
     if (!shipRows.length) return;
-    var cols = ['日期', '客人姓名', '電話', '品項', '公斤數', '出貨方式', '門市或地址', '金額', '收款狀態'];
+    var cols = ['日期', '客人姓名', '電話', '品項', '數量', '單位', '出貨方式', '門市或地址', '金額', '收款狀態'];
     function esc(v) {
       var s = (v === null || v === undefined) ? '' : v.toString();
       return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
@@ -871,7 +912,7 @@
     shipRows.forEach(function (o) {
       // 電話前面加 tab，Excel 才不會又把開頭的 0 吃掉
       lines.push([
-        esc(o.日期), esc(o.客人姓名), '="' + o.電話 + '"', esc(o.品項), esc(o.公斤數),
+        esc(o.日期), esc(o.客人姓名), '="' + o.電話 + '"', esc(o.品項), esc(qtyOf(o)), esc(unitOf(o)),
         esc(o.出貨方式), esc(o.門市或地址), esc(o.金額), esc(o.收款狀態)
       ].join(','));
     });
@@ -996,7 +1037,7 @@
         return '<div class="top"><span class="name">' + o.客人姓名 + '</span>' +
           '<span class="amt">' + money(o.金額) + '</span></div>' +
           '<div class="meta">' + (o.日期 || '') + '　' + waitTag(o.日期) + '</div>' +
-          '<div class="meta">' + o.品項 + ' ' + o.公斤數 + ' 公斤'
+          '<div class="meta">' + o.品項 + ' ' + qtyShort(o)
             + (o.運費 ? '　＋運費 ' + money(o.運費) : '') + '</div>' +
           (o.電話 ? '<div class="meta">☎ ' + o.電話 + '</div>' : '') +
           '<div class="meta">' + o.出貨方式 + '　' + o.門市或地址 + '</div>' +
@@ -1013,7 +1054,7 @@
         return '<div class="top"><span class="name">' + o.客人姓名 + '</span>' +
           '<span class="amt">' + money(o.金額) + '</span></div>' +
           '<div class="meta">' + (o.日期 || '') + '　' + waitTag(o.日期) + '</div>' +
-          '<div class="meta">' + o.品項 + ' ' + o.公斤數 + ' 公斤'
+          '<div class="meta">' + o.品項 + ' ' + qtyShort(o)
             + (o.運費 ? '（含運費 ' + money(o.運費) + '）' : '') + '</div>';
       }
     });
@@ -1118,6 +1159,7 @@
   document.querySelectorAll('input[name="e-ship"]').forEach(function (r) {
     r.addEventListener('change', editCalc);
   });
+  document.getElementById('e-unit').addEventListener('change', editCalc);
 
   function openEdit(o, onDone) {
     editRow = o.rowIndex; editOnDone = onDone;
@@ -1125,7 +1167,8 @@
     document.getElementById('e-name').value = o.客人姓名 || '';
     document.getElementById('e-phone').value = o.電話 || '';
     document.getElementById('e-item').value = o.品項 || '';
-    document.getElementById('e-kg').value = o.公斤數 || '';
+    document.getElementById('e-kg').value = qtyOf(o) || '';
+    document.getElementById('e-unit').value = unitOf(o);
     document.getElementById('e-price').value = o.單價 || '';
     document.getElementById('e-fee').value = o.運費 || 0;
     document.getElementById('e-cost').value = o.出貨成本 || '';
@@ -1160,7 +1203,8 @@
       客人姓名: document.getElementById('e-name').value,
       電話: document.getElementById('e-phone').value,
       品項: document.getElementById('e-item').value,
-      公斤數: document.getElementById('e-kg').value,
+      數量: document.getElementById('e-kg').value,
+      單位: document.getElementById('e-unit').value,
       單價: document.getElementById('e-price').value,
       運費: document.getElementById('e-fee').value,
       出貨成本: document.getElementById('e-cost').value,
@@ -1220,7 +1264,8 @@
       if (!res.ok) { box.innerHTML = '<div class="empty">' + res.error + '</div>'; return; }
       if (!res.訂單.length) { box.innerHTML = '<div class="empty">找不到訂單</div>'; return; }
       box.innerHTML = '<div class="qcount">共 ' + res.筆數 + ' 筆　'
-        + res.合計公斤 + ' 公斤　' + money(res.合計金額) + '</div>';
+        + (res.合計台斤 != null ? res.合計台斤 + ' 台斤（' + res.合計公斤 + ' 公斤）' : res.合計公斤 + ' 公斤')
+        + '　' + money(res.合計金額) + '</div>';
       res.訂單.forEach(function (o) {
         var div = document.createElement('div');
         div.className = 'ocard';
@@ -1230,13 +1275,13 @@
           ? '<span class="tag shipped">已出貨</span>' : '<span class="tag unshipped">未出貨</span>';
         div.innerHTML =
           '<div class="oh"><span class="who">' + o.客人姓名 + '</span><span class="amt">' + money(o.金額) + '</span></div>' +
-          '<div class="line">' + o.日期 + '　' + o.品項 + ' ' + o.公斤數 + ' 公斤 × ' + o.單價 + ' 元</div>' +
+          '<div class="line">' + o.日期 + '　' + o.品項 + ' ' + qtyText(o) + ' × ' + o.單價 + ' 元</div>' +
           '<div class="line">' + o.出貨方式 + '　' + o.門市或地址 + '</div>' +
           (o.電話 ? '<div class="line">☎ ' + o.電話 + '</div>' : '') +
           '<div class="tags">' + paidTag + shipTag + '</div>';
         attachEdit(div, o, loadOrders);
         attachDelete(div, {
-          label: o.客人姓名 + '　' + o.品項 + ' ' + o.公斤數 + ' 公斤',
+          label: o.客人姓名 + '　' + o.品項 + ' ' + qtyShort(o),
           action: '刪除訂單',
           rowIndex: o.rowIndex,
           onDone: loadOrders
@@ -1275,12 +1320,14 @@
     var btn = this;
     var msg = document.getElementById('t-msg');
     var kg = document.getElementById('t-kg').value;
-    if (kg === '') { showMsg(msg, false, '請填現在實際剩下幾公斤'); return; }
+    var tUnit = document.getElementById('t-unit').value;
+    if (kg === '') { showMsg(msg, false, '請填現在實際剩下多少'); return; }
     btn.disabled = true; btn.textContent = '送出中…';
     postAction({
       action: '盤點',
       品項: pickedItem('t-item', 't-item-other'),
-      實際公斤: kg,
+      實際數量: kg,
+      單位: tUnit,
       原因: document.getElementById('t-reason').value
     }).then(function (res) {
       showMsg(msg, res.ok, res.ok ? res.message : res.error);
@@ -1311,11 +1358,12 @@
         var div = document.createElement('div');
         div.className = 'adj';
         var sign = a.調整公斤 > 0 ? '+' : '';
+        var aQty = (a.調整數量 != null ? a.調整數量 : a.調整公斤), aUnit = a.單位 || '公斤';
         div.innerHTML =
-          '<div class="oh"><span>' + a.品項 + '</span><span class="d ' + (a.調整公斤 > 0 ? 'plus' : 'minus') + '">' + sign + a.調整公斤 + ' 公斤</span></div>' +
+          '<div class="oh"><span>' + a.品項 + '</span><span class="d ' + (a.調整公斤 > 0 ? 'plus' : 'minus') + '">' + sign + aQty + ' ' + aUnit + '</span></div>' +
           '<div class="line">' + a.日期 + '　' + a.原因 + '</div>';
         attachDelete(div, {
-          label: a.日期 + '　' + a.品項 + ' ' + sign + a.調整公斤 + ' 公斤',
+          label: a.日期 + '　' + a.品項 + ' ' + sign + aQty + ' ' + aUnit,
           action: '刪除庫存調整',
           rowIndex: a.rowIndex,
           onDone: function () { loadAdjusts(); loadSummary(); }
@@ -1341,10 +1389,10 @@
         var div = document.createElement('div');
         div.className = 'ocard';
         div.innerHTML =
-          '<div class="oh"><span class="who">' + c.品項 + ' ' + c.公斤數 + ' 公斤</span><span class="line">' + c.日期 + '</span></div>' +
+          '<div class="oh"><span class="who">' + c.品項 + ' ' + qtyText(c) + '</span><span class="line">' + c.日期 + '</span></div>' +
           (c.備註 ? '<div class="line">備註：' + c.備註 + '</div>' : '');
         attachDelete(div, {
-          label: c.日期 + '　' + c.品項 + ' ' + c.公斤數 + ' 公斤',
+          label: c.日期 + '　' + c.品項 + ' ' + qtyShort(c),
           action: '刪除漁獲',
           rowIndex: c.rowIndex,
           onDone: loadCatches
