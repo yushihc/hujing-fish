@@ -108,6 +108,31 @@
   .dtab { display:none; }
   .dtab.on { display:block; }
 
+  /* 「寫過的」清單：用小卡片，不要用滿版大按鈕（之前整片藍色很難看） */
+  .dl-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .dl-count { color: var(--muted); font-size:.9rem; }
+  .dl-refresh { appearance:none; background:transparent; border:0; font:inherit; font-size:.88rem;
+    color: var(--sky-ink); cursor:pointer; padding:4px 6px; border-radius:8px; }
+  .dl-refresh:hover { background: var(--paper-2); }
+  .dcard { background:#fff; border:1px solid var(--line); border-radius:14px;
+    padding:16px 18px; margin-bottom:10px; }
+  .dcard .dtop { display:flex; align-items:flex-start; gap:10px; justify-content:space-between; }
+  .dcard .dttl { font-weight:700; font-size:1.02rem; color: var(--ink); line-height:1.5; }
+  .dcard .dmeta2 { color: var(--muted); font-size:.84rem; margin-top:3px; }
+  .dcard .dex { color: var(--ink-soft); font-size:.9rem; margin-top:8px; line-height:1.6;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .dcard .dacts { display:flex; gap:6px; justify-content:flex-end; align-items:center;
+    margin-top:12px; padding-top:10px; border-top:1px solid var(--line); }
+  .dcard .dact { appearance:none; background:transparent; border:0; font:inherit; font-size:.88rem;
+    color: var(--sky-ink); cursor:pointer; padding:5px 10px; border-radius:8px; }
+  .dcard .dact:hover { background: var(--sky-soft); }
+  /* 刪除連結沿用既有的防呆流程，只是在這裡縮小、擺右邊 */
+  .dcard .dacts .del-link { margin:0; padding:5px 10px; font-size:.88rem; }
+  .badge-live, .badge-draft { font-size:.72rem; font-weight:700; padding:3px 10px;
+    border-radius:999px; white-space:nowrap; }
+  .badge-live { background: var(--ok-soft); color: var(--ok); }
+  .badge-draft { background: var(--paper-2); color: var(--muted); }
+
   /* 兩顆按鈕並排（存草稿／發布） */
   .row2 { display:flex; gap:10px; margin-top:14px; }
   .row2 .btn { flex:1; }
@@ -498,10 +523,9 @@
     </div>
 
     <div class="dtab" id="dt-list">
-      <div class="card">
-        <h2>已經寫過的</h2>
-        <p class="hint">點「編輯這則」會跳回「寫日記」把內容帶進去，改完再按一次發布。</p>
-        <button class="btn ghost" id="btn-refresh-diary" type="button">🔄 重新整理</button>
+      <div class="dl-head">
+        <span class="dl-count" id="d-count">讀取中…</span>
+        <button type="button" class="dl-refresh" id="btn-refresh-diary">🔄 重新整理</button>
       </div>
       <div id="d-list" class="loading">讀取中…</div>
     </div>
@@ -1565,23 +1589,28 @@
     box.textContent = '讀取中…';
     postAction({ action: '日記清單' }).then(function (res) {
       box.className = '';
-      if (!res.ok) { box.innerHTML = '<div class="empty">' + res.error + '</div>'; return; }
-      if (!res.日記.length) { box.innerHTML = '<div class="empty">還沒有寫過日記</div>'; return; }
+      var count = document.getElementById('d-count');
+      if (!res.ok) { count.textContent = ''; box.innerHTML = '<div class="empty">' + res.error + '</div>'; return; }
+      if (!res.日記.length) { count.textContent = ''; box.innerHTML = '<div class="empty">還沒有寫過日記</div>'; return; }
+      var live數 = res.日記.filter(function (d) { return d.狀態 === '已發布'; }).length;
+      count.textContent = '共 ' + res.日記.length + ' 則（已發布 ' + live數 + '）';
       box.innerHTML = '';
       res.日記.forEach(function (d) {
         var live = d.狀態 === '已發布';
         var div = document.createElement('div');
-        div.className = 'ocard';
+        div.className = 'dcard';
         div.innerHTML =
-          '<div class="oh"><span class="who">' + d.標題 + '</span>'
-          + '<span class="tag ' + (live ? 'paid' : 'unpaid') + '">' + d.狀態 + '</span></div>'
-          + '<div class="line">' + d.日期 + (d.標籤 ? '　' + d.標籤 : '') + '</div>'
-          + '<div class="line">' + (d.內文[0] || '').slice(0, 40) + '…</div>';
+          '<div class="dtop"><div><div class="dttl">' + d.標題 + '</div>'
+          + '<div class="dmeta2">' + d.日期 + (d.標籤 ? '　·　' + d.標籤 : '') + '</div></div>'
+          + '<span class="' + (live ? 'badge-live' : 'badge-draft') + '">' + d.狀態 + '</span></div>'
+          + '<div class="dex">' + (d.內文[0] || '') + '</div>';
+        var acts = document.createElement('div');
+        acts.className = 'dacts';
+        div.appendChild(acts);
         var edit = document.createElement('button');
         edit.type = 'button';
-        edit.className = 'btn ghost';
-        edit.style.marginTop = '8px';
-        edit.textContent = '✏️ 編輯這則';
+        edit.className = 'dact';
+        edit.textContent = '✏️ 編輯';
         edit.addEventListener('click', function () {
           diaryEditRow = d.rowIndex;
           document.getElementById('d-row').value = d.rowIndex;
@@ -1596,8 +1625,8 @@
           document.querySelector('#form-diary button[type="submit"]').textContent = '更新並發布';
           document.getElementById('d-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
-        div.appendChild(edit);
-        attachDelete(div, {
+        acts.appendChild(edit);
+        attachDelete(acts, {
           label: d.日期 + '　' + d.標題,
           action: '刪除日記',
           rowIndex: d.rowIndex,
