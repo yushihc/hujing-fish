@@ -517,10 +517,35 @@
     },
   ];
 
-  (function renderDiary() {
+  // 日記實際上是從管理工具寫進 Google 試算表的。
+  // 這裡去把「已發布」的抓回來；抓不到（離線、Google 抽風）就用上面那份備援。
+  var DIARY_API = 'https://script.google.com/macros/s/AKfycbzWsIIe9jZXdLXe2q2XqsB4S83FrDNAU9zDMu-Vqqam63vhNnqrIrEi8G4CavTVLvBxaw/exec';
+
+  (function loadDiaryFromApi() {
+    fetch(DIARY_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: '公開日記' }),
+    })
+      .then(function (r) { return r.text(); })
+      .then(function (t) {
+        var res = JSON.parse(t);
+        if (!res.ok || !res.日記 || !res.日記.length) return; // 沒東西就維持備援那則
+        renderDiary(res.日記.map(function (d) {
+          return {
+            date: (d.日期 || '').replace(/-/g, '.'),
+            tag: d.標籤, title: d.標題, body: d.內文,
+            photo: d.照片, caption: d.照片說明,
+          };
+        }));
+      })
+      .catch(function () { /* 讀不到就用備援，不要讓訪客看到錯誤 */ });
+  })();
+
+  function renderDiary(list) {
     var box = document.getElementById('diary-list');
     if (!box) return;
-    box.innerHTML = DIARY.map(function (d) {
+    box.innerHTML = (list || []).map(function (d) {
       var meta = '<div class="dmeta"><span class="ddate">' + d.date + '</span>'
         + (d.tag ? '<span class="dtag">' + d.tag + '</span>' : '') + '</div>';
       var pic = d.photo
@@ -530,7 +555,8 @@
       var text = (d.body || []).map(function (p) { return '<p>' + p + '</p>'; }).join('');
       return '<article class="dentry">' + meta + '<h3>' + d.title + '</h3>' + pic + text + '</article>';
     }).join('');
-  })();
+  }
+  renderDiary(DIARY); // 先畫備援那則，API 回來再覆蓋
 
   // ★★★ LINE 官方帳號的加好友網址。ID 是 @600imryz ★★★
   // 之後若在後台拿到 lin.ee 的短網址，換掉這一行就好，其他都不用動。

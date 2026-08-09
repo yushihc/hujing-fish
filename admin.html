@@ -98,6 +98,11 @@
   /* 超商代收上限的常駐提醒（不是錯誤，是先講在前面） */
   .cod-note { margin:8px 0 4px; padding:9px 12px; border-radius:10px; font-size:.84rem; line-height:1.6;
     background: var(--coral-soft); color: var(--coral-ink); }
+  /* 兩顆按鈕並排（存草稿／發布） */
+  .row2 { display:flex; gap:10px; margin-top:14px; }
+  .row2 .btn { flex:1; }
+  #d-body { width:100%; font: inherit; padding:11px 13px; border:1px solid var(--line);
+    border-radius:10px; background:#fff; color:var(--ink); resize:vertical; line-height:1.7; }
   /* 按鈕在等待時的樣子：轉圈圈 ＋ 不能重複按 */
   .btn[disabled] { opacity:.75; cursor: default; }
   .spin { display:inline-block; width:14px; height:14px; margin-right:8px; vertical-align:-2px;
@@ -273,6 +278,7 @@
     <button role="tab" aria-selected="false" data-target="stock">📦 庫存</button>
     <button role="tab" aria-selected="false" data-target="orders">🔍 訂單查詢</button>
     <button role="tab" aria-selected="false" data-target="report">📈 報表</button>
+    <button role="tab" aria-selected="false" data-target="diary">📖 虎井日記</button>
     <button role="tab" aria-selected="false" data-target="archive">🗄 封存區</button>
   </nav>
 
@@ -430,6 +436,57 @@
     <div id="q-list" class="loading">讀取中…</div>
   </section>
 
+  <section class="pane page" id="pane-diary">
+    <div class="card">
+      <h2>寫一則虎井日記</h2>
+      <p class="hint">寫好按「發布」，官網的「虎井日記」那一頁馬上就會出現。還沒想好就先存草稿。</p>
+      <form id="form-diary">
+        <input type="hidden" id="d-row" value="">
+        <label for="d-date">日期</label>
+        <input type="date" id="d-date">
+        <label for="d-tag">小標籤（可以不填）</label>
+        <select id="d-tag">
+          <option value="">不加標籤</option>
+          <option value="爸爸的海">爸爸的海</option>
+          <option value="島上的事">島上的事</option>
+          <option value="貓">貓</option>
+          <option value="吃法">吃法</option>
+          <option value="季節">季節</option>
+        </select>
+        <label for="d-title">標題</label>
+        <input type="text" id="d-title" placeholder="例：那天浪太大，船差點回不來">
+        <label for="d-body">內文</label>
+        <textarea id="d-body" rows="9" placeholder="直接打字就好。&#10;&#10;空一行就會自動分段。"></textarea>
+        <p class="cost-hint">空一行 ＝ 分一段。不用管排版，網頁會自己處理。</p>
+        <label for="d-photo">配一張照片（可以不選）</label>
+        <select id="d-photo">
+          <option value="">不放照片</option>
+          <option value="assets/photos/hero.jpg">玄武岩海岸</option>
+          <option value="assets/photos/harbour.jpg">虎井漁港</option>
+          <option value="assets/photos/village.jpg">村子與海</option>
+          <option value="assets/photos/sea.jpg">虎井的海</option>
+          <option value="assets/photos/coast.jpg">海岸</option>
+          <option value="assets/photos/cat-alley.jpg">巷子口的橘貓</option>
+          <option value="assets/photos/cat-wall.jpg">沙灘上頭的陶土貓</option>
+        </select>
+        <label for="d-caption">照片說明（可以不填）</label>
+        <input type="text" id="d-caption" placeholder="例：那天的海">
+        <div class="row2">
+          <button type="button" class="btn ghost" id="btn-diary-draft">存成草稿</button>
+          <button type="submit" class="btn">發布</button>
+        </div>
+        <button type="button" class="btn ghost" id="btn-diary-cancel" style="display:none;margin-top:8px">取消編輯，寫新的一則</button>
+        <div class="msg" id="d-msg"></div>
+      </form>
+    </div>
+    <div class="card">
+      <h2>已經寫過的</h2>
+      <p class="hint">點「編輯」可以改，改完記得再按一次發布。</p>
+      <button class="btn ghost" id="btn-refresh-diary" type="button">🔄 重新整理</button>
+    </div>
+    <div id="d-list" class="loading">讀取中…</div>
+  </section>
+
   <section class="pane page" id="pane-archive">
     <div class="card">
       <h2>封存區</h2>
@@ -563,6 +620,7 @@
       if (btn.dataset.target === 'report') loadReport();
       if (btn.dataset.target === 'orders') loadOrders();
       if (btn.dataset.target === 'archive') loadArchive();
+      if (btn.dataset.target === 'diary') loadDiary();
     });
   });
 
@@ -672,6 +730,7 @@
     return local.toISOString().slice(0, 10);
   }
   document.getElementById('c-date').value = todayStr();
+  document.getElementById('d-date').value = todayStr();
 
   function showMsg(el, ok, text) {
     el.className = 'msg show ' + (ok ? 'ok' : 'err');
@@ -1406,6 +1465,108 @@
           action: '刪除漁獲',
           rowIndex: c.rowIndex,
           onDone: loadCatches
+        });
+        box.appendChild(div);
+      });
+    }).catch(function (err) {
+      box.className = '';
+      box.innerHTML = '<div class="empty">讀取失敗：' + err + '</div>';
+    });
+  }
+
+  // ══════════════ 虎井日記 ══════════════
+  var diaryEditRow = '';
+
+  function diaryPayload(state) {
+    return {
+      action: diaryEditRow ? '編輯日記' : '新增日記',
+      rowIndex: diaryEditRow || undefined,
+      日期: document.getElementById('d-date').value,
+      標籤: document.getElementById('d-tag').value,
+      標題: document.getElementById('d-title').value.trim(),
+      內文: document.getElementById('d-body').value,
+      照片: document.getElementById('d-photo').value,
+      照片說明: document.getElementById('d-caption').value.trim(),
+      狀態: state,
+    };
+  }
+
+  function resetDiaryForm() {
+    diaryEditRow = '';
+    document.getElementById('d-row').value = '';
+    ['d-title', 'd-body', 'd-caption'].forEach(function (id) { document.getElementById(id).value = ''; });
+    document.getElementById('d-tag').value = '';
+    document.getElementById('d-photo').value = '';
+    document.getElementById('d-date').value = todayStr();
+    document.getElementById('btn-diary-cancel').style.display = 'none';
+    document.querySelector('#form-diary button[type="submit"]').textContent = '發布';
+  }
+
+  function submitDiary(state) {
+    var msg = document.getElementById('d-msg');
+    var p = diaryPayload(state);
+    if (!p.標題) { showMsg(msg, false, '要填標題'); return; }
+    if (!p.內文.trim()) { showMsg(msg, false, '要填內文'); return; }
+    showBusy(msg, '儲存中…');
+    postAction(p).then(function (res) {
+      if (!res.ok) { showMsg(msg, false, res.error); return; }
+      showOk('日記已儲存', res.message);
+      resetDiaryForm();
+      msg.className = 'msg';
+      loadDiary();
+    }).catch(function (err) { showMsg(msg, false, '失敗：' + err); });
+  }
+
+  document.getElementById('form-diary').addEventListener('submit', function (e) {
+    e.preventDefault();
+    submitDiary('已發布');
+  });
+  document.getElementById('btn-diary-draft').addEventListener('click', function () { submitDiary('草稿'); });
+  document.getElementById('btn-diary-cancel').addEventListener('click', resetDiaryForm);
+  document.getElementById('btn-refresh-diary').addEventListener('click', function () { loadDiary(); });
+
+  function loadDiary() {
+    var box = document.getElementById('d-list');
+    box.className = 'loading';
+    box.textContent = '讀取中…';
+    postAction({ action: '日記清單' }).then(function (res) {
+      box.className = '';
+      if (!res.ok) { box.innerHTML = '<div class="empty">' + res.error + '</div>'; return; }
+      if (!res.日記.length) { box.innerHTML = '<div class="empty">還沒有寫過日記</div>'; return; }
+      box.innerHTML = '';
+      res.日記.forEach(function (d) {
+        var live = d.狀態 === '已發布';
+        var div = document.createElement('div');
+        div.className = 'ocard';
+        div.innerHTML =
+          '<div class="oh"><span class="who">' + d.標題 + '</span>'
+          + '<span class="tag ' + (live ? 'paid' : 'unpaid') + '">' + d.狀態 + '</span></div>'
+          + '<div class="line">' + d.日期 + (d.標籤 ? '　' + d.標籤 : '') + '</div>'
+          + '<div class="line">' + (d.內文[0] || '').slice(0, 40) + '…</div>';
+        var edit = document.createElement('button');
+        edit.type = 'button';
+        edit.className = 'btn ghost';
+        edit.style.marginTop = '8px';
+        edit.textContent = '✏️ 編輯這則';
+        edit.addEventListener('click', function () {
+          diaryEditRow = d.rowIndex;
+          document.getElementById('d-row').value = d.rowIndex;
+          document.getElementById('d-date').value = d.日期;
+          document.getElementById('d-tag').value = d.標籤 || '';
+          document.getElementById('d-title').value = d.標題;
+          document.getElementById('d-body').value = (d.內文 || []).join('\n\n');
+          document.getElementById('d-photo').value = d.照片 || '';
+          document.getElementById('d-caption').value = d.照片說明 || '';
+          document.getElementById('btn-diary-cancel').style.display = '';
+          document.querySelector('#form-diary button[type="submit"]').textContent = '更新並發布';
+          document.getElementById('d-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+        div.appendChild(edit);
+        attachDelete(div, {
+          label: d.日期 + '　' + d.標題,
+          action: '刪除日記',
+          rowIndex: d.rowIndex,
+          onDone: loadDiary,
         });
         box.appendChild(div);
       });
