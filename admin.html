@@ -121,6 +121,7 @@
   .dcard .dmeta2 { color: var(--muted); font-size:.84rem; margin-top:3px; }
   .dcard .dex { color: var(--ink-soft); font-size:.9rem; margin-top:8px; line-height:1.6;
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .who-line { margin-top:8px; color: var(--muted); font-size:.8rem; }
   .dcard .dacts { display:flex; gap:6px; justify-content:flex-end; align-items:center;
     margin-top:12px; padding-top:10px; border-top:1px solid var(--line); }
   .dcard .dact { appearance:none; background:transparent; border:0; font:inherit; font-size:.88rem;
@@ -1453,7 +1454,10 @@
           '<div class="line">' + o.日期 + '　' + o.品項 + ' ' + qtyText(o) + ' × ' + o.單價 + ' 元</div>' +
           '<div class="line">' + o.出貨方式 + '　' + o.門市或地址 + '</div>' +
           (o.電話 ? '<div class="line">☎ ' + o.電話 + '</div>' : '') +
-          '<div class="tags">' + paidTag + shipTag + '</div>';
+          '<div class="tags">' + paidTag + shipTag + '</div>' +
+          '<div class="who-line">📝 登記：' + (o.登記人 || '—')
+            + (o.最後修改人 ? '　·　✏️ 最後修改：' + o.最後修改人 + '（' + (o.最後修改時間 || '') + '）' : '')
+            + '</div>';
         attachEdit(div, o, loadOrders);
         attachDelete(div, {
           label: o.客人姓名 + '　' + o.品項 + ' ' + qtyShort(o),
@@ -1831,7 +1835,10 @@
           '<div class="dtop"><div><div class="dttl">' + d.標題 + '</div>'
           + '<div class="dmeta2">' + d.日期 + (d.標籤 ? '　·　' + d.標籤 : '') + '</div></div>'
           + '<span class="' + (live ? 'badge-live' : 'badge-draft') + '">' + d.狀態 + '</span></div>'
-          + '<div class="dex">' + (d.內文[0] || '') + '</div>';
+          + '<div class="dex">' + (d.內文[0] || '') + '</div>'
+          + '<div class="who-line">✍️ ' + (d.寫的人 || '—')
+            + (d.最後修改人 ? '　·　最後修改：' + d.最後修改人 + '（' + (d.最後修改時間 || '') + '）' : '')
+            + '</div>';
         var acts = document.createElement('div');
         acts.className = 'dacts';
         div.appendChild(acts);

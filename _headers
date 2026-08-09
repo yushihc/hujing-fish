@@ -1,0 +1,10 @@
+# Cloudflare Pages 的快取設定
+#
+# 為什麼要有這個：日記是動態內容，改完之後如果瀏覽器還拿舊的 index.html，
+# 會以為「怎麼沒變」。網頁本身每次都重新確認，圖片和圖示照樣快取，速度不受影響。
+
+/*
+  Cache-Control: no-cache
+
+/assets/*
+  Cache-Control: public, max-age=86400
