@@ -95,6 +95,9 @@
   .qty-row input { flex:1 1 auto; min-width:0; }
   .qty-row .unit-sel { flex:0 0 92px; }
   .stock-pill .sub2 { font-weight:500; opacity:.7; font-size:.85em; }
+  /* 超商代收上限的常駐提醒（不是錯誤，是先講在前面） */
+  .cod-note { margin:8px 0 4px; padding:9px 12px; border-radius:10px; font-size:.84rem; line-height:1.6;
+    background: var(--coral-soft); color: var(--coral-ink); }
   /* 按鈕在等待時的樣子：轉圈圈 ＋ 不能重複按 */
   .btn[disabled] { opacity:.75; cursor: default; }
   .spin { display:inline-block; width:14px; height:14px; margin-right:8px; vertical-align:-2px;
@@ -335,6 +338,8 @@
           <label class="opt"><input type="radio" name="o-ship" value="7-11先匯款"> 7-11 先匯款</label>
           <label class="opt"><input type="radio" name="o-ship" value="宅配"> 冷凍宅配</label>
         </div>
+        <p class="cod-note">⚠️ <strong>應收滿 2,000 元就不能用「取貨付款」</strong> － 超商代收上限是 2,000（含運費）。<br>
+          以 650／台斤 算大約是 <strong>3 台斤</strong>，超過請改選「7-11 先匯款」請客人先轉帳。</p>
         <label id="o-addr-label" for="o-addr">7-11 門市名稱</label>
         <input type="text" id="o-addr">
         <label for="o-fee">運費（向客人收）</label>
@@ -501,6 +506,7 @@
       <label class="opt"><input type="radio" name="e-ship" value="7-11先匯款"> 7-11 先匯款</label>
       <label class="opt"><input type="radio" name="e-ship" value="宅配"> 冷凍宅配</label>
     </div>
+    <p class="cod-note">⚠️ 應收滿 2,000 就不能用「取貨付款」（超商代收上限，含運費）。</p>
     <label for="e-addr">門市或地址</label>
     <input type="text" id="e-addr">
     <label>狀態</label>
