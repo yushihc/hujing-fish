@@ -132,6 +132,21 @@
   .about-h3 { font-family: var(--font-serif); font-weight:700; color: var(--sky-ink); font-size:1.35rem; margin: 10px 0 6px; }
   .note-card { margin-top:20px; background: var(--paper); border:1px dashed var(--line); border-radius:12px; padding:16px 18px; color: var(--muted); font-size:.9rem; }
 
+  /* 虎井日記 */
+  .dentry { background: var(--paper); border:1px solid var(--line); border-radius: var(--r-card);
+    padding: 26px 28px; box-shadow: var(--shadow); margin-bottom:18px; max-width:44em; }
+  .dentry .dmeta { display:flex; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
+  .dentry .ddate { font-family: Georgia, serif; font-style:italic; color: var(--coral-ink); font-size:.9rem; }
+  .dentry .dtag { font-size:.72rem; font-weight:700; padding:2px 9px; border-radius:999px;
+    background: var(--sky-soft); color: var(--sky-ink); }
+  .dentry h3 { font-family: var(--font-serif); font-weight:700; color: var(--sky-ink);
+    font-size:1.35rem; margin:0 0 12px; line-height:1.45; }
+  .dentry p { margin:0 0 12px; color: var(--ink-soft); text-wrap: pretty; }
+  .dentry p:last-child { margin-bottom:0; }
+  .dentry figure { margin:0 0 16px; }
+  .dentry figure img { width:100%; border-radius:12px; }
+  .dentry figcaption { color: var(--muted); font-size:.84rem; margin-top:6px; }
+
   /* order */
   .order-card { position:relative; overflow:hidden; background: linear-gradient(158deg, var(--sky-ink), var(--sky)); color:#fff; border-radius: var(--r-lg); padding: clamp(30px,5vw,52px); box-shadow: var(--shadow); text-align:center; }
   .order-card::before { content:""; position:absolute; top:0; left:0; right:0; height:4px; background: linear-gradient(90deg, var(--gold), var(--coral)); }
@@ -214,6 +229,7 @@
     <button data-target="cook"><span class="ico" aria-hidden="true">🍳</span> 料理與保存</button>
     <!-- 海鮮月曆先收起來（2026-08 使用者說目前多餘）。以後要開回來，把這行和下面 pane-calendar 那一段的註解拿掉就好。
     <button data-target="calendar"><span class="ico" aria-hidden="true">📅</span> 海鮮月曆</button> -->
+    <button data-target="diary"><span class="ico" aria-hidden="true">📖</span> 虎井日記</button>
     <button data-target="about"><span class="ico" aria-hidden="true">🏝️</span> 關於我們</button>
   </nav>
   <a class="s-cta" id="cta" href="#order" data-target="order">
@@ -390,6 +406,14 @@
   </section>
   -->
 
+  <section class="pane page" id="pane-diary">
+    <p class="eyebrow">island diary</p>
+    <h2 class="title">虎井日記</h2>
+    <p class="sub">island diary．島上的事、海上的事，還有那些只有在這裡才知道的細節。</p>
+    <!-- 日記內容在最下面的 DIARY 陣列，要新增就加一筆物件，不用動這裡 -->
+    <div id="diary-list"></div>
+  </section>
+
   <section class="pane page" id="pane-about">
     <p class="eyebrow">about us</p>
     <h2 class="title">關於虎井嶼手釣魚</h2>
@@ -458,6 +482,55 @@
       document.querySelectorAll('.ctab').forEach(function(t){ t.classList.toggle('on', t.id==='ct-'+b.dataset.ct); });
     });
   });
+
+  /* ═══════════════════════════════════════════════════════════
+     虎井日記 － 要新增一則，就在最前面加一筆物件（最新的排最上面）
+
+       {
+         date: '2026.08.09',            // 日期
+         tag: '爸爸的海',                // 小標籤，可省略
+         title: '標題',
+         photo: 'assets/photos/xxx.jpg', // 照片，沒有就整行拿掉
+         caption: '照片說明',             // 沒照片就一起拿掉
+         body: [
+           '第一段…',
+           '第二段…',
+         ],
+       },
+
+     不用動下面的程式，加物件就會自動出現在網頁上。
+     ═══════════════════════════════════════════════════════════ */
+  var DIARY = [
+    {
+      date: '2026.08.09',
+      tag: '開場',
+      title: '為什麼想寫這本日記',
+      photo: 'assets/photos/harbour.jpg',
+      caption: '虎井漁港——魚上岸的地方',
+      body: [
+        '我們賣的是小卷。但如果只講小卷，其實講不完這件事。',
+        '爸爸退休那年買了一艘小船，回到虎井嶼。他沒有選擇用網，而是一支釣竿、一條線，一尾一尾釣。每天先看海況、等潮汐，浪太大就不出海——所以我們沒辦法保證這禮拜一定有什麼，今天海裡有什麼，我們就賣什麼。',
+        '這座島上還有很多我們覺得值得說的事：黑潮支流和澎湖海流在這裡交會，所以魚要一直對抗海流，肉才會那麼緊實；港邊有一整排看著海的陶土貓，巷子裡到處是曬太陽的貓；冬天的東北季風大到會讓人懷疑人生。',
+        '這些事不會讓小卷變得更便宜，但會讓你知道，你吃的那一口是從什麼地方來的。',
+        '所以開了這一頁。想到什麼就寫什麼，不定期更新。',
+      ],
+    },
+  ];
+
+  (function renderDiary() {
+    var box = document.getElementById('diary-list');
+    if (!box) return;
+    box.innerHTML = DIARY.map(function (d) {
+      var meta = '<div class="dmeta"><span class="ddate">' + d.date + '</span>'
+        + (d.tag ? '<span class="dtag">' + d.tag + '</span>' : '') + '</div>';
+      var pic = d.photo
+        ? '<figure><img src="' + d.photo + '" alt="' + (d.caption || d.title) + '" loading="lazy">'
+          + (d.caption ? '<figcaption>' + d.caption + '</figcaption>' : '') + '</figure>'
+        : '';
+      var text = (d.body || []).map(function (p) { return '<p>' + p + '</p>'; }).join('');
+      return '<article class="dentry">' + meta + '<h3>' + d.title + '</h3>' + pic + text + '</article>';
+    }).join('');
+  })();
 
   // ★★★ LINE 官方帳號的加好友網址。ID 是 @600imryz ★★★
   // 之後若在後台拿到 lin.ee 的短網址，換掉這一行就好，其他都不用動。
