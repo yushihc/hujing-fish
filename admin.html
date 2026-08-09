@@ -141,13 +141,18 @@
   .photo-none { color: var(--muted); font-size:.84rem; }
   .photo-side { display:flex; flex-direction:column; gap:6px; align-items:flex-start; }
 
-  /* 圖庫視窗 */
-  .photo-modal { max-width: 720px; }
-  .gal { display:grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap:10px;
-    max-height:52vh; overflow-y:auto; margin:10px 0 4px; }
+  /* 圖庫視窗 － 盡量開大，選照片要看得清楚 */
+  .photo-modal { max-width: 1040px; width: min(1040px, 94vw); }
+  .gal-bar { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:6px 0 12px; }
+  .gal-bar select { width:auto; min-width:150px; margin:0; padding:8px 12px; font-size:.9rem; }
+  .gal-count { color: var(--muted); font-size:.85rem; margin-left:auto; }
+  .gal { display:grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap:12px;
+    max-height:60vh; overflow-y:auto; margin:0 0 4px; padding-right:4px; }
   .gal-item { border:2px solid transparent; border-radius:12px; overflow:hidden; cursor:pointer;
     background: var(--paper-2); padding:0; position:relative; }
-  .gal-item img { width:100%; height:100px; object-fit:cover; display:block; }
+  .gal-item img { width:100%; height:140px; object-fit:cover; display:block; }
+  .gal-item .when { position:absolute; top:6px; right:6px; background:rgba(0,0,0,.55); color:#fff;
+    font-size:.68rem; padding:2px 7px; border-radius:999px; }
   .gal-item .cap { display:block; font-size:.78rem; color: var(--ink-soft);
     padding:6px 8px; text-align:left; line-height:1.4; }
   .gal-item:hover { border-color: var(--sky); }
@@ -520,7 +525,9 @@
           <option value="貓">貓</option>
           <option value="吃法">吃法</option>
           <option value="季節">季節</option>
+          <option value="其他">其他（自己打）</option>
         </select>
+        <input type="text" id="d-tag-other" placeholder="" style="display:none; margin-top:8px;">
         <label for="d-title">標題</label>
         <input type="text" id="d-title">
         <label for="d-body">內文</label>
@@ -562,7 +569,19 @@
   <div class="modal-mask" id="photo-modal">
     <div class="modal photo-modal">
       <h3>🖼 圖庫</h3>
-      <p class="hint">點一張就選好了。</p>
+      <div class="gal-bar">
+        <select id="gal-filter">
+          <option value="all">全部照片</option>
+          <option value="up">只看自己上傳的</option>
+          <option value="built">只看虎井內建的</option>
+        </select>
+        <select id="gal-sort">
+          <option value="new">最新上傳的在前</option>
+          <option value="old">最舊的在前</option>
+          <option value="name">依說明排序</option>
+        </select>
+        <span class="gal-count" id="gal-count"></span>
+      </div>
       <div class="gal" id="gal"></div>
       <div class="gal-foot">
         <label class="upload-btn" for="d-file">＋ 上傳新照片</label>
@@ -803,6 +822,7 @@
   }
   wireItemSelect('c-item', 'c-item-other');
   wireItemSelect('o-item', 'o-item-other');
+  wireItemSelect('d-tag', 'd-tag-other');
 
   function pickedItem(selectId, otherId) {
     var sel = document.getElementById(selectId);
@@ -1606,25 +1626,56 @@
   ];
   var uploadedPhotos = [];
 
+  function shortDate(iso) {
+    if (!iso) return '';
+    return iso.slice(0, 10).replace(/-/g, '/').slice(5); // 只留 月/日
+  }
+
   function renderGallery() {
     var gal = document.getElementById('gal');
     var chosen = document.getElementById('d-photo').value;
-    var all = uploadedPhotos.concat(BUILTIN_PHOTOS); // 自己上傳的排前面
-    if (!all.length) { gal.innerHTML = '<div class="empty">圖庫是空的</div>'; return; }
+    var filter = document.getElementById('gal-filter').value;
+    var sort = document.getElementById('gal-sort').value;
+
+    var all = [];
+    if (filter !== 'built') all = all.concat(uploadedPhotos);
+    if (filter !== 'up') all = all.concat(BUILTIN_PHOTOS);
+
+    all = all.slice();
+    if (sort === 'name') {
+      all.sort(function (a, b) { return (a.說明 || '').localeCompare(b.說明 || '', 'zh-Hant'); });
+    } else {
+      // 內建照片沒有上傳時間，一律排在自己上傳的後面
+      all.sort(function (a, b) {
+        var A = a.上傳時間 || '', B = b.上傳時間 || '';
+        if (!A && !B) return 0;
+        if (!A) return 1;
+        if (!B) return -1;
+        return sort === 'old' ? (A < B ? -1 : 1) : (A < B ? 1 : -1);
+      });
+    }
+
+    document.getElementById('gal-count').textContent = '共 ' + all.length + ' 張';
+    if (!all.length) { gal.innerHTML = '<div class="empty">這個條件下沒有照片</div>'; return; }
+
     gal.innerHTML = '';
     all.forEach(function (p) {
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'gal-item' + (p.url === chosen ? ' on' : '');
       b.innerHTML = '<img src="' + p.url + '" alt="" loading="lazy">'
+        + (p.上傳時間 ? '<span class="when">' + shortDate(p.上傳時間) + '</span>' : '')
         + '<span class="cap">' + (p.說明 || '（沒有說明）') + '</span>';
       b.addEventListener('click', function () {
-        setPhoto(p.url, p.說明);
+        setPhoto(p.url, p.說明 === '（沒有說明）' ? '' : p.說明);
         closePhotoModal();
       });
       gal.appendChild(b);
     });
   }
+  ['gal-filter', 'gal-sort'].forEach(function (id) {
+    document.getElementById(id).addEventListener('change', renderGallery);
+  });
 
   function setPhoto(url, caption) {
     document.getElementById('d-photo').value = url || '';
@@ -1651,7 +1702,7 @@
       .then(function (res) {
         if (!res.ok) return;
         uploadedPhotos = res.照片.map(function (p) {
-          return { url: p.url, 說明: p.說明 || '（沒有說明）' };
+          return { url: p.url, 說明: p.說明 || '（沒有說明）', 上傳時間: p.上傳時間 || '' };
         });
         renderGallery();
       })
@@ -1682,7 +1733,7 @@
       return fetch(PHOTO_API + '/upload', { method: 'POST', body: fd });
     }).then(function (r) { return r.json(); }).then(function (res) {
       if (!res.ok) { state.textContent = '❌ ' + res.error; return; }
-      uploadedPhotos.unshift({ url: res.url, 說明: '剛剛上傳的' });
+      uploadedPhotos.unshift({ url: res.url, 說明: '剛剛上傳的', 上傳時間: new Date().toISOString() });
       setPhoto(res.url);
       renderGallery();
       state.textContent = '✅ 上傳完成，已經選好了';
@@ -1714,7 +1765,7 @@
       action: diaryEditRow ? '編輯日記' : '新增日記',
       rowIndex: diaryEditRow || undefined,
       日期: document.getElementById('d-date').value,
-      標籤: document.getElementById('d-tag').value,
+      標籤: pickedItem('d-tag', 'd-tag-other'),
       標題: document.getElementById('d-title').value.trim(),
       內文: document.getElementById('d-body').value,
       照片: document.getElementById('d-photo').value,
@@ -1728,6 +1779,8 @@
     document.getElementById('d-row').value = '';
     ['d-title', 'd-body', 'd-caption'].forEach(function (id) { document.getElementById(id).value = ''; });
     document.getElementById('d-tag').value = '';
+    document.getElementById('d-tag-other').value = '';
+    document.getElementById('d-tag-other').style.display = 'none';
     document.getElementById('d-date').value = todayStr();
     document.getElementById('btn-diary-cancel').style.display = 'none';
     document.getElementById('d-upstate').textContent = '';
@@ -1790,7 +1843,14 @@
           diaryEditRow = d.rowIndex;
           document.getElementById('d-row').value = d.rowIndex;
           document.getElementById('d-date').value = d.日期;
-          document.getElementById('d-tag').value = d.標籤 || '';
+          // 標籤如果不是清單裡的選項，就切到「其他」並填進去
+          var tagSel = document.getElementById('d-tag'), tagOther = document.getElementById('d-tag-other');
+          var known = [].some.call(tagSel.options, function (o) { return o.value === (d.標籤 || ''); });
+          if (d.標籤 && !known) {
+            tagSel.value = '其他'; tagOther.value = d.標籤; tagOther.style.display = 'block';
+          } else {
+            tagSel.value = d.標籤 || ''; tagOther.value = ''; tagOther.style.display = 'none';
+          }
           document.getElementById('d-title').value = d.標題;
           document.getElementById('d-body').value = (d.內文 || []).join('\n\n');
           document.getElementById('d-caption').value = d.照片說明 || '';
