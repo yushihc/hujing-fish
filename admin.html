@@ -342,6 +342,8 @@
           以 650／台斤 算大約是 <strong>3 台斤</strong>，超過請改選「7-11 先匯款」請客人先轉帳。</p>
         <label id="o-addr-label" for="o-addr">7-11 門市名稱</label>
         <input type="text" id="o-addr">
+        <p class="cost-hint" id="o-addr-hint">✅ 接單前先確認這間門市<strong>有冷凍交貨便</strong>。本島幾乎都有，
+          澎湖排除七美、望安。<a href="https://myship.7-11.com.tw/MyShip/Shipinfo?showUrlType=freeze" target="_blank" rel="noopener">查詢門市 ↗</a></p>
         <label for="o-fee">運費（向客人收）</label>
         <input type="number" id="o-fee" inputmode="numeric" step="any" min="0" value="120">
         <label for="o-cost">出貨成本（我們實付：運費＋紙箱）</label>
@@ -631,6 +633,8 @@
       var input = document.getElementById('o-addr');
       var cost = document.getElementById('o-cost');
       var hint = document.getElementById('o-cost-hint');
+      // 冷凍交貨便的門市提醒只在走 7-11 時才需要
+      document.getElementById('o-addr-hint').style.display = isStore(this.value) ? '' : 'none';
       if (isStore(this.value)) {
         label.textContent = '7-11 門市名稱'; input.placeholder = '';
         cost.value = 149; document.getElementById('o-fee').value = 120;
