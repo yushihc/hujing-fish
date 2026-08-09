@@ -133,13 +133,32 @@
   .badge-live { background: var(--ok-soft); color: var(--ok); }
   .badge-draft { background: var(--paper-2); color: var(--muted); }
 
-  /* 上傳新照片 */
-  .upload-row { display:flex; align-items:center; gap:12px; margin-top:8px; }
+  /* 照片欄位：左邊是選好的縮圖，右邊是按鈕 */
+  .photo-field { display:flex; gap:14px; align-items:flex-start; margin-top:4px; }
+  .photo-slot { width:150px; height:104px; border-radius:12px; border:1px dashed var(--line);
+    background: var(--paper-2); display:grid; place-items:center; overflow:hidden; flex:0 0 auto; }
+  .photo-slot img { width:100%; height:100%; object-fit:cover; display:none; }
+  .photo-none { color: var(--muted); font-size:.84rem; }
+  .photo-side { display:flex; flex-direction:column; gap:6px; align-items:flex-start; }
+
+  /* 圖庫視窗 */
+  .photo-modal { max-width: 720px; }
+  .gal { display:grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap:10px;
+    max-height:52vh; overflow-y:auto; margin:10px 0 4px; }
+  .gal-item { border:2px solid transparent; border-radius:12px; overflow:hidden; cursor:pointer;
+    background: var(--paper-2); padding:0; position:relative; }
+  .gal-item img { width:100%; height:100px; object-fit:cover; display:block; }
+  .gal-item .cap { display:block; font-size:.78rem; color: var(--ink-soft);
+    padding:6px 8px; text-align:left; line-height:1.4; }
+  .gal-item:hover { border-color: var(--sky); }
+  .gal-item.on { border-color: var(--coral); }
+  .gal-foot { display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    border-top:1px solid var(--line); padding-top:12px; margin-top:6px; }
+  .gal-foot .dact { margin-left:auto; }
   .upload-btn { display:inline-block; background: var(--sky-soft); color: var(--sky-ink);
     font-weight:700; font-size:.9rem; padding:9px 16px; border-radius:10px; cursor:pointer; }
   .upload-btn:hover { filter: brightness(.96); }
   .upload-state { color: var(--muted); font-size:.85rem; }
-  .photo-preview { margin-top:10px; max-height:150px; border-radius:10px; border:1px solid var(--line); }
 
   /* 兩顆按鈕並排（存草稿／發布） */
   .row2 { display:flex; gap:10px; margin-top:14px; }
@@ -507,26 +526,18 @@
         <label for="d-body">內文</label>
         <textarea id="d-body" rows="9"></textarea>
         <p class="cost-hint">空一行 ＝ 分一段。不用管排版，網頁會自己處理。</p>
-        <label for="d-photo">配一張照片（可以不選）</label>
-        <select id="d-photo">
-          <option value="">不放照片</option>
-          <optgroup label="虎井的照片" id="d-photo-builtin">
-            <option value="assets/photos/hero.jpg">玄武岩海岸</option>
-            <option value="assets/photos/harbour.jpg">虎井漁港</option>
-            <option value="assets/photos/village.jpg">村子與海</option>
-            <option value="assets/photos/sea.jpg">虎井的海</option>
-            <option value="assets/photos/coast.jpg">海岸</option>
-            <option value="assets/photos/cat-alley.jpg">巷子口的橘貓</option>
-            <option value="assets/photos/cat-wall.jpg">沙灘上頭的陶土貓</option>
-          </optgroup>
-          <optgroup label="自己上傳的" id="d-photo-uploaded"></optgroup>
-        </select>
-        <div class="upload-row">
-          <label class="upload-btn" for="d-file">＋ 上傳新照片</label>
-          <input type="file" id="d-file" accept="image/*" hidden>
-          <span class="upload-state" id="d-upstate"></span>
+        <label>配一張照片（可以不選）</label>
+        <input type="hidden" id="d-photo" value="">
+        <div class="photo-field">
+          <div class="photo-slot" id="d-slot">
+            <img id="d-preview" alt="">
+            <span class="photo-none" id="d-none">還沒選照片</span>
+          </div>
+          <div class="photo-side">
+            <button type="button" class="btn ghost" id="btn-pick-photo">🖼 打開圖庫</button>
+            <button type="button" class="dact" id="btn-clear-photo" style="display:none">移除照片</button>
+          </div>
         </div>
-        <img id="d-preview" class="photo-preview" alt="" style="display:none">
         <label for="d-caption">照片說明（可以不填）</label>
         <input type="text" id="d-caption">
         <div class="row2">
@@ -547,6 +558,20 @@
       <div id="d-list" class="loading">讀取中…</div>
     </div>
   </section>
+
+  <div class="modal-mask" id="photo-modal">
+    <div class="modal photo-modal">
+      <h3>🖼 圖庫</h3>
+      <p class="hint">點一張就選好了。</p>
+      <div class="gal" id="gal"></div>
+      <div class="gal-foot">
+        <label class="upload-btn" for="d-file">＋ 上傳新照片</label>
+        <input type="file" id="d-file" accept="image/*" hidden>
+        <span class="upload-state" id="d-upstate"></span>
+        <button type="button" class="dact" id="btn-photo-close">關閉</button>
+      </div>
+    </div>
+  </div>
 
   <section class="pane page" id="pane-archive">
     <div class="card">
@@ -1569,13 +1594,53 @@
     });
   }
 
-  function addUploadedOption(url, label) {
-    var grp = document.getElementById('d-photo-uploaded');
-    if ([].some.call(grp.children, function (o) { return o.value === url; })) return;
-    var opt = document.createElement('option');
-    opt.value = url;
-    opt.textContent = label;
-    grp.insertBefore(opt, grp.firstChild);
+  // 圖庫：內建的虎井照片 ＋ 自己上傳的
+  var BUILTIN_PHOTOS = [
+    { url: 'assets/photos/hero.jpg', 說明: '玄武岩海岸' },
+    { url: 'assets/photos/harbour.jpg', 說明: '虎井漁港' },
+    { url: 'assets/photos/village.jpg', 說明: '村子與海' },
+    { url: 'assets/photos/sea.jpg', 說明: '虎井的海' },
+    { url: 'assets/photos/coast.jpg', 說明: '海岸' },
+    { url: 'assets/photos/cat-alley.jpg', 說明: '巷子口的橘貓' },
+    { url: 'assets/photos/cat-wall.jpg', 說明: '沙灘上頭的陶土貓' },
+  ];
+  var uploadedPhotos = [];
+
+  function renderGallery() {
+    var gal = document.getElementById('gal');
+    var chosen = document.getElementById('d-photo').value;
+    var all = uploadedPhotos.concat(BUILTIN_PHOTOS); // 自己上傳的排前面
+    if (!all.length) { gal.innerHTML = '<div class="empty">圖庫是空的</div>'; return; }
+    gal.innerHTML = '';
+    all.forEach(function (p) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'gal-item' + (p.url === chosen ? ' on' : '');
+      b.innerHTML = '<img src="' + p.url + '" alt="" loading="lazy">'
+        + '<span class="cap">' + (p.說明 || '（沒有說明）') + '</span>';
+      b.addEventListener('click', function () {
+        setPhoto(p.url, p.說明);
+        closePhotoModal();
+      });
+      gal.appendChild(b);
+    });
+  }
+
+  function setPhoto(url, caption) {
+    document.getElementById('d-photo').value = url || '';
+    var img = document.getElementById('d-preview');
+    var none = document.getElementById('d-none');
+    var clear = document.getElementById('btn-clear-photo');
+    if (url) {
+      img.src = url; img.style.display = 'block';
+      none.style.display = 'none'; clear.style.display = '';
+      // 說明欄還是空的話，順手帶入圖庫的說明，媽媽可以直接改
+      var cap = document.getElementById('d-caption');
+      if (!cap.value.trim() && caption) cap.value = caption;
+    } else {
+      img.style.display = 'none'; none.style.display = '';
+      clear.style.display = 'none';
+    }
   }
 
   function refreshUploadedPhotos() {
@@ -1585,21 +1650,21 @@
       .then(function (r) { return r.json(); })
       .then(function (res) {
         if (!res.ok) return;
-        res.照片.forEach(function (p) {
-          addUploadedOption(p.url, (p.說明 || p.key.replace('diary/', '')) + '（' + p.大小KB + ' KB）');
+        uploadedPhotos = res.照片.map(function (p) {
+          return { url: p.url, 說明: p.說明 || '（沒有說明）' };
         });
+        renderGallery();
       })
       .catch(function () { /* 拿不到就算了，內建那幾張還是能用 */ });
   }
 
-  function showPhotoPreview() {
-    var v = document.getElementById('d-photo').value;
-    var img = document.getElementById('d-preview');
-    if (!v) { img.style.display = 'none'; return; }
-    img.src = v;
-    img.style.display = '';
-  }
-  document.getElementById('d-photo').addEventListener('change', showPhotoPreview);
+  var photoMask = document.getElementById('photo-modal');
+  function openPhotoModal() { renderGallery(); photoMask.classList.add('show'); }
+  function closePhotoModal() { photoMask.classList.remove('show'); }
+  document.getElementById('btn-pick-photo').addEventListener('click', openPhotoModal);
+  document.getElementById('btn-photo-close').addEventListener('click', closePhotoModal);
+  photoMask.addEventListener('click', function (e) { if (e.target === photoMask) closePhotoModal(); });
+  document.getElementById('btn-clear-photo').addEventListener('click', function () { setPhoto(''); });
 
   document.getElementById('d-file').addEventListener('change', function () {
     var file = this.files && this.files[0];
@@ -1617,10 +1682,11 @@
       return fetch(PHOTO_API + '/upload', { method: 'POST', body: fd });
     }).then(function (r) { return r.json(); }).then(function (res) {
       if (!res.ok) { state.textContent = '❌ ' + res.error; return; }
-      addUploadedOption(res.url, '剛剛上傳的');
-      document.getElementById('d-photo').value = res.url;
-      showPhotoPreview();
+      uploadedPhotos.unshift({ url: res.url, 說明: '剛剛上傳的' });
+      setPhoto(res.url);
+      renderGallery();
       state.textContent = '✅ 上傳完成，已經選好了';
+      setTimeout(closePhotoModal, 700);
     }).catch(function (e) {
       state.textContent = '❌ 上傳失敗：' + e;
     }).then(function () {
@@ -1662,11 +1728,10 @@
     document.getElementById('d-row').value = '';
     ['d-title', 'd-body', 'd-caption'].forEach(function (id) { document.getElementById(id).value = ''; });
     document.getElementById('d-tag').value = '';
-    document.getElementById('d-photo').value = '';
     document.getElementById('d-date').value = todayStr();
     document.getElementById('btn-diary-cancel').style.display = 'none';
     document.getElementById('d-upstate').textContent = '';
-    document.getElementById('d-preview').style.display = 'none';
+    setPhoto('');
     document.querySelector('#form-diary button[type="submit"]').textContent = '發布';
   }
 
@@ -1728,11 +1793,8 @@
           document.getElementById('d-tag').value = d.標籤 || '';
           document.getElementById('d-title').value = d.標題;
           document.getElementById('d-body').value = (d.內文 || []).join('\n\n');
-          document.getElementById('d-photo').value = d.照片 || '';
           document.getElementById('d-caption').value = d.照片說明 || '';
-          if (d.照片) addUploadedOption(d.照片, '這則原本用的');
-          document.getElementById('d-photo').value = d.照片 || '';
-          showPhotoPreview();
+          setPhoto(d.照片 || '');
           document.getElementById('btn-diary-cancel').style.display = '';
           showDiaryTab('write'); // 跳回寫日記那頁，不然改了看不到
           document.querySelector('#form-diary button[type="submit"]').textContent = '更新並發布';
