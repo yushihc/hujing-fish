@@ -367,7 +367,7 @@
       <form id="form-catch">
         <label for="c-item">品項</label>
         <select id="c-item">
-          <option value="小卷">小卷</option>
+          <option value="小管">小管</option>
           <option value="其他">其他</option>
         </select>
         <input type="text" id="c-item-other" placeholder="請輸入品項名稱" style="display:none; margin-top:8px;">
@@ -399,7 +399,7 @@
       <form id="form-order">
         <label for="o-item">品項</label>
         <select id="o-item">
-          <option value="小卷">小卷</option>
+          <option value="小管">小管</option>
           <option value="其他">其他</option>
         </select>
         <input type="text" id="o-item-other" placeholder="請輸入品項名稱" style="display:none; margin-top:8px;">
@@ -1495,7 +1495,7 @@
     var sel = document.getElementById('t-item');
     var prev = sel.value;
     var names = currentStock.map(function (s) { return s.品項; });
-    if (names.indexOf('小卷') === -1) names.unshift('小卷');
+    if (names.indexOf('小管') === -1) names.unshift('小管');
     sel.innerHTML = names.map(function (n) {
       return '<option value="' + n + '">' + n + '</option>';
     }).join('') + '<option value="其他">其他</option>';
