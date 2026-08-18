@@ -74,6 +74,25 @@
   /* 待出貨卡片上「這筆沒有 Email」的提醒 － 去 7-11 寄件前要補問 */
   .meta.miss { color: var(--coral-ink, #A85416); }
 
+  /* 貼上 LINE 訊息的區塊：跟下面的表單分開，看得出來是「先貼、再檢查」兩步 */
+  .paste-box { background: var(--sky-soft, #E8F1F8); border:1px dashed var(--sky, #1683C9);
+    border-radius:12px; padding:12px 12px 10px; margin-bottom:16px; }
+  .paste-box label { margin-top:0; }
+  .paste-box textarea { width:100%; border:1px solid var(--line); border-radius:10px;
+    padding:10px; font:inherit; background: var(--paper); resize:vertical; }
+  .paste-box textarea:focus { border-color: var(--sky); outline:none; }
+  .paste-act { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:8px; }
+  .btn.small { width:auto; padding:8px 14px; font-size:.88rem; }
+  .paste-msg { font-size:.85rem; font-weight:600; }
+  .paste-msg.ok { color:#1B7A4B; }
+  .paste-msg.warn { color: var(--coral-ink); }
+
+  /* 待辦分組：標題右邊掛一顆筆數，一眼看到哪一組最多 */
+  .todo-card + .todo-card { margin-top:14px; }
+  .todo-card h2 { display:flex; align-items:center; gap:10px; }
+  .grp-n { background: var(--coral); color: var(--on-coral); font-size:.8rem; font-weight:800;
+    min-width:24px; text-align:center; padding:2px 8px; border-radius:999px; }
+
   .radio-row { display:flex; gap:10px; }
   .radio-row label.opt {
     flex:1; display:flex; align-items:center; justify-content:center; gap:6px;
@@ -401,6 +420,16 @@
     <div class="card">
       <h2>登記訂單</h2>
       <p class="hint">收到 LINE 訂單後，把客人資料記下來。</p>
+
+      <div class="paste-box">
+        <label for="o-paste">把 LINE 訊息整段貼進來</label>
+        <textarea id="o-paste" rows="3"></textarea>
+        <div class="paste-act">
+          <button type="button" class="btn ghost small" id="btn-parse">✨ 自動填入下面的欄位</button>
+          <span class="paste-msg" id="o-paste-msg"></span>
+        </div>
+      </div>
+
       <form id="form-order">
         <label for="o-item">品項</label>
         <select id="o-item">
@@ -408,8 +437,9 @@
           <option value="其他">其他</option>
         </select>
         <input type="text" id="o-item-other" placeholder="請輸入品項名稱" style="display:none; margin-top:8px;">
-        <label for="o-name">客人姓名</label>
-        <input type="text" id="o-name">
+        <label for="o-name">客人姓名<span class="why">老客人打名字會自動帶出上次的資料</span></label>
+        <input type="text" id="o-name" list="customer-list" autocomplete="off">
+        <datalist id="customer-list"></datalist>
         <label for="o-phone">電話</label>
         <input type="tel" id="o-phone">
         <label for="o-email">Email<span class="why">7-11 寄件要用，建議先問</span></label>
@@ -447,26 +477,11 @@
 
   <section class="pane" id="pane-pending">
     <div class="stat-row">
-      <div class="stat"><div class="n" id="s-ship">–</div><div class="l">待出貨筆數</div></div>
-      <div class="stat"><div class="n" id="s-pay">–</div><div class="l">待收款筆數</div></div>
+      <div class="stat"><div class="n" id="s-ship">–</div><div class="l">該出貨</div></div>
+      <div class="stat"><div class="n" id="s-pay">–</div><div class="l">等收錢</div></div>
     </div>
 
-    <div class="cols2">
-      <div class="card">
-        <h2>待出貨</h2>
-        <p class="hint">這次要寄的清單，可以複製貼到 LINE，或下載成 Excel。</p>
-        <div class="two-btn">
-          <button class="btn ghost" id="btn-copy-ship" type="button">📋 複製清單</button>
-          <button class="btn ghost" id="btn-csv-ship" type="button">📥 下載 Excel</button>
-        </div>
-        <div id="s-ship-list" class="loading" style="margin-top:14px">讀取中…</div>
-      </div>
-
-      <div class="card">
-        <h2>待收款</h2>
-        <div id="s-pay-list" class="loading">讀取中…</div>
-      </div>
-    </div>
+    <div id="s-todo" class="loading">讀取中…</div>
 
     <button class="dl-refresh" id="btn-refresh" type="button" style="margin-top:14px">🔄 重新整理</button>
   </section>
@@ -751,6 +766,7 @@
       if (btn.dataset.target === 'stock') { loadSummary(); loadAdjusts(); }
       if (btn.dataset.target === 'report') loadReport();
       if (btn.dataset.target === 'orders') loadOrders();
+      if (btn.dataset.target === 'order') loadCustomers();
       if (btn.dataset.target === 'archive') loadArchive();
       if (btn.dataset.target === 'diary') showDiaryTab('write');
     });
@@ -939,6 +955,7 @@
     loadSummary();
     loadCatches();
     loadAdjusts();
+    loadCustomers();
   }
 
   document.getElementById('form-login').addEventListener('submit', function (e) {
@@ -1048,20 +1065,17 @@
 
   function loadSummary() {
     document.getElementById('s-stock-list').textContent = '讀取中…';
-    document.getElementById('s-ship-list').textContent = '讀取中…';
-    document.getElementById('s-pay-list').textContent = '讀取中…';
+    document.getElementById('s-todo').textContent = '讀取中…';
     postAction({ action: '總覽' }).then(function (res) {
       if (!res.ok) { document.getElementById('s-stock-list').textContent = res.error; return; }
       currentStock = res.庫存明細 || [];
       renderStock(res.庫存明細);
       document.getElementById('s-ship').textContent = res.待出貨.length;
       document.getElementById('s-pay').textContent = res.待收款.length;
-      renderShip(res.待出貨);
-      renderPay(res.待收款);
+      renderTodo(res.待辦 || []);
     }).catch(function (err) {
       document.getElementById('s-stock-list').textContent = '讀取失敗：' + err;
-      document.getElementById('s-ship-list').textContent = '讀取失敗：' + err;
-      document.getElementById('s-pay-list').textContent = '讀取失敗：' + err;
+      document.getElementById('s-todo').textContent = '讀取失敗：' + err;
     });
   }
 
@@ -1138,8 +1152,9 @@
     setTimeout(function () { btn.textContent = old; }, 1800);
   }
 
-  document.getElementById('btn-copy-ship').addEventListener('click', function () {
-    var btn = this;
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('#btn-copy-ship');
+    if (!btn) return;
     var text = shipAsText();
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(function () { flashBtn(btn, '✅ 已複製'); })
@@ -1157,13 +1172,137 @@
     document.body.removeChild(ta);
   }
 
-  document.getElementById('btn-csv-ship').addEventListener('click', function () {
-    if (!shipRows.length) { flashBtn(this, '沒有待出貨'); return; }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('#btn-csv-ship');
+    if (!btn) return;
+    if (!shipRows.length) { flashBtn(btn, '沒有待出貨'); return; }
     downloadShipCsv();
-    flashBtn(this, '✅ 已下載');
+    flashBtn(btn, '✅ 已下載');
   });
 
-  // 可勾選的清單（待出貨／待收款共用）
+
+  // ── 貼上 LINE 訊息，自動拆成欄位 ──────────────────
+  // 客人不會照格式回，所以規則是「找得到就填、找不到留空」，人再檢查一次。
+  // 目的是把一筆從打十幾格變成看幾格，不是要百分之百猜對。
+  function parseOrderText(text) {
+    var t = (text || '').replace(/\u3000/g, ' ');
+    var got = {}, hit = [];
+
+    // Email 先抓，抓完從字串裡拿掉，免得後面被誤判成姓名或門市
+    var m = t.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/);
+    if (m) { got.Email = m[0]; hit.push('Email'); t = t.replace(m[0], ' '); }
+
+    // 電話：09 開頭十碼，中間可能夾空白或減號
+    m = t.match(/09[\d\s-]{8,12}/);
+    if (m) {
+      var phone = m[0].replace(/[\s-]/g, '').slice(0, 10);
+      if (phone.length === 10) { got.電話 = phone; hit.push('電話'); t = t.replace(m[0], ' '); }
+    }
+
+    // 數量與單位
+    m = t.match(/(\d+(?:\.\d+)?)\s*(台斤|斤|公斤|kg|KG|Kg)/);
+    if (m) {
+      got.數量 = m[1];
+      got.單位 = /公斤|kg|KG|Kg/i.test(m[2]) ? '公斤' : '台斤';
+      hit.push('數量');
+      t = t.replace(m[0], ' ');
+    }
+
+    // 有「市」或「縣」又有路街段巷號 → 當成宅配地址。
+    // 一定要從縣市名開始抓，前面不能吃字，否則「宅配到台中市…」會把「宅配到」也算進地址
+    m = t.match(/[一-龥]{2}[市縣][^\s,，、]*(?:路|街|大道|巷|弄|號|段)[^\s,，、]*/);
+    if (m) {
+      got.門市或地址 = m[0]; got.出貨方式 = '宅配'; hit.push('宅配地址');
+      t = t.replace(m[0], ' ');
+    } else {
+      // 否則找「◯◯門市」或「◯◯店」
+      m = t.match(/[\u4e00-\u9fa5A-Za-z0-9]{1,10}(?:門市|店)/);
+      if (m) { got.門市或地址 = m[0]; hit.push('門市'); t = t.replace(m[0], ' '); }
+    }
+
+    // 姓名：先找「收件人◯◯◯」這種明講的，這個最準
+    m = t.match(/(?:收件人|收件者|收貨人|姓名|寄給|給)\s*[：:]?\s*([\u4e00-\u9fa5]{2,4})/);
+    if (m) {
+      got.客人姓名 = m[1]; hit.push('姓名');
+    } else if (hit.length) {
+      // 沒明講就從剩下的字裡撿 － 但要先有電話、數量或 Email 之類的線索才猜，
+      // 不然「請問還有貨嗎」這種純詢問也會被硬湊出一個名字
+      // 排掉常出現但不是名字的詞（客人很愛先寒暄）
+      var STOP = /台斤|公斤|門市|宅配|訂購|謝謝|你好|您好|請問|收件|地址|電話|信箱|小管|付款|匯款|取貨|冷凍|想訂|想買|我要|想要|請幫|幫我|麻煩|不好|意思|可以|多少|什麼|怎麼|需要|一下|這樣|好嗎|有貨|沒貨|預購|下單|老闆|還有/;
+      var names = t.match(/[\u4e00-\u9fa5]{2,4}/g) || [];
+      for (var i = 0; i < names.length; i++) {
+        if (!STOP.test(names[i])) { got.客人姓名 = names[i]; hit.push('姓名'); break; }
+      }
+    }
+    return { 值: got, 填了: hit };
+  }
+
+  function setShipRadio(v) {
+    var el = document.querySelector('input[name="o-ship"][value="' + v + '"]');
+    if (!el || el.checked) return false;
+    el.checked = true;
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+    return true;
+  }
+
+  function pasteMsg(text, ok) {
+    var el = document.getElementById('o-paste-msg');
+    el.textContent = text;
+    el.className = 'paste-msg ' + (ok ? 'ok' : 'warn');
+  }
+
+  document.getElementById('btn-parse').addEventListener('click', function () {
+    var raw = document.getElementById('o-paste').value;
+    if (!raw.trim()) { pasteMsg('先把訊息貼進上面的框', false); return; }
+    var res = parseOrderText(raw), g = res.值;
+    if (!res.填了.length) { pasteMsg('看不出來有什麼，請手動填', false); return; }
+
+    function set(id, v) { if (v !== undefined && v !== '') document.getElementById(id).value = v; }
+    set('o-name', g.客人姓名);
+    set('o-phone', g.電話);
+    set('o-email', g.Email);
+    set('o-kg', g.數量);
+    set('o-addr', g.門市或地址);
+    if (g.單位) {
+      var u = document.getElementById('o-unit');
+      u.value = g.單位;
+      u.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    if (g.出貨方式) setShipRadio(g.出貨方式);
+    pasteMsg('已填入 ' + res.填了.join('、') + '，請檢查一次再送出', true);
+  });
+
+  // ── 老客人自動帶出上次的資料 ──────────────────────
+  var customers = [];
+  function loadCustomers() {
+    postAction({ action: '客人清單' }).then(function (res) {
+      if (!res.ok) return;
+      customers = res.客人 || [];
+      document.getElementById('customer-list').innerHTML = customers.map(function (c) {
+        return '<option value="' + c.姓名 + '">' + (c.次數 > 1 ? '買過 ' + c.次數 + ' 次' : '') + '</option>';
+      }).join('');
+    }).catch(function () { });
+  }
+
+  document.getElementById('o-name').addEventListener('change', function () {
+    var name = this.value.trim();
+    var c = customers.filter(function (x) { return x.姓名 === name; })[0];
+    if (!c) return;
+    var filled = [];
+    // 只補空的欄位 － 剛剛從 LINE 訊息拆出來的資料是這次的，不能被舊資料蓋掉
+    function fillIfEmpty(id, v, label) {
+      var el = document.getElementById(id);
+      if (el && !el.value && v) { el.value = v; filled.push(label); }
+    }
+    fillIfEmpty('o-phone', c.電話, '電話');
+    fillIfEmpty('o-email', c.Email, 'Email');
+    var addrWasEmpty = !document.getElementById('o-addr').value;
+    fillIfEmpty('o-addr', c.門市或地址, '門市');
+    if (addrWasEmpty && c.出貨方式 && setShipRadio(c.出貨方式)) filled.push('出貨方式');
+    if (filled.length) pasteMsg('這位買過 ' + c.次數 + ' 次，帶出上次的 ' + filled.join('、'), true);
+  });
+
+  // 可勾選的清單（每一組待辦共用）
   function renderPickList(opts) {
     var box = document.getElementById(opts.boxId);
     box.className = ''; // 移除「讀取中」的置中樣式，否則整塊文字會被置中
@@ -1230,38 +1369,87 @@
     refresh();
   }
 
-  function renderShip(items) {
-    shipRows = items || [];
-    renderPickList({
-      boxId: 's-ship-list', items: items, emptyText: '目前沒有待出貨的訂單',
-      goText: '✅ 批次標記已出貨', field: '出貨狀態', value: '已出',
-      rowHtml: function (o) {
-        var paid = o.收款狀態 === '已收';
-        return '<div class="top"><span class="name">' + o.客人姓名 + '</span>' +
-          '<span class="amt">' + money(o.金額) + '</span></div>' +
-          '<div class="meta">' + (o.日期 || '') + '　' + waitTag(o.日期) + '</div>' +
-          '<div class="meta">' + o.品項 + ' ' + qtyShort(o)
-            + (o.運費 ? '　＋運費 ' + money(o.運費) : '') + '</div>' +
-          (o.電話 ? '<div class="meta">☎ ' + o.電話 + '</div>' : '') +
-          (o.Email ? '<div class="meta">✉ ' + o.Email + '</div>'
-                   : '<div class="meta miss">✉ 沒有 Email － 寄件前先問客人</div>') +
-          '<div class="meta">' + o.出貨方式 + '　' + o.門市或地址 + '</div>' +
-          '<div class="tags"><span class="tag ' + (paid ? 'paid' : 'unpaid') + '">' + (paid ? '已收款' : '未收款') + '</span></div>';
-      }
-    });
+  // ── 今天要做什麼 ────────────────────────────────
+  // 以前分「待出貨」「待收款」兩張表，同一筆訂單會同時出現在兩邊，很容易看錯。
+  // 現在後端算好每筆的「下一步」，一筆只會落在一組，每組剛好只有一個動作要按。
+  var TODO_GROUPS = [
+    {
+      key: '該出貨了', title: '該出貨了', icon: '📦',
+      hint: '錢收到了、或是取貨付款，這幾筆可以寄了。',
+      field: '出貨狀態', value: '已出', goText: '✅ 批次標記已出貨',
+      tools: true, empty: '沒有要寄的'
+    },
+    {
+      key: '等匯款', title: '等客人匯款', icon: '⏳',
+      hint: '先匯款的訂單，錢還沒進來，先不要寄。收到再標記。',
+      field: '收款狀態', value: '已收', goText: '💰 批次標記已收款',
+      empty: '沒有在等匯款的'
+    },
+    {
+      key: '等超商撥款', title: '等超商撥款', icon: '🏪',
+      hint: '已經寄出，客人到門市付錢，等 7-11 把錢撥給我們。',
+      field: '收款狀態', value: '已收', goText: '💰 批次標記已收款',
+      empty: '沒有在等撥款的'
+    },
+    {
+      key: '等收款', title: '等收款', icon: '💸',
+      hint: '已經寄出但錢還沒到。',
+      field: '收款狀態', value: '已收', goText: '💰 批次標記已收款',
+      empty: '沒有欠款的'
+    }
+  ];
+
+  function todoRowHtml(o) {
+    var paid = o.收款狀態 === '已收';
+    var needMail = o.下一步 === '該出貨了';
+    return '<div class="top"><span class="name">' + o.客人姓名 + '</span>' +
+      '<span class="amt">' + money(o.金額) + '</span></div>' +
+      '<div class="meta">' + (o.日期 || '') + '　' + waitTag(o.日期) + '</div>' +
+      '<div class="meta">' + o.品項 + ' ' + qtyShort(o)
+        + (o.運費 ? '　＋運費 ' + money(o.運費) : '') + '</div>' +
+      (o.電話 ? '<div class="meta">☎ ' + o.電話 + '</div>' : '') +
+      (o.Email ? '<div class="meta">✉ ' + o.Email + '</div>'
+               : (needMail ? '<div class="meta miss">✉ 沒有 Email － 寄件前先問客人</div>' : '')) +
+      (o.門市或地址 ? '<div class="meta">' + o.出貨方式 + '　' + o.門市或地址 + '</div>' : '') +
+      '<div class="tags"><span class="tag ' + (paid ? 'paid' : 'unpaid') + '">'
+        + (paid ? '已收款' : '未收款') + '</span></div>';
   }
 
-  function renderPay(items) {
-    renderPickList({
-      boxId: 's-pay-list', items: items, emptyText: '目前沒有待收款的訂單',
-      goText: '💰 批次標記已收款', field: '收款狀態', value: '已收',
-      rowHtml: function (o) {
-        return '<div class="top"><span class="name">' + o.客人姓名 + '</span>' +
-          '<span class="amt">' + money(o.金額) + '</span></div>' +
-          '<div class="meta">' + (o.日期 || '') + '　' + waitTag(o.日期) + '</div>' +
-          '<div class="meta">' + o.品項 + ' ' + qtyShort(o)
-            + (o.運費 ? '（含運費 ' + money(o.運費) + '）' : '') + '</div>';
-      }
+  function renderTodo(items) {
+    var all = items || [];
+    shipRows = all.filter(function (o) { return o.下一步 === '該出貨了'; });
+
+    var box = document.getElementById('s-todo');
+    box.className = '';
+    var groups = TODO_GROUPS.filter(function (g) {
+      return all.some(function (o) { return o.下一步 === g.key; });
+    });
+
+    if (!groups.length) {
+      box.innerHTML = '<div class="card"><div class="empty">全部處理完了 🎉</div></div>';
+      return;
+    }
+
+    box.innerHTML = groups.map(function (g) {
+      var n = all.filter(function (o) { return o.下一步 === g.key; }).length;
+      return '<div class="card todo-card">' +
+        '<h2>' + g.icon + ' ' + g.title + '<span class="grp-n">' + n + '</span></h2>' +
+        '<p class="hint">' + g.hint + '</p>' +
+        (g.tools ? '<div class="two-btn">' +
+          '<button class="btn ghost" id="btn-copy-ship" type="button">📋 複製清單</button>' +
+          '<button class="btn ghost" id="btn-csv-ship" type="button">📥 下載 Excel</button>' +
+          '</div>' : '') +
+        '<div id="todo-' + g.key + '" style="margin-top:12px"></div>' +
+        '</div>';
+    }).join('');
+
+    groups.forEach(function (g) {
+      renderPickList({
+        boxId: 'todo-' + g.key,
+        items: all.filter(function (o) { return o.下一步 === g.key; }),
+        emptyText: g.empty, goText: g.goText, field: g.field, value: g.value,
+        rowHtml: todoRowHtml
+      });
     });
   }
 
