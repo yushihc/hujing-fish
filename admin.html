@@ -459,7 +459,8 @@
           <label class="opt"><input type="radio" name="o-ship" value="宅配"> 冷凍宅配</label>
         </div>
         <p class="cod-note">⚠️ <strong>應收滿 2,000 元就不能用「取貨付款」</strong> － 超商代收上限是 2,000（含運費）。<br>
-          以 650／台斤 算大約是 <strong>3 台斤</strong>，超過請改選「7-11 先匯款」請客人先轉帳。</p>
+          以 650／台斤 算，<strong>2 台斤</strong>（應收 1,420）可以；<strong>3 台斤</strong>加運費就變 2,070，
+          要改選「7-11 先匯款」請客人先轉帳。</p>
         <label id="o-addr-label" for="o-addr">7-11 門市名稱</label>
         <input type="text" id="o-addr">
         <p class="cost-hint" id="o-addr-hint">✅ 接單前先確認這間門市<strong>有冷凍交貨便</strong>。本島幾乎都有，
@@ -1055,7 +1056,7 @@
         showOk('訂單登記成功', res.message);
         document.getElementById('form-order').reset();
         document.getElementById('o-price').value = 650;
-        document.getElementById('o-fee').value = 129;
+        document.getElementById('o-fee').value = 120;
         document.getElementById('o-cost').value = 149;
         document.getElementById('o-item-other').style.display = 'none';
         updateCalc();
