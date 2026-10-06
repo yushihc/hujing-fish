@@ -82,6 +82,55 @@
   .hero h1 { font-family: var(--font-serif); font-weight:700; margin:0 0 14px; font-size: clamp(2rem,6vw,3.4rem); line-height:1.18; text-wrap:balance; text-shadow: 0 2px 18px rgba(0,0,0,.55); }
   .hero p.lead { margin:0 0 26px; font-size: clamp(1rem,2.3vw,1.2rem); color: rgba(255,255,255,.96); max-width:22em; text-shadow: 0 1px 12px rgba(0,0,0,.55); }
   .home-foot { color: var(--muted); font-size:.82rem; margin-top:22px; }
+  /* 購物車 */
+  .shop { display:grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap:18px; }
+  .prod { background: var(--paper); border:1px solid var(--line); border-radius: var(--r-card); overflow:hidden; box-shadow: var(--shadow); display:flex; flex-direction:column; }
+  .prod .ph { height:180px; padding:14px; box-sizing:border-box; overflow:hidden; }
+  .prod .ph img { display:block; width:100%; height:100%; object-fit:contain; }
+  .prod .bd { padding:16px 18px 18px; display:flex; flex-direction:column; gap:6px; flex:1; }
+  .prod h3 { margin:0; font-family: var(--font-serif); font-size:1.22rem; color: var(--sky-ink); }
+  .prod .pr { font-weight:800; color: var(--coral-ink); }
+  .prod .pr small { font-weight:600; color: var(--ink-soft); }
+  .prod .spec { margin:0; color: var(--ink-soft); font-size:.86rem; }
+  .prod .left { margin:4px 0 2px; font-size:.86rem; color: var(--ink); font-weight:700; }
+  .prod.sold .ph { filter: grayscale(.85); opacity:.55; }
+  .prod.sold .left { color: var(--muted); font-weight:600; }
+  .pks { display:flex; flex-direction:column; gap:6px; margin-top:4px; }
+  .pkr { display:flex; align-items:center; gap:8px; border:1px solid var(--line); background: var(--paper-2); border-radius:10px; padding:7px 8px 7px 12px; font-size:.9rem; }
+  .pkr .n { font-weight:800; color: var(--sky-ink); min-width:2.8em; }
+  .pkr .g { color: var(--ink-soft); flex:1; }
+  .pkr .pa { font-weight:800; color: var(--coral-ink); }
+  .pkr button { appearance:none; border:0; border-radius:8px; padding:7px 12px; font:inherit; font-size:.84rem; font-weight:800; cursor:pointer; background: var(--coral); color: var(--on-coral); white-space:nowrap; }
+  .pkr.in { border-color: var(--sky); background: var(--sky-soft); }
+  .pkr.in button { background: var(--sky); color:#fff; }
+  .cart-fab { position:fixed; right:20px; bottom:20px; z-index:40; display:none; align-items:center; gap:10px; border:0; cursor:pointer; background: var(--sky-ink); color:#fff; font:inherit; font-weight:800; padding:13px 20px; border-radius:999px; box-shadow: 0 10px 28px rgba(18,79,134,.35); }
+  .cart-fab.show { display:inline-flex; }
+  .cart-fab .c { background: var(--coral); color: var(--on-coral); border-radius:999px; min-width:1.7em; padding:1px 7px; text-align:center; }
+  .cart-mask { position:fixed; inset:0; background: rgba(20,40,55,.38); z-index:50; display:none; }
+  .cart-mask.show { display:block; }
+  .cart { position:fixed; top:0; right:0; bottom:0; width:min(420px, 100vw); background: var(--bg); z-index:51; transform: translateX(105%); transition: transform .25s ease; display:flex; flex-direction:column; box-shadow: -10px 0 30px rgba(20,40,55,.18); }
+  .cart.show { transform:none; }
+  .cart header { display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid var(--line); }
+  .cart header h3 { margin:0; font-family: var(--font-serif); color: var(--sky-ink); }
+  .cart header button { border:0; background:none; font-size:1.5rem; cursor:pointer; color: var(--ink-soft); }
+  .cart .items { flex:1; overflow:auto; padding:14px 20px; }
+  .ci { display:flex; gap:10px; align-items:center; padding:10px 0; border-bottom:1px dashed var(--line); }
+  .ci img { width:56px; height:44px; object-fit:contain; background: var(--paper); border-radius:8px; }
+  .ci .t { flex:1; font-size:.9rem; line-height:1.4; }
+  .ci .t small { display:block; color: var(--ink-soft); }
+  .ci .pa { font-weight:800; color: var(--coral-ink); }
+  .ci button { border:0; background:none; color: var(--muted); font-size:1.1rem; cursor:pointer; }
+  .cart .sum { padding:14px 20px 20px; border-top:1px solid var(--line); background: var(--paper); }
+  .ship-pick { display:flex; gap:8px; margin-bottom:12px; }
+  .ship-pick label { flex:1; border:1px solid var(--line); border-radius:10px; padding:9px 10px; font-size:.86rem; cursor:pointer; text-align:center; background: var(--bg); }
+  .ship-pick label:has(input:checked) { border-color: var(--sky); background: var(--sky-soft); color: var(--sky-ink); font-weight:700; }
+  .ship-pick input { display:none; }
+  .sum .row { display:flex; justify-content:space-between; font-size:.92rem; margin:3px 0; }
+  .sum .row.total { font-size:1.12rem; font-weight:800; color: var(--coral-ink); margin-top:8px; }
+  .sum .tip { font-size:.82rem; color: var(--ink-soft); margin:8px 0 0; }
+  .sum .warn { font-size:.84rem; color:#B4413B; font-weight:700; margin:8px 0 0; }
+  .sum .btn { width:100%; justify-content:center; margin-top:14px; }
+  .cart .empty-cart { color: var(--muted); text-align:center; padding:40px 0; }
 
   /* points */
   .points { display:grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap:16px; }
@@ -255,6 +304,7 @@
     <div class="page">
       <p class="eyebrow">this season</p>
       <h2 class="title">本季漁獲</h2>
+      <div id="catalog">
       <p class="sub">價格以台斤計。這批魚體偏小，大尾的另外算。</p>
       <div class="twrap"><table class="dtable">
         <tr><th>品項</th><th class="nw">元／台斤</th><th>規格</th></tr>
@@ -265,7 +315,8 @@
         <tr><td>手釣小管</td><td class="nw">600</td><td>季末清倉（原價 650）</td></tr>
       </table></div>
       <p class="sub" style="margin-top:18px">紅甘、土魠、玳瑁石斑、冰卷是澎湖在地漁船嚴選；手釣小管是爸爸一竿一線釣的。</p>
-      <a class="btn" href="#order" data-target="order">要哪一種、幾台斤，跟我們說</a>
+      </div>
+      <a class="btn" href="#order" data-target="order" id="catalog-cta">要哪一種、幾台斤，跟我們說</a>
       <p class="home-foot">出貨：7-11 冷凍交貨便 120 元（滿 2,000 免運）｜黑貓低溫宅配 260 元（滿 3,600 免運）</p>
     </div>
   </section>
@@ -475,6 +526,14 @@
 
 </main>
 
+<button class="cart-fab" id="cart-fab" type="button" aria-label="打開購物車">🛒 購物車 <span class="c" id="cart-n">0</span><span id="cart-sum"></span></button>
+<div class="cart-mask" id="cart-mask"></div>
+<aside class="cart" id="cart" aria-label="購物車" aria-hidden="true">
+  <header><h3>🛒 購物車</h3><button type="button" id="cart-close" aria-label="關閉">×</button></header>
+  <div class="items" id="cart-items"></div>
+  <div class="sum" id="cart-sumbox"></div>
+</aside>
+
 <script>
   var panes = document.querySelectorAll('.pane');
   var navButtons = document.querySelectorAll('#nav button');
@@ -575,6 +634,175 @@
       .catch(function () { /* 讀不到就用備援，不要讓訪客看到錯誤 */ });
   })();
 
+  // 本季漁獲：從試算表讀每一包。還沒登記任何包裝（或讀不到）就維持頁面上那張靜態表
+  (function loadCatalog() {
+    fetch(DIARY_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: '公開商品' }),
+    })
+      .then(function (r) { return r.text(); })
+      .then(function (t) {
+        var res = JSON.parse(t);
+        if (!res.ok || !res.品項) return;
+        var count = res.品項.reduce(function (s, it) { return s + it.包.length; }, 0);
+        if (!count) return;
+        renderCatalog(res.品項, res);
+      })
+      .catch(function () { /* 讀不到就留著靜態表 */ });
+  })();
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  function nt(n) { return '$' + (Number(n) || 0).toLocaleString(); }
+
+  // 品項的水彩圖（新品項沒有圖就只顯示文字）
+  var PROD_IMG = {
+    '紅甘': ['assets/wc-amberjack.jpg', '#fbf9f3'],
+    '土魠': ['assets/wc-mackerel.jpg', '#fdfcf7'],
+    '玳瑁石斑': ['assets/wc-grouper.jpg', '#fcfdf9'],
+    '冰卷': ['assets/wc-squid-cooked.jpg', '#fefefb'],
+    '手釣小管': ['assets/wc-handline.jpg', '#fcf9f3']
+  };
+
+  // 購物車：只記包裝編號，價錢每次都用最新的商品清單算
+  var shop = { items: [], byId: {}, rules: null };
+  var cart = [];
+  try { cart = JSON.parse(localStorage.getItem('hujing_cart') || '[]') || []; } catch (e) { cart = []; }
+  var shipWay = '7-11';
+  function saveCart() { try { localStorage.setItem('hujing_cart', JSON.stringify(cart)); } catch (e) { } }
+
+  function renderCatalog(items, res) {
+    var box = document.getElementById('catalog');
+    if (!box) return;
+    shop.items = items;
+    shop.rules = res;
+    shop.byId = {};
+    items.forEach(function (it) { it.包.forEach(function (p) { shop.byId[p.編號] = { p: p, it: it }; }); });
+    // 已經被別人買走的，從購物車拿掉
+    cart = cart.filter(function (id) { return shop.byId[id]; });
+    saveCart();
+
+    box.innerHTML = '<p class="sub">每一包都秤好了，價錢照克數算。挑好放進購物車，結帳會開 LINE 把清單傳給我們。</p>'
+      + '<div class="shop">' + items.map(function (it) {
+        var img = PROD_IMG[it.品項];
+        var sold = !it.包.length;
+        return '<article class="prod' + (sold ? ' sold' : '') + '">'
+          + (img ? '<div class="ph" style="background:' + img[1] + '"><img src="' + img[0] + '" alt="' + esc(it.品項) + '" loading="lazy"></div>' : '')
+          + '<div class="bd"><h3>' + esc(it.品項) + '</h3>'
+          + '<div class="pr">' + it.單價 + ' 元<small>／台斤</small></div>'
+          + '<p class="spec">' + esc([it.規格, it.來源].filter(Boolean).join('・')) + '</p>'
+          + '<p class="left">' + (sold ? '這一批賣完了'
+            : '目前剩 ' + it.總克數.toLocaleString() + ' 克（約 ' + (Math.round(it.總克數 / 60) / 10) + ' 台斤）') + '</p>'
+          + '<div class="pks">' + it.包.map(function (p) {
+            return '<div class="pkr" data-id="' + p.編號 + '"><span class="n">' + p.編號 + ' 號</span>'
+              + '<span class="g">' + p.克數 + ' 克</span><span class="pa">' + nt(p.價格) + '</span>'
+              + '<button type="button" data-id="' + p.編號 + '"></button></div>';
+          }).join('') + '</div></div></article>';
+      }).join('') + '</div>';
+    box.querySelectorAll('.pkr button').forEach(function (b) {
+      b.addEventListener('click', function () { toggleCart(Number(b.dataset.id)); });
+    });
+    var cta = document.getElementById('catalog-cta');
+    if (cta) cta.style.display = 'none';
+    refreshCart();
+  }
+
+  function toggleCart(id) {
+    var i = cart.indexOf(id);
+    if (i === -1) cart.push(id); else cart.splice(i, 1);
+    saveCart();
+    refreshCart();
+  }
+
+  function cartTotals() {
+    var r = shop.rules || {};
+    var amount = cart.reduce(function (s, id) { return s + shop.byId[id].p.價格; }, 0);
+    var fee = (r.運費 || {})[shipWay] || 0;
+    var freeAt = (r.免運 || {})[shipWay] || 0;
+    var free = freeAt > 0 && amount >= freeAt;
+    // 去零頭：跟後台一樣捨去到十位
+    var total = Math.floor((amount + (free ? 0 : fee)) / 10) * 10;
+    return { amount: amount, fee: free ? 0 : fee, freeAt: freeAt, free: free, total: total, codMax: r.取貨付款上限 || 2000 };
+  }
+
+  function refreshCart() {
+    document.querySelectorAll('.pkr').forEach(function (row) {
+      var on = cart.indexOf(Number(row.dataset.id)) !== -1;
+      row.classList.toggle('in', on);
+      row.querySelector('button').textContent = on ? '✓ 已加入' : '＋ 加入';
+    });
+    var t = cartTotals();
+    document.getElementById('cart-n').textContent = cart.length;
+    document.getElementById('cart-sum').textContent = cart.length ? nt(t.amount) : '';
+    document.getElementById('cart-fab').classList.toggle('show', cart.length > 0);
+
+    var list = document.getElementById('cart-items');
+    if (!cart.length) {
+      list.innerHTML = '<div class="empty-cart">購物車是空的</div>';
+      document.getElementById('cart-sumbox').innerHTML = '';
+      return;
+    }
+    list.innerHTML = cart.map(function (id) {
+      var x = shop.byId[id], img = PROD_IMG[x.it.品項];
+      return '<div class="ci">' + (img ? '<img src="' + img[0] + '" alt="">' : '')
+        + '<div class="t">' + esc(x.it.品項) + '　' + id + ' 號<small>' + x.p.克數 + ' 克</small></div>'
+        + '<span class="pa">' + nt(x.p.價格) + '</span>'
+        + '<button type="button" data-id="' + id + '" aria-label="移除 ' + id + ' 號">✕</button></div>';
+    }).join('');
+    list.querySelectorAll('button').forEach(function (b) {
+      b.addEventListener('click', function () { toggleCart(Number(b.dataset.id)); });
+    });
+
+    var gap = t.freeAt - t.amount;
+    document.getElementById('cart-sumbox').innerHTML =
+      '<div class="ship-pick">'
+      + '<label><input type="radio" name="ship" value="7-11"' + (shipWay === '7-11' ? ' checked' : '') + '>7-11 冷凍店取</label>'
+      + '<label><input type="radio" name="ship" value="宅配"' + (shipWay === '宅配' ? ' checked' : '') + '>黑貓冷凍宅配</label></div>'
+      + '<div class="row"><span>魚（' + cart.length + ' 包）</span><span>' + nt(t.amount) + '</span></div>'
+      + '<div class="row"><span>運費</span><span>' + (t.free ? '免運' : nt(t.fee)) + '</span></div>'
+      + '<div class="row total"><span>合計</span><span>' + nt(t.total) + '</span></div>'
+      + (t.free ? '' : '<p class="tip">再買 ' + nt(gap) + ' 就免運（滿 ' + nt(t.freeAt) + '）</p>')
+      + (shipWay === '7-11' && t.total > t.codMax
+        ? '<p class="warn">超過 ' + nt(t.codMax) + '，7-11 不能取貨付款，要先匯款</p>' : '')
+      + '<a class="btn btn-line" id="cart-go" href="#" target="_blank" rel="noopener">用<span class="line-mark" aria-hidden="true">LINE</span>傳訂單給我們</a>'
+      + '<p class="tip">會開 LINE 並填好清單，再補上收件人、電話、門市或地址、Email 送出就好。</p>';
+    document.querySelectorAll('input[name="ship"]').forEach(function (r) {
+      r.addEventListener('change', function () { shipWay = r.value; refreshCart(); });
+    });
+    document.getElementById('cart-go').href = lineOrderUrl(t);
+  }
+
+  // 開 LINE 官方帳號的對話框，訊息先填好
+  function lineOrderUrl(t) {
+    var lines = ['我要訂：'];
+    cart.forEach(function (id) {
+      var x = shop.byId[id];
+      lines.push(x.it.品項 + ' ' + id + ' 號 ' + x.p.克數 + ' 克 ' + nt(x.p.價格));
+    });
+    lines.push('共 ' + cart.length + ' 包，魚 ' + nt(t.amount) + '，運費 ' + (t.free ? '免運' : nt(t.fee)) + '，合計 ' + nt(t.total));
+    lines.push('出貨：' + (shipWay === '7-11' ? '7-11 冷凍店取' : '黑貓冷凍宅配'));
+    lines.push('');
+    lines.push('收件人：');
+    lines.push('電話：');
+    lines.push(shipWay === '7-11' ? '7-11 門市：' : '地址：');
+    lines.push('Email：');
+    return 'https://line.me/R/oaMessage/' + encodeURIComponent(LINE_ID) + '/?' + encodeURIComponent(lines.join('\n'));
+  }
+
+  function openCart(open) {
+    document.getElementById('cart').classList.toggle('show', open);
+    document.getElementById('cart-mask').classList.toggle('show', open);
+    document.getElementById('cart').setAttribute('aria-hidden', open ? 'false' : 'true');
+  }
+  document.getElementById('cart-fab').addEventListener('click', function () { openCart(true); });
+  document.getElementById('cart-close').addEventListener('click', function () { openCart(false); });
+  document.getElementById('cart-mask').addEventListener('click', function () { openCart(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') openCart(false); });
+
   function renderDiary(list) {
     var box = document.getElementById('diary-list');
     if (!box) return;
@@ -593,7 +821,8 @@
 
   // ★★★ LINE 官方帳號的加好友網址。ID 是 @600imryz ★★★
   // 之後若在後台拿到 lin.ee 的短網址，換掉這一行就好，其他都不用動。
-  var LINE_URL = 'https://line.me/R/ti/p/@600imryz';
+  var LINE_ID = '@600imryz';
+  var LINE_URL = 'https://line.me/R/ti/p/' + LINE_ID;
 
   (function wireLine(){
     var btn = document.getElementById('line-btn');
