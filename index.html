@@ -352,6 +352,7 @@
   <div class="s-tag">Hujing Island · hand-line caught</div>
   <nav class="nav" id="nav" aria-label="主選單">
     <button data-target="home" aria-current="page"><span class="ico" aria-hidden="true">🌊</span> 首頁</button>
+    <button data-target="shop"><span class="ico" aria-hidden="true">🛒</span> 線上購買</button>
     <button data-target="why"><span class="ico" aria-hidden="true">⚓</span> 為什麼選我們</button>
     <button data-target="fish"><span class="ico" aria-hidden="true">🐟</span> 當季魚種</button>
     <button data-target="cook"><span class="ico" aria-hidden="true">🍳</span> 料理與保存</button>
@@ -378,8 +379,12 @@
         <span class="kicker">🎣 澎湖 · 虎井嶼直送</span>
         <h1>一支釣竿，<br>一座小島</h1>
         <p class="lead">把虎井嶼的海味，鎖鮮宅配到你家餐桌。<br>今天海裡有什麼，我們就賣什麼。</p>
+        <a class="btn" href="#shop" data-target="shop">看本季漁獲</a>
       </div>
     </div>
+  </section>
+
+  <section class="pane" id="pane-shop">
     <div class="page">
       <p class="eyebrow">this season</p>
       <h2 class="title">本季漁獲</h2>
@@ -728,7 +733,7 @@
         var res = JSON.parse(t);
         if (!res.ok || !res.品項) return;
         var count = res.品項.reduce(function (s, it) { return s + it.包.length; }, 0);
-        if (!count) return;
+        shop.preview = !count;
         renderCatalog(res.品項, res);
       })
       .catch(function () { /* 讀不到就留著靜態表 */ });
@@ -752,7 +757,7 @@
   var ICON_CART = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle><path d="M2.5 3.5h3l2.4 11.2a1.6 1.6 0 0 0 1.6 1.3h8.3a1.6 1.6 0 0 0 1.6-1.2L21 8H6.6"></path></svg>';
 
   // 購物車：只記包裝編號，價錢每次都用最新的商品清單算
-  var shop = { items: [], byId: {}, rules: null, filter: '全部' };
+  var shop = { items: [], byId: {}, rules: null, filter: '全部', preview: false };
   var cart = [];
   try { cart = JSON.parse(localStorage.getItem('hujing_cart') || '[]') || []; } catch (e) { cart = []; }
   var shipWay = '7-11';
@@ -771,7 +776,9 @@
 
     var cats = ['全部'];
     items.forEach(function (it) { if (it.分類 && cats.indexOf(it.分類) === -1) cats.push(it.分類); });
-    box.innerHTML = '<p class="sub">每一包都秤好重量，價錢照克數算。點進去挑你要的那幾包。</p>'
+    box.innerHTML = '<p class="sub">' + (shop.preview
+        ? '這一批正在秤重分裝，很快就能在這裡一包一包挑。想先訂，用 LINE 跟我們說。'
+        : '每一包都秤好重量，價錢照克數算。點進去挑你要的那幾包。') + '</p>'
       + (cats.length > 2 ? '<div class="chips">' + cats.map(function (c) {
         return '<button type="button" data-cat="' + esc(c) + '" class="' + (c === shop.filter ? 'on' : '') + '">' + esc(c) + '</button>';
       }).join('') + '</div>' : '')
@@ -799,7 +806,7 @@
     var list = shop.items.filter(function (it) { return shop.filter === '全部' || it.分類 === shop.filter; });
     grid.innerHTML = list.map(function (it) {
       var img = PROD_IMG[it.品項];
-      var sold = !it.包.length;
+      var sold = !it.包.length && !shop.preview;
       var dad = /手釣/.test(it.來源);
       return '<button type="button" class="prod' + (sold ? ' sold' : '') + '" data-item="' + esc(it.品項) + '"'
         + (sold ? ' aria-disabled="true"' : '') + '>'
@@ -810,8 +817,8 @@
         + (it.來源 ? '<span class="src' + (dad ? ' dad' : '') + '">' + esc(it.來源) + '</span>' : '')
         + '<div class="row1"><h3>' + esc(it.品項) + '</h3><span class="pr">' + it.單價 + '<small> 元／台斤</small></span></div>'
         + ((it.特色 || [])[0] ? '<p class="one">' + esc(it.特色[0]) + '</p>' : '')
-        + '<div class="foot"><span>' + (sold ? esc(it.規格 || '') : stockText(it.包.length)) + '</span>'
-        + (sold ? '' : '<span class="go">選擇重量 ›</span>') + '</div>'
+        + '<div class="foot"><span>' + (sold ? esc(it.規格 || '') : shop.preview ? '準備上架' : stockText(it.包.length)) + '</span>'
+        + (sold ? '' : '<span class="go">' + (shop.preview ? '看介紹 ›' : '選擇重量 ›') + '</span>') + '</div>'
         + '</div></button>';
     }).join('');
     grid.querySelectorAll('.prod').forEach(function (b) {
@@ -857,14 +864,16 @@
       + '<h2 id="pd-title">' + esc(it.品項) + '</h2>'
       + '<div class="pr">' + it.單價 + '<small> 元／台斤</small></div></div>'
       + (it.規格 ? '<p class="spec">' + esc(it.規格) + '</p>' : '')
-      + '<div><div class="pd-h"><h3>選擇重量</h3><span>' + stockText(it.包.length) + '，可以選好幾包</span></div>'
+      + (!it.包.length ? '<div class="pd-buy"><div class="l"><span>這一批正在秤重分裝</span><b style="font-size:1rem;color:var(--ink)">想先訂可以用 LINE 問</b></div>'
+        + '<a class="line-go" style="margin:0;padding:0 18px" href="' + 'https://line.me/R/oaMessage/' + encodeURIComponent(LINE_ID) + '/?' + encodeURIComponent('我想問' + it.品項) + '" target="_blank" rel="noopener"><span class="lm" aria-hidden="true">LINE</span>詢問</a></div>' : '')
+      + (it.包.length ? '<div><div class="pd-h"><h3>選擇重量</h3><span>' + stockText(it.包.length) + '，可以選好幾包</span></div>'
       + '<div class="tiles" style="margin-top:10px">' + it.包.map(function (p) {
         var on = pd.picked.indexOf(p.編號) !== -1;
         return '<button type="button" class="tile" data-id="' + p.編號 + '" aria-pressed="' + on + '">'
           + '<span class="no">' + p.編號 + ' 號</span><span class="g">' + p.克數 + ' 克</span><span class="p">' + nt(p.價格) + '</span></button>';
       }).join('') + '</div></div>'
       + '<div class="pd-buy"><div class="l"><span id="pd-line"></span><b id="pd-total"></b></div>'
-      + '<button type="button" class="buy-btn" id="pd-add">' + (had ? '更新購物車' : '加入購物車') + '</button></div>'
+      + '<button type="button" class="buy-btn" id="pd-add">' + (had ? '更新購物車' : '加入購物車') + '</button></div>' : '')
       + (secs.length ? '<div class="pd-tabs"><div class="pd-tabbar" role="tablist">' + secs.map(function (s) {
         return '<button type="button" role="tab" data-tab="' + s[0] + '" aria-selected="' + (s[0] === pd.tab) + '">' + s[0] + '</button>';
       }).join('') + '</div>' + secs.map(function (s) {
@@ -889,8 +898,10 @@
         root.querySelectorAll('.pd-sec').forEach(function (x) { x.classList.toggle('on', x.dataset.sec === pd.tab); });
       });
     });
-    root.querySelector('#pd-add').addEventListener('click', addFromDetail);
-    updatePdBuy();
+    if (root.querySelector('#pd-add')) {
+      root.querySelector('#pd-add').addEventListener('click', addFromDetail);
+      updatePdBuy();
+    }
   }
   function updatePdBuy() {
     var it = pd.item;
