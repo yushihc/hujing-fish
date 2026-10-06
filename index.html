@@ -400,7 +400,7 @@
       </table></div>
       <p class="sub" style="margin-top:18px">紅甘、土魠、玳瑁石斑、冰卷是澎湖在地漁船嚴選；手釣小管是爸爸一竿一線釣的。</p>
       </div>
-      <a class="btn" href="#order" data-target="order" id="catalog-cta">要哪一種、幾台斤，跟我們說</a>
+      <a class="btn" href="#order" data-target="order" id="catalog-cta">LINE 訂購</a>
       <p class="home-foot">出貨：7-11 冷凍交貨便 120 元（滿 2,000 免運）｜黑貓低溫宅配 260 元（滿 3,600 免運）</p>
     </div>
   </section>
@@ -430,19 +430,19 @@
     <p class="sub">跟著澎湖的海走，當季才出。每種魚的肉質、吃法我們都講得出來。</p>
     <div class="note-card" style="margin-bottom:18px">🐟 <strong>標「現在有貨」的就是這一批在賣的</strong>。其他魚種等當季海況到了才會上場，先淡淡地放在下面給你認識。</div>
     <div class="fish">
-      <div class="fcard now"><div class="pic" style="background:#fbf9f3"><img src="assets/wc-amberjack.jpg" alt="紅甘"></div>
+      <div class="fcard now"><div class="pic" style="background:var(--paper)"><img src="assets/wc-amberjack.webp" alt="紅甘"></div>
         <div class="body"><div class="top"><h3>紅甘</h3><span class="badge-now">現在有貨</span></div>
         <p>肉質彈、刺少，輪切真空分裝。煎、清蒸、煮湯都可以。</p></div></div>
-      <div class="fcard now"><div class="pic" style="background:#fdfcf7"><img src="assets/wc-mackerel.jpg" alt="土魠"></div>
+      <div class="fcard now"><div class="pic" style="background:var(--paper)"><img src="assets/wc-mackerel.webp" alt="土魠"></div>
         <div class="body"><div class="top"><h3>土魠</h3><span class="badge-now">現在有貨</span></div>
         <p>輪切真空分裝。乾煎就很好吃，先大火讓表面定型再轉中小火。</p></div></div>
-      <div class="fcard now"><div class="pic" style="background:#fcfdf9"><img src="assets/wc-grouper.jpg" alt="玳瑁石斑"></div>
+      <div class="fcard now"><div class="pic" style="background:var(--paper)"><img src="assets/wc-grouper.webp" alt="玳瑁石斑"></div>
         <div class="body"><div class="top"><h3>玳瑁石斑</h3><span class="badge-now">現在有貨</span></div>
         <p>三去真空，去鱗、去鰓、去內臟都處理好了。魚皮膠質豐厚，清蒸最能吃到鮮甜。</p></div></div>
-      <div class="fcard now"><div class="pic" style="background:#fefefb"><img src="assets/wc-squid-cooked.jpg" alt="冰卷"></div>
+      <div class="fcard now"><div class="pic" style="background:var(--paper)"><img src="assets/wc-squid-cooked.webp" alt="冰卷"></div>
         <div class="body"><div class="top"><h3>冰卷</h3><span class="badge-now">現在有貨</span></div>
         <p>煮熟後冷凍的，退冰切一切就能上桌，不用處理、不用煮。</p></div></div>
-      <div class="fcard now"><div class="pic" style="background:#fcf9f3"><img src="assets/wc-handline.jpg" alt="手釣小管"></div>
+      <div class="fcard now"><div class="pic" style="background:var(--paper)"><img src="assets/wc-handline.webp" alt="手釣小管"></div>
         <div class="body"><div class="top"><h3>手釣小管</h3><span class="badge-now">季末清倉</span></div>
         <p>爸爸一竿一線釣的，靠岸就處理、當天真空冷凍。賣完要等明年。</p></div></div>
     </div>
@@ -601,7 +601,7 @@
   <section class="pane page" id="pane-order">
     <div class="order-card">
       <h2>本季漁獲，開賣中</h2>
-      <p>加入我們的 LINE，跟我們說要幾斤就好。<br>當週有什麼魚、什麼時候出海，也都會在 LINE 上先講。</p>
+      <p>加入 LINE 官方帳號即可訂購。<br>每週漁獲與出海時間，也會先在 LINE 公告。</p>
       <a class="btn btn-line" id="line-btn" href="#">加入<span class="line-mark" aria-hidden="true">LINE</span>官方帳號</a>
       <div class="thanks" id="thanks">LINE 官方帳號建置中，這幾天就好 🐟</div>
     </div>
@@ -748,11 +748,11 @@
 
   // 品項的水彩圖（新品項沒有圖就只顯示文字）
   var PROD_IMG = {
-    '紅甘': ['assets/wc-amberjack.jpg', '#fbf9f3'],
-    '土魠': ['assets/wc-mackerel.jpg', '#fdfcf7'],
-    '玳瑁石斑': ['assets/wc-grouper.jpg', '#fcfdf9'],
-    '冰卷': ['assets/wc-squid-cooked.jpg', '#fefefb'],
-    '手釣小管': ['assets/wc-handline.jpg', '#fcf9f3']
+    '紅甘': ['assets/wc-amberjack.webp', 'var(--paper)'],
+    '土魠': ['assets/wc-mackerel.webp', 'var(--paper)'],
+    '玳瑁石斑': ['assets/wc-grouper.webp', 'var(--paper)'],
+    '冰卷': ['assets/wc-squid-cooked.webp', 'var(--paper)'],
+    '手釣小管': ['assets/wc-handline.webp', 'var(--paper)']
   };
   var ICON_CART = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle><path d="M2.5 3.5h3l2.4 11.2a1.6 1.6 0 0 0 1.6 1.3h8.3a1.6 1.6 0 0 0 1.6-1.2L21 8H6.6"></path></svg>';
 
@@ -777,8 +777,8 @@
     var cats = ['全部'];
     items.forEach(function (it) { if (it.分類 && cats.indexOf(it.分類) === -1) cats.push(it.分類); });
     box.innerHTML = '<p class="sub">' + (shop.preview
-        ? '這一批正在秤重分裝，很快就能在這裡一包一包挑。想先訂，用 LINE 跟我們說。'
-        : '每一包都秤好重量，價錢照克數算。點進去挑你要的那幾包。') + '</p>'
+        ? '目前分裝中，即將開放線上選購。現在訂購請洽 LINE。'
+        : '每包皆已秤重，依實際克數計價。') + '</p>'
       + (cats.length > 2 ? '<div class="chips">' + cats.map(function (c) {
         return '<button type="button" data-cat="' + esc(c) + '" class="' + (c === shop.filter ? 'on' : '') + '">' + esc(c) + '</button>';
       }).join('') + '</div>' : '')
@@ -817,8 +817,8 @@
         + (it.來源 ? '<span class="src' + (dad ? ' dad' : '') + '">' + esc(it.來源) + '</span>' : '')
         + '<div class="row1"><h3>' + esc(it.品項) + '</h3><span class="pr">' + it.單價 + '<small> 元／台斤</small></span></div>'
         + ((it.特色 || [])[0] ? '<p class="one">' + esc(it.特色[0]) + '</p>' : '')
-        + '<div class="foot"><span>' + (sold ? esc(it.規格 || '') : shop.preview ? '準備上架' : stockText(it.包.length)) + '</span>'
-        + (sold ? '' : '<span class="go">' + (shop.preview ? '看介紹 ›' : '選擇重量 ›') + '</span>') + '</div>'
+        + '<div class="foot"><span>' + (sold ? esc(it.規格 || '') : shop.preview ? '即將上架' : stockText(it.包.length)) + '</span>'
+        + (sold ? '' : '<span class="go">' + (shop.preview ? '查看 ›' : '選購 ›') + '</span>') + '</div>'
         + '</div></button>';
     }).join('');
     grid.querySelectorAll('.prod').forEach(function (b) {
@@ -858,15 +858,15 @@
       '<div class="pd-top"><button type="button" class="pd-x" aria-label="關閉">×</button></div>'
       + '<div class="pd-grid"><div>'
       + '<div class="pd-img" style="background:' + (img ? img[1] : 'var(--paper-2)') + '">' + (img ? '<img src="' + img[0] + '" alt="' + esc(it.品項) + '水彩插畫">' : '') + '</div>'
-      + '<div class="pd-badges"><div><b>真空包裝</b>一包一包秤好</div><div><b>−18°C 冷凍</b>鎖住鮮度</div><div><b>澎湖直送</b>7-11 或宅配</div></div>'
+      + '<div class="pd-badges"><div><b>真空包裝</b>逐包秤重</div><div><b>−18°C 冷凍</b>冷凍保存</div><div><b>澎湖直送</b>7-11 或宅配</div></div>'
       + '</div><div class="pd-info">'
       + '<div>' + (it.來源 ? '<span class="src' + (dad ? ' dad' : '') + '">' + esc(it.來源) + '</span>' : '')
       + '<h2 id="pd-title">' + esc(it.品項) + '</h2>'
       + '<div class="pr">' + it.單價 + '<small> 元／台斤</small></div></div>'
       + (it.規格 ? '<p class="spec">' + esc(it.規格) + '</p>' : '')
-      + (!it.包.length ? '<div class="pd-buy"><div class="l"><span>這一批正在秤重分裝</span><b style="font-size:1rem;color:var(--ink)">想先訂可以用 LINE 問</b></div>'
-        + '<a class="line-go" style="margin:0;padding:0 18px" href="' + 'https://line.me/R/oaMessage/' + encodeURIComponent(LINE_ID) + '/?' + encodeURIComponent('我想問' + it.品項) + '" target="_blank" rel="noopener"><span class="lm" aria-hidden="true">LINE</span>詢問</a></div>' : '')
-      + (it.包.length ? '<div><div class="pd-h"><h3>選擇重量</h3><span>' + stockText(it.包.length) + '，可以選好幾包</span></div>'
+      + (!it.包.length ? '<div class="pd-buy"><div class="l"><span>分裝中</span><b style="font-size:1rem;color:var(--ink)">即將開放選購</b></div>'
+        + '<a class="line-go" style="margin:0;padding:0 18px" href="' + 'https://line.me/R/oaMessage/' + encodeURIComponent(LINE_ID) + '/?' + encodeURIComponent('詢問：' + it.品項) + '" target="_blank" rel="noopener"><span class="lm" aria-hidden="true">LINE</span>洽詢</a></div>' : '')
+      + (it.包.length ? '<div><div class="pd-h"><h3>選擇重量</h3><span>' + stockText(it.包.length) + '，可複選</span></div>'
       + '<div class="tiles" style="margin-top:10px">' + it.包.map(function (p) {
         var on = pd.picked.indexOf(p.編號) !== -1;
         return '<button type="button" class="tile" data-id="' + p.編號 + '" aria-pressed="' + on + '">'
@@ -908,7 +908,7 @@
     var chosen = it.包.filter(function (p) { return pd.picked.indexOf(p.編號) !== -1; });
     var grams = chosen.reduce(function (s, p) { return s + p.克數; }, 0);
     var total = chosen.reduce(function (s, p) { return s + p.價格; }, 0);
-    document.getElementById('pd-line').textContent = chosen.length ? '已選 ' + chosen.length + ' 包・' + grams.toLocaleString() + ' 克' : '還沒選';
+    document.getElementById('pd-line').textContent = chosen.length ? '已選 ' + chosen.length + ' 包・' + grams.toLocaleString() + ' 克' : '尚未選擇';
     document.getElementById('pd-total').textContent = nt(total);
     var had = it.包.some(function (p) { return cart.indexOf(p.編號) !== -1; });
     document.getElementById('pd-add').disabled = !chosen.length && !had;
@@ -920,7 +920,7 @@
     saveCart();
     refreshCart();
     closeDetail();
-    toast(pd.picked.length ? (before ? '購物車已更新' : '已加入購物車：' + pd.item.品項 + ' ' + pd.picked.length + ' 包') : '已從購物車拿掉' + pd.item.品項);
+    toast(pd.picked.length ? (before ? '購物車已更新' : '已加入購物車') : '已從購物車移除');
   }
   var toastTimer;
   function toast(msg) {
@@ -957,7 +957,7 @@
 
     var list = document.getElementById('cart-items');
     if (!cart.length) {
-      list.innerHTML = '<div class="empty-cart">購物車是空的</div>';
+      list.innerHTML = '<div class="empty-cart">購物車目前沒有商品</div>';
       document.getElementById('cart-sumbox').innerHTML = '';
       return;
     }
@@ -981,11 +981,11 @@
       + '<div class="row"><span>魚（' + cart.length + ' 包）</span><span>' + nt(t.amount) + '</span></div>'
       + '<div class="row"><span>運費</span><span>' + (t.free ? '免運' : nt(t.fee)) + '</span></div>'
       + '<div class="row total"><span>合計</span><span>' + nt(t.total) + '</span></div>'
-      + (t.free ? '' : '<p class="tip">再買 ' + nt(gap) + ' 就免運（滿 ' + nt(t.freeAt) + '）</p>')
+      + (t.free ? '' : '<p class="tip">再 ' + nt(gap) + ' 即可免運（滿 ' + nt(t.freeAt) + '）</p>')
       + (shipWay === '7-11' && t.total > t.codMax
-        ? '<p class="warn">超過 ' + nt(t.codMax) + '，7-11 不能取貨付款，要先匯款</p>' : '')
-      + '<a class="line-go" id="cart-go" href="#" target="_blank" rel="noopener"><span class="lm" aria-hidden="true">LINE</span>用 LINE 傳訂單給我們</a>'
-      + '<p class="hint">會打開 LINE、填好清單。再補上收件人、電話、門市或地址、Email 送出就好。</p>';
+        ? '<p class="warn">超過 ' + nt(t.codMax) + '，7-11 無法取貨付款，需先匯款</p>' : '')
+      + '<a class="line-go" id="cart-go" href="#" target="_blank" rel="noopener"><span class="lm" aria-hidden="true">LINE</span>以 LINE 送出訂單</a>'
+      + '<p class="hint">將開啟 LINE 並帶入訂購明細，請補上收件人、電話、門市或地址及 Email 後送出。</p>';
     document.querySelectorAll('.ship-pick button').forEach(function (b) {
       b.addEventListener('click', function () { shipWay = b.dataset.ship; refreshCart(); });
     });
@@ -994,7 +994,7 @@
 
   // 開 LINE 官方帳號的對話框，訊息先填好
   function lineOrderUrl(t) {
-    var lines = ['我要訂：'];
+    var lines = ['訂購明細：'];
     cart.forEach(function (id) {
       var x = shop.byId[id];
       lines.push(x.it.品項 + ' ' + id + ' 號 ' + x.p.克數 + ' 克 ' + nt(x.p.價格));
