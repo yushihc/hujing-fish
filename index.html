@@ -82,55 +82,134 @@
   .hero h1 { font-family: var(--font-serif); font-weight:700; margin:0 0 14px; font-size: clamp(2rem,6vw,3.4rem); line-height:1.18; text-wrap:balance; text-shadow: 0 2px 18px rgba(0,0,0,.55); }
   .hero p.lead { margin:0 0 26px; font-size: clamp(1rem,2.3vw,1.2rem); color: rgba(255,255,255,.96); max-width:22em; text-shadow: 0 1px 12px rgba(0,0,0,.55); }
   .home-foot { color: var(--muted); font-size:.82rem; margin-top:22px; }
-  /* 購物車 */
-  .shop { display:grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap:18px; }
-  .prod { background: var(--paper); border:1px solid var(--line); border-radius: var(--r-card); overflow:hidden; box-shadow: var(--shadow); display:flex; flex-direction:column; }
-  .prod .ph { height:180px; padding:14px; box-sizing:border-box; overflow:hidden; }
+  /* 購物車：商品列表 */
+  .chips { display:flex; gap:8px; flex-wrap:wrap; margin:0 0 18px; }
+  .chips button { appearance:none; border:1px solid #E5DBC7; background: var(--paper); color: var(--ink); font:inherit; font-size:.9rem; padding:8px 16px; border-radius:999px; cursor:pointer; min-height:40px; }
+  .chips button.on { background: var(--sky-ink); border-color: var(--sky-ink); color:#fff; font-weight:700; }
+  .shop { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:22px; }
+  .prod { appearance:none; font:inherit; color:inherit; text-align:left; cursor:pointer; padding:0; display:flex; flex-direction:column; background: var(--paper); border:1px solid var(--line); border-radius:18px; overflow:hidden; box-shadow: 0 10px 30px rgba(69,81,77,.08); transition: transform .15s, box-shadow .15s; }
+  .prod:hover { transform: translateY(-3px); box-shadow: 0 16px 36px rgba(18,79,134,.14); }
+  .prod .ph { height:200px; padding:18px; box-sizing:border-box; position:relative; }
   .prod .ph img { display:block; width:100%; height:100%; object-fit:contain; }
-  .prod .bd { padding:16px 18px 18px; display:flex; flex-direction:column; gap:6px; flex:1; }
-  .prod h3 { margin:0; font-family: var(--font-serif); font-size:1.22rem; color: var(--sky-ink); }
-  .prod .pr { font-weight:800; color: var(--coral-ink); }
-  .prod .pr small { font-weight:600; color: var(--ink-soft); }
-  .prod .spec { margin:0; color: var(--ink-soft); font-size:.86rem; }
-  .prod .left { margin:4px 0 2px; font-size:.86rem; color: var(--ink); font-weight:700; }
-  .prod.sold .ph { filter: grayscale(.85); opacity:.55; }
-  .prod.sold .left { color: var(--muted); font-weight:600; }
-  .pks { display:flex; flex-direction:column; gap:6px; margin-top:4px; }
-  .pkr { display:flex; align-items:center; gap:8px; border:1px solid var(--line); background: var(--paper-2); border-radius:10px; padding:7px 8px 7px 12px; font-size:.9rem; }
-  .pkr .n { font-weight:800; color: var(--sky-ink); min-width:2.8em; }
-  .pkr .g { color: var(--ink-soft); flex:1; }
-  .pkr .pa { font-weight:800; color: var(--coral-ink); }
-  .pkr button { appearance:none; border:0; border-radius:8px; padding:7px 12px; font:inherit; font-size:.84rem; font-weight:800; cursor:pointer; background: var(--coral); color: var(--on-coral); white-space:nowrap; }
-  .pkr.in { border-color: var(--sky); background: var(--sky-soft); }
-  .pkr.in button { background: var(--sky); color:#fff; }
-  .cart-fab { position:fixed; right:20px; bottom:20px; z-index:40; display:none; align-items:center; gap:10px; border:0; cursor:pointer; background: var(--sky-ink); color:#fff; font:inherit; font-weight:800; padding:13px 20px; border-radius:999px; box-shadow: 0 10px 28px rgba(18,79,134,.35); }
+  .prod .bd { padding:16px 18px 18px; display:flex; flex-direction:column; gap:7px; flex:1; }
+  .src { align-self:flex-start; font-size:.75rem; color: var(--sky-ink); background:#DCEBF6; padding:3px 10px; border-radius:999px; }
+  .src.dad { color: var(--coral-ink); background: var(--coral-soft); }
+  .prod .row1 { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .prod h3 { margin:0; font-family: var(--font-serif); font-size:1.3rem; color:#1F2B28; }
+  .pr { font-weight:800; color: var(--coral-ink); white-space:nowrap; }
+  .pr small { font-weight:500; font-size:.78rem; color: var(--ink-soft); }
+  .prod .one { margin:0; font-size:.88rem; color: var(--ink-soft); }
+  .prod .foot { display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:11px; border-top:1px dashed #E5DBC7; font-size:.88rem; }
+  .prod .go { font-weight:800; color: var(--sky-ink); }
+  .prod.sold { background: var(--paper-2); cursor:default; box-shadow:none; }
+  .prod.sold:hover { transform:none; }
+  .prod.sold .ph img { opacity:.45; }
+  .prod.sold h3, .prod.sold .pr { color:#6B6257; }
+  .soldtag { position:absolute; top:14px; left:14px; background:#3E4A46; color:#fff; font-size:.78rem; font-weight:800; letter-spacing:.08em; padding:4px 11px; border-radius:999px; }
+  .ship-note { display:flex; gap:24px; flex-wrap:wrap; font-size:.88rem; color: var(--ink-soft); margin-top:20px; }
+  @media (max-width: 860px) {
+    .shop { grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; }
+    .prod { border-radius:16px; }
+    .prod .ph { height:122px; padding:10px; }
+    .prod .bd { padding:10px 12px 12px; gap:3px; }
+    .prod h3 { font-size:1.05rem; }
+    .prod .row1 { flex-direction:column; align-items:flex-start; gap:2px; }
+    .prod .one, .prod .src, .prod .go { display:none; }
+    .prod .foot { border:0; padding-top:2px; font-size:.78rem; color: var(--ink-soft); }
+    .soldtag { top:8px; left:8px; font-size:.68rem; padding:3px 8px; }
+  }
+
+  /* 購物車：商品頁 */
+  .pd-mask { position:fixed; inset:0; background: rgba(20,40,55,.45); z-index:60; display:none; }
+  .pd-mask.show { display:block; }
+  .pd { position:fixed; z-index:61; left:50%; top:50%; transform: translate(-50%,-50%); width:min(980px, calc(100vw - 48px)); max-height: calc(100vh - 48px); overflow:auto; background: var(--bg); border-radius:22px; box-shadow: 0 30px 80px rgba(20,40,55,.3); display:none; }
+  .pd.show { display:block; }
+  .pd-top { position:sticky; top:0; z-index:2; display:flex; justify-content:flex-end; padding:10px 10px 0; pointer-events:none; }
+  .pd-x { pointer-events:auto; appearance:none; border:0; width:44px; height:44px; border-radius:999px; background: var(--paper); box-shadow: var(--shadow); font-size:1.5rem; line-height:1; color: var(--ink-soft); cursor:pointer; }
+  .pd-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:36px; padding:0 36px 32px; margin-top:-34px; }
+  .pd-img { height:400px; border:1px solid var(--line); border-radius:20px; padding:28px; box-sizing:border-box; }
+  .pd-img img { display:block; width:100%; height:100%; object-fit:contain; }
+  .pd-badges { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px; margin-top:12px; }
+  .pd-badges div { background: var(--paper); border:1px solid var(--line); border-radius:14px; padding:12px 6px; text-align:center; font-size:.78rem; color: var(--ink-soft); display:flex; flex-direction:column; gap:2px; }
+  .pd-badges b { color: var(--sky-ink); font-size:.92rem; }
+  .pd-info { display:flex; flex-direction:column; gap:16px; padding-top:44px; }
+  .pd-info h2 { margin:4px 0 2px; font-family: var(--font-serif); font-size:2.1rem; color:#1F2B28; }
+  .pd-info .pr { font-size:1.5rem; }
+  .pd-info .spec { margin:0; color: var(--ink-soft); font-size:.95rem; }
+  .pd-h { display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
+  .pd-h h3 { margin:0; font-size:1.05rem; color:#1F2B28; }
+  .pd-h span { font-size:.82rem; color: var(--ink-soft); }
+  .tiles { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px; }
+  .tile { appearance:none; font:inherit; cursor:pointer; text-align:left; min-height:84px; padding:11px 13px; border-radius:14px; background: var(--paper); border:1px solid #DCCFB6; display:flex; flex-direction:column; gap:1px; color:inherit; }
+  .tile .no { font-size:.8rem; color: var(--ink-soft); }
+  .tile .g { font-size:1.2rem; font-weight:800; color:#1F2B28; }
+  .tile .p { font-size:.95rem; font-weight:800; color: var(--coral-ink); }
+  .tile[aria-pressed="true"] { background:#DCEBF6; border:2px solid var(--sky-ink); padding:10px 12px; }
+  .pd-buy { background: var(--paper); border:1px solid var(--line); border-radius:16px; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
+  .pd-buy .l { display:flex; flex-direction:column; }
+  .pd-buy .l span { font-size:.85rem; color: var(--ink-soft); }
+  .pd-buy .l b { font-size:1.4rem; color: var(--coral-ink); }
+  .buy-btn { appearance:none; border:0; cursor:pointer; font:inherit; font-weight:800; font-size:1rem; background: var(--coral-ink); color:#fff; padding:0 24px; min-height:50px; border-radius:999px; white-space:nowrap; }
+  .buy-btn:disabled { background:#C9BFAE; cursor:not-allowed; }
+  .pd-tabs { background: var(--paper); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+  .pd-tabbar { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); border-bottom:1px solid var(--line); }
+  .pd-tabbar button { appearance:none; border:0; font:inherit; cursor:pointer; padding:13px 6px; background: var(--paper-2); color: var(--ink-soft); }
+  .pd-tabbar button[aria-selected="true"] { background: var(--paper); color: var(--sky-ink); font-weight:800; box-shadow: inset 0 -3px 0 var(--sky-ink); }
+  .pd-sec { display:none; padding:14px 18px 16px; }
+  .pd-sec.on { display:block; }
+  .pd-sec h4 { display:none; }
+  .pd-sec ul, .pd-sec ol { margin:0; padding-left:20px; line-height:1.85; font-size:.95rem; }
+  .toast { position:fixed; left:50%; bottom:90px; transform:translateX(-50%); background:#1F2B28; color:#fff; padding:11px 20px; border-radius:999px; font-size:.92rem; z-index:70; opacity:0; transition: opacity .2s; pointer-events:none; }
+  .toast.show { opacity:1; }
+  @media (max-width: 860px) {
+    .pd { left:0; top:0; transform:none; width:100vw; height:100dvh; max-height:none; border-radius:0; padding-bottom:96px; box-sizing:border-box; }
+    .pd-grid { grid-template-columns: 1fr; gap:0; padding:0; margin-top:-54px; }
+    .pd-img { height:250px; border:0; border-bottom:1px solid var(--line); border-radius:0; padding:18px; }
+    .pd-badges { display:none; }
+    .pd-info { padding:18px 16px 24px; gap:18px; }
+    .pd-info h2 { font-size:1.7rem; }
+    .tiles { grid-template-columns: 1fr; gap:8px; }
+    .tile { min-height:56px; flex-direction:row; align-items:center; gap:12px; }
+    .tile .g { flex:1; font-size:1.1rem; }
+    .pd-buy { position:fixed; left:0; right:0; bottom:0; border-radius:0; border:0; border-top:1px solid var(--line); box-shadow: 0 -8px 24px rgba(69,81,77,.1); padding:12px 16px 18px; z-index:3; }
+    .pd-tabs { background:none; border:0; display:flex; flex-direction:column; gap:12px; }
+    .pd-tabbar { display:none; }
+    .pd-sec { display:block; background: var(--paper); border:1px solid var(--line); border-radius:16px; }
+    .pd-sec h4 { display:block; margin:0 0 6px; font-size:1rem; color: var(--sky-ink); }
+  }
+
+  /* 購物車：抽屜 */
+  .cart-fab { position:fixed; right:20px; bottom:20px; z-index:40; display:none; align-items:center; gap:10px; border:0; cursor:pointer; background: var(--sky-ink); color:#fff; font:inherit; font-weight:800; padding:13px 20px; border-radius:999px; box-shadow: 0 10px 28px rgba(18,79,134,.35); min-height:48px; }
   .cart-fab.show { display:inline-flex; }
   .cart-fab .c { background: var(--coral); color: var(--on-coral); border-radius:999px; min-width:1.7em; padding:1px 7px; text-align:center; }
   .cart-mask { position:fixed; inset:0; background: rgba(20,40,55,.38); z-index:50; display:none; }
   .cart-mask.show { display:block; }
   .cart { position:fixed; top:0; right:0; bottom:0; width:min(420px, 100vw); background: var(--bg); z-index:51; transform: translateX(105%); transition: transform .25s ease; display:flex; flex-direction:column; box-shadow: -10px 0 30px rgba(20,40,55,.18); }
   .cart.show { transform:none; }
-  .cart header { display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid var(--line); }
+  .cart header { display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-bottom:1px solid var(--line); background: var(--paper); }
   .cart header h3 { margin:0; font-family: var(--font-serif); color: var(--sky-ink); }
-  .cart header button { border:0; background:none; font-size:1.5rem; cursor:pointer; color: var(--ink-soft); }
-  .cart .items { flex:1; overflow:auto; padding:14px 20px; }
-  .ci { display:flex; gap:10px; align-items:center; padding:10px 0; border-bottom:1px dashed var(--line); }
-  .ci img { width:56px; height:44px; object-fit:contain; background: var(--paper); border-radius:8px; }
-  .ci .t { flex:1; font-size:.9rem; line-height:1.4; }
-  .ci .t small { display:block; color: var(--ink-soft); }
+  .cart header button { border:0; background:none; font-size:1.6rem; cursor:pointer; color: var(--ink-soft); width:44px; height:44px; }
+  .cart .items { flex:1; overflow:auto; padding:6px 20px; }
+  .ci { display:flex; gap:12px; align-items:center; padding:13px 0; border-bottom:1px dashed #DCCFB6; }
+  .ci img { width:66px; height:52px; object-fit:contain; background: var(--paper); border:1px solid var(--line); border-radius:10px; padding:3px; box-sizing:border-box; }
+  .ci .t { flex:1; font-size:.95rem; line-height:1.4; font-weight:700; color:#1F2B28; }
+  .ci .t small { display:block; color: var(--ink-soft); font-weight:400; font-size:.82rem; }
   .ci .pa { font-weight:800; color: var(--coral-ink); }
-  .ci button { border:0; background:none; color: var(--muted); font-size:1.1rem; cursor:pointer; }
-  .cart .sum { padding:14px 20px 20px; border-top:1px solid var(--line); background: var(--paper); }
-  .ship-pick { display:flex; gap:8px; margin-bottom:12px; }
-  .ship-pick label { flex:1; border:1px solid var(--line); border-radius:10px; padding:9px 10px; font-size:.86rem; cursor:pointer; text-align:center; background: var(--bg); }
-  .ship-pick label:has(input:checked) { border-color: var(--sky); background: var(--sky-soft); color: var(--sky-ink); font-weight:700; }
-  .ship-pick input { display:none; }
+  .ci button { border:0; background:none; color: var(--muted); font-size:1.15rem; cursor:pointer; width:44px; height:44px; }
+  .cart .sum { padding:14px 20px 18px; border-top:1px solid var(--line); background: var(--paper); }
+  .ship-pick { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:8px; margin-bottom:12px; }
+  .ship-pick button { appearance:none; font:inherit; cursor:pointer; min-height:52px; border-radius:12px; border:1px solid #DCCFB6; background: var(--bg); color: var(--ink); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; }
+  .ship-pick button b { font-size:.9rem; }
+  .ship-pick button span { font-size:.76rem; }
+  .ship-pick button[aria-pressed="true"] { background:#DCEBF6; color: var(--sky-ink); border:2px solid var(--sky-ink); }
   .sum .row { display:flex; justify-content:space-between; font-size:.92rem; margin:3px 0; }
-  .sum .row.total { font-size:1.12rem; font-weight:800; color: var(--coral-ink); margin-top:8px; }
-  .sum .tip { font-size:.82rem; color: var(--ink-soft); margin:8px 0 0; }
-  .sum .warn { font-size:.84rem; color:#B4413B; font-weight:700; margin:8px 0 0; }
-  .sum .btn { width:100%; justify-content:center; margin-top:14px; }
-  .cart .empty-cart { color: var(--muted); text-align:center; padding:40px 0; }
+  .sum .row.total { font-size:1.15rem; font-weight:800; color: var(--coral-ink); margin-top:8px; }
+  .sum .tip { font-size:.82rem; color: var(--sky-ink); background:#DCEBF6; border-radius:10px; padding:8px 12px; margin:10px 0 0; }
+  .sum .warn { font-size:.84rem; color:#9A2F28; background:#FBE4E2; border-radius:10px; padding:8px 12px; font-weight:700; margin:8px 0 0; }
+  .line-go { display:flex; align-items:center; justify-content:center; gap:10px; min-height:52px; border-radius:999px; background:#06C755; color:#fff; text-decoration:none; font-weight:800; margin-top:14px; }
+  .line-go .lm { background:#fff; color:#06C755; font-size:.75rem; font-weight:900; padding:3px 7px; border-radius:6px; }
+  .sum .hint { font-size:.78rem; color: var(--ink-soft); margin:8px 0 0; line-height:1.6; }
+  .cart .empty-cart { color: var(--muted); text-align:center; padding:50px 0; }
 
   /* points */
   .points { display:grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap:16px; }
@@ -423,7 +502,7 @@
       <div class="step"><span class="sn"></span><div><h3>擦乾水分（去腥關鍵）</h3><p>拆封後用廚房紙巾把魚體表面與腹腔血水徹底擦乾，去掉大部分腥味來源。</p></div></div>
       <div class="step"><span class="sn"></span><div><h3>切勿重複冷凍</h3><p>解凍後當天料理完畢，別再丟回冷凍庫，否則細菌倍增、肉質變柴。</p></div></div>
     </div>
-      <h3 class="about-h3">本季這三種怎麼煮</h3>
+      <h3 class="about-h3">本季魚種的料理方式</h3>
       <div class="steps">
       <div class="step"><span class="sn"></span><div><h3>土魠：乾煎</h3><p>擦乾、抹薄鹽放一下，下鍋先大火讓表面定型，再轉中小火蓋鍋蓋慢慢煎。<strong>耐得住不要一直翻</strong>，搖鍋子滑得動再翻面。</p></div></div>
       <div class="step"><span class="sn"></span><div><h3>紅甘：煎、清蒸、煮湯都可以</h3><p>肉質彈、刺少。想清淡一點就墊薑片清蒸，天冷就煮味噌湯。</p></div></div>
@@ -526,13 +605,16 @@
 
 </main>
 
-<button class="cart-fab" id="cart-fab" type="button" aria-label="打開購物車">🛒 購物車 <span class="c" id="cart-n">0</span><span id="cart-sum"></span></button>
+<button class="cart-fab" id="cart-fab" type="button" aria-label="打開購物車"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle><path d="M2.5 3.5h3l2.4 11.2a1.6 1.6 0 0 0 1.6 1.3h8.3a1.6 1.6 0 0 0 1.6-1.2L21 8H6.6"></path></svg>購物車 <span class="c" id="cart-n">0</span><span id="cart-sum"></span></button>
 <div class="cart-mask" id="cart-mask"></div>
 <aside class="cart" id="cart" aria-label="購物車" aria-hidden="true">
-  <header><h3>🛒 購物車</h3><button type="button" id="cart-close" aria-label="關閉">×</button></header>
+  <header><h3>購物車</h3><button type="button" id="cart-close" aria-label="關閉">×</button></header>
   <div class="items" id="cart-items"></div>
   <div class="sum" id="cart-sumbox"></div>
 </aside>
+<div class="pd-mask" id="pd-mask"></div>
+<section class="pd" id="pd" role="dialog" aria-modal="true" aria-labelledby="pd-title"></section>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
   var panes = document.querySelectorAll('.pane');
@@ -667,9 +749,10 @@
     '冰卷': ['assets/wc-squid-cooked.jpg', '#fefefb'],
     '手釣小管': ['assets/wc-handline.jpg', '#fcf9f3']
   };
+  var ICON_CART = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle><path d="M2.5 3.5h3l2.4 11.2a1.6 1.6 0 0 0 1.6 1.3h8.3a1.6 1.6 0 0 0 1.6-1.2L21 8H6.6"></path></svg>';
 
   // 購物車：只記包裝編號，價錢每次都用最新的商品清單算
-  var shop = { items: [], byId: {}, rules: null };
+  var shop = { items: [], byId: {}, rules: null, filter: '全部' };
   var cart = [];
   try { cart = JSON.parse(localStorage.getItem('hujing_cart') || '[]') || []; } catch (e) { cart = []; }
   var shipWay = '7-11';
@@ -686,29 +769,155 @@
     cart = cart.filter(function (id) { return shop.byId[id]; });
     saveCart();
 
-    box.innerHTML = '<p class="sub">每一包都秤好了，價錢照克數算。挑好放進購物車，結帳會開 LINE 把清單傳給我們。</p>'
-      + '<div class="shop">' + items.map(function (it) {
-        var img = PROD_IMG[it.品項];
-        var sold = !it.包.length;
-        return '<article class="prod' + (sold ? ' sold' : '') + '">'
-          + (img ? '<div class="ph" style="background:' + img[1] + '"><img src="' + img[0] + '" alt="' + esc(it.品項) + '" loading="lazy"></div>' : '')
-          + '<div class="bd"><h3>' + esc(it.品項) + '</h3>'
-          + '<div class="pr">' + it.單價 + ' 元<small>／台斤</small></div>'
-          + '<p class="spec">' + esc([it.規格, it.來源].filter(Boolean).join('・')) + '</p>'
-          + '<p class="left">' + (sold ? '這一批賣完了'
-            : '目前剩 ' + it.總克數.toLocaleString() + ' 克（約 ' + (Math.round(it.總克數 / 60) / 10) + ' 台斤）') + '</p>'
-          + '<div class="pks">' + it.包.map(function (p) {
-            return '<div class="pkr" data-id="' + p.編號 + '"><span class="n">' + p.編號 + ' 號</span>'
-              + '<span class="g">' + p.克數 + ' 克</span><span class="pa">' + nt(p.價格) + '</span>'
-              + '<button type="button" data-id="' + p.編號 + '"></button></div>';
-          }).join('') + '</div></div></article>';
-      }).join('') + '</div>';
-    box.querySelectorAll('.pkr button').forEach(function (b) {
-      b.addEventListener('click', function () { toggleCart(Number(b.dataset.id)); });
+    var cats = ['全部'];
+    items.forEach(function (it) { if (it.分類 && cats.indexOf(it.分類) === -1) cats.push(it.分類); });
+    box.innerHTML = '<p class="sub">每一包都秤好重量，價錢照克數算。點進去挑你要的那幾包。</p>'
+      + (cats.length > 2 ? '<div class="chips">' + cats.map(function (c) {
+        return '<button type="button" data-cat="' + esc(c) + '" class="' + (c === shop.filter ? 'on' : '') + '">' + esc(c) + '</button>';
+      }).join('') + '</div>' : '')
+      + '<div class="shop" id="shop-grid"></div>'
+      + '<div class="ship-note"><span>7-11 冷凍店取 ' + nt((res.運費 || {})['7-11']) + '，滿 ' + nt((res.免運 || {})['7-11']) + ' 免運</span>'
+      + '<span>黑貓冷凍宅配 ' + nt((res.運費 || {})['宅配']) + '，滿 ' + nt((res.免運 || {})['宅配']) + ' 免運</span></div>';
+    box.querySelectorAll('.chips button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        shop.filter = b.dataset.cat;
+        box.querySelectorAll('.chips button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        renderGrid();
+      });
     });
+    renderGrid();
     var cta = document.getElementById('catalog-cta');
     if (cta) cta.style.display = 'none';
     refreshCart();
+  }
+
+  // 存量：超過 3 包只寫「>3」，3 包以下寫實際包數
+  function stockText(n) { return '存量 ' + (n > 3 ? '>3' : n); }
+
+  function renderGrid() {
+    var grid = document.getElementById('shop-grid');
+    var list = shop.items.filter(function (it) { return shop.filter === '全部' || it.分類 === shop.filter; });
+    grid.innerHTML = list.map(function (it) {
+      var img = PROD_IMG[it.品項];
+      var sold = !it.包.length;
+      var dad = /手釣/.test(it.來源);
+      return '<button type="button" class="prod' + (sold ? ' sold' : '') + '" data-item="' + esc(it.品項) + '"'
+        + (sold ? ' aria-disabled="true"' : '') + '>'
+        + '<div class="ph" style="background:' + (img ? img[1] : 'var(--paper-2)') + '">'
+        + (img ? '<img src="' + img[0] + '" alt="" loading="lazy">' : '')
+        + (sold ? '<span class="soldtag">SOLD OUT</span>' : '') + '</div>'
+        + '<div class="bd">'
+        + (it.來源 ? '<span class="src' + (dad ? ' dad' : '') + '">' + esc(it.來源) + '</span>' : '')
+        + '<div class="row1"><h3>' + esc(it.品項) + '</h3><span class="pr">' + it.單價 + '<small> 元／台斤</small></span></div>'
+        + ((it.特色 || [])[0] ? '<p class="one">' + esc(it.特色[0]) + '</p>' : '')
+        + '<div class="foot"><span>' + (sold ? esc(it.規格 || '') : stockText(it.包.length)) + '</span>'
+        + (sold ? '' : '<span class="go">選擇重量 ›</span>') + '</div>'
+        + '</div></button>';
+    }).join('');
+    grid.querySelectorAll('.prod').forEach(function (b) {
+      if (b.classList.contains('sold')) return;
+      b.addEventListener('click', function () { openDetail(b.dataset.item); });
+    });
+  }
+
+  // ── 商品頁 ──
+  var pd = { item: null, picked: [], tab: '特色' };
+  function openDetail(name) {
+    var it = shop.items.filter(function (x) { return x.品項 === name; })[0];
+    if (!it) return;
+    pd.item = it;
+    // 已經在購物車裡的先幫他勾起來
+    pd.picked = it.包.map(function (p) { return p.編號; }).filter(function (id) { return cart.indexOf(id) !== -1; });
+    pd.tab = '特色';
+    renderDetail();
+    document.getElementById('pd').classList.add('show');
+    document.getElementById('pd-mask').classList.add('show');
+    document.getElementById('pd').scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+    setTimeout(function () { document.querySelector('#pd .pd-x').focus(); }, 30);
+  }
+  function closeDetail() {
+    document.getElementById('pd').classList.remove('show');
+    document.getElementById('pd-mask').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  function renderDetail() {
+    var it = pd.item, img = PROD_IMG[it.品項];
+    var dad = /手釣/.test(it.來源);
+    var secs = [['特色', 'ul'], ['料理方式', 'ol'], ['保存', 'ul']].filter(function (s) { return (it[s[0]] || []).length; });
+    if (secs.length && !secs.some(function (s) { return s[0] === pd.tab; })) pd.tab = secs[0][0];
+    var had = it.包.some(function (p) { return cart.indexOf(p.編號) !== -1; });
+    document.getElementById('pd').innerHTML =
+      '<div class="pd-top"><button type="button" class="pd-x" aria-label="關閉">×</button></div>'
+      + '<div class="pd-grid"><div>'
+      + '<div class="pd-img" style="background:' + (img ? img[1] : 'var(--paper-2)') + '">' + (img ? '<img src="' + img[0] + '" alt="' + esc(it.品項) + '水彩插畫">' : '') + '</div>'
+      + '<div class="pd-badges"><div><b>真空包裝</b>一包一包秤好</div><div><b>−18°C 冷凍</b>鎖住鮮度</div><div><b>澎湖直送</b>7-11 或宅配</div></div>'
+      + '</div><div class="pd-info">'
+      + '<div>' + (it.來源 ? '<span class="src' + (dad ? ' dad' : '') + '">' + esc(it.來源) + '</span>' : '')
+      + '<h2 id="pd-title">' + esc(it.品項) + '</h2>'
+      + '<div class="pr">' + it.單價 + '<small> 元／台斤</small></div></div>'
+      + (it.規格 ? '<p class="spec">' + esc(it.規格) + '</p>' : '')
+      + '<div><div class="pd-h"><h3>選擇重量</h3><span>' + stockText(it.包.length) + '，可以選好幾包</span></div>'
+      + '<div class="tiles" style="margin-top:10px">' + it.包.map(function (p) {
+        var on = pd.picked.indexOf(p.編號) !== -1;
+        return '<button type="button" class="tile" data-id="' + p.編號 + '" aria-pressed="' + on + '">'
+          + '<span class="no">' + p.編號 + ' 號</span><span class="g">' + p.克數 + ' 克</span><span class="p">' + nt(p.價格) + '</span></button>';
+      }).join('') + '</div></div>'
+      + '<div class="pd-buy"><div class="l"><span id="pd-line"></span><b id="pd-total"></b></div>'
+      + '<button type="button" class="buy-btn" id="pd-add">' + (had ? '更新購物車' : '加入購物車') + '</button></div>'
+      + (secs.length ? '<div class="pd-tabs"><div class="pd-tabbar" role="tablist">' + secs.map(function (s) {
+        return '<button type="button" role="tab" data-tab="' + s[0] + '" aria-selected="' + (s[0] === pd.tab) + '">' + s[0] + '</button>';
+      }).join('') + '</div>' + secs.map(function (s) {
+        return '<div class="pd-sec' + (s[0] === pd.tab ? ' on' : '') + '" data-sec="' + s[0] + '"><h4>' + s[0] + '</h4><' + s[1] + '>'
+          + it[s[0]].map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('') + '</' + s[1] + '></div>';
+      }).join('') + '</div>' : '')
+      + '</div></div>';
+    var root = document.getElementById('pd');
+    root.querySelector('.pd-x').addEventListener('click', closeDetail);
+    root.querySelectorAll('.tile').forEach(function (t) {
+      t.addEventListener('click', function () {
+        var id = Number(t.dataset.id), i = pd.picked.indexOf(id);
+        if (i === -1) pd.picked.push(id); else pd.picked.splice(i, 1);
+        t.setAttribute('aria-pressed', i === -1);
+        updatePdBuy();
+      });
+    });
+    root.querySelectorAll('.pd-tabbar button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        pd.tab = b.dataset.tab;
+        root.querySelectorAll('.pd-tabbar button').forEach(function (x) { x.setAttribute('aria-selected', x === b); });
+        root.querySelectorAll('.pd-sec').forEach(function (x) { x.classList.toggle('on', x.dataset.sec === pd.tab); });
+      });
+    });
+    root.querySelector('#pd-add').addEventListener('click', addFromDetail);
+    updatePdBuy();
+  }
+  function updatePdBuy() {
+    var it = pd.item;
+    var chosen = it.包.filter(function (p) { return pd.picked.indexOf(p.編號) !== -1; });
+    var grams = chosen.reduce(function (s, p) { return s + p.克數; }, 0);
+    var total = chosen.reduce(function (s, p) { return s + p.價格; }, 0);
+    document.getElementById('pd-line').textContent = chosen.length ? '已選 ' + chosen.length + ' 包・' + grams.toLocaleString() + ' 克' : '還沒選';
+    document.getElementById('pd-total').textContent = nt(total);
+    var had = it.包.some(function (p) { return cart.indexOf(p.編號) !== -1; });
+    document.getElementById('pd-add').disabled = !chosen.length && !had;
+  }
+  function addFromDetail() {
+    var mine = pd.item.包.map(function (p) { return p.編號; });
+    var before = cart.filter(function (id) { return mine.indexOf(id) !== -1; }).length;
+    cart = cart.filter(function (id) { return mine.indexOf(id) === -1; }).concat(pd.picked);
+    saveCart();
+    refreshCart();
+    closeDetail();
+    toast(pd.picked.length ? (before ? '購物車已更新' : '已加入購物車：' + pd.item.品項 + ' ' + pd.picked.length + ' 包') : '已從購物車拿掉' + pd.item.品項);
+  }
+  var toastTimer;
+  function toast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove('show'); }, 2200);
   }
 
   function toggleCart(id) {
@@ -730,11 +939,6 @@
   }
 
   function refreshCart() {
-    document.querySelectorAll('.pkr').forEach(function (row) {
-      var on = cart.indexOf(Number(row.dataset.id)) !== -1;
-      row.classList.toggle('in', on);
-      row.querySelector('button').textContent = on ? '✓ 已加入' : '＋ 加入';
-    });
     var t = cartTotals();
     document.getElementById('cart-n').textContent = cart.length;
     document.getElementById('cart-sum').textContent = cart.length ? nt(t.amount) : '';
@@ -751,27 +955,28 @@
       return '<div class="ci">' + (img ? '<img src="' + img[0] + '" alt="">' : '')
         + '<div class="t">' + esc(x.it.品項) + '　' + id + ' 號<small>' + x.p.克數 + ' 克</small></div>'
         + '<span class="pa">' + nt(x.p.價格) + '</span>'
-        + '<button type="button" data-id="' + id + '" aria-label="移除 ' + id + ' 號">✕</button></div>';
+        + '<button type="button" data-id="' + id + '" aria-label="移除 ' + esc(x.it.品項) + ' ' + id + ' 號">✕</button></div>';
     }).join('');
     list.querySelectorAll('button').forEach(function (b) {
       b.addEventListener('click', function () { toggleCart(Number(b.dataset.id)); });
     });
 
+    var r = shop.rules || {};
     var gap = t.freeAt - t.amount;
     document.getElementById('cart-sumbox').innerHTML =
       '<div class="ship-pick">'
-      + '<label><input type="radio" name="ship" value="7-11"' + (shipWay === '7-11' ? ' checked' : '') + '>7-11 冷凍店取</label>'
-      + '<label><input type="radio" name="ship" value="宅配"' + (shipWay === '宅配' ? ' checked' : '') + '>黑貓冷凍宅配</label></div>'
+      + '<button type="button" data-ship="7-11" aria-pressed="' + (shipWay === '7-11') + '"><b>7-11 冷凍店取</b><span>運費 ' + nt((r.運費 || {})['7-11']) + '</span></button>'
+      + '<button type="button" data-ship="宅配" aria-pressed="' + (shipWay === '宅配') + '"><b>黑貓冷凍宅配</b><span>運費 ' + nt((r.運費 || {})['宅配']) + '</span></button></div>'
       + '<div class="row"><span>魚（' + cart.length + ' 包）</span><span>' + nt(t.amount) + '</span></div>'
       + '<div class="row"><span>運費</span><span>' + (t.free ? '免運' : nt(t.fee)) + '</span></div>'
       + '<div class="row total"><span>合計</span><span>' + nt(t.total) + '</span></div>'
       + (t.free ? '' : '<p class="tip">再買 ' + nt(gap) + ' 就免運（滿 ' + nt(t.freeAt) + '）</p>')
       + (shipWay === '7-11' && t.total > t.codMax
         ? '<p class="warn">超過 ' + nt(t.codMax) + '，7-11 不能取貨付款，要先匯款</p>' : '')
-      + '<a class="btn btn-line" id="cart-go" href="#" target="_blank" rel="noopener">用<span class="line-mark" aria-hidden="true">LINE</span>傳訂單給我們</a>'
-      + '<p class="tip">會開 LINE 並填好清單，再補上收件人、電話、門市或地址、Email 送出就好。</p>';
-    document.querySelectorAll('input[name="ship"]').forEach(function (r) {
-      r.addEventListener('change', function () { shipWay = r.value; refreshCart(); });
+      + '<a class="line-go" id="cart-go" href="#" target="_blank" rel="noopener"><span class="lm" aria-hidden="true">LINE</span>用 LINE 傳訂單給我們</a>'
+      + '<p class="hint">會打開 LINE、填好清單。再補上收件人、電話、門市或地址、Email 送出就好。</p>';
+    document.querySelectorAll('.ship-pick button').forEach(function (b) {
+      b.addEventListener('click', function () { shipWay = b.dataset.ship; refreshCart(); });
     });
     document.getElementById('cart-go').href = lineOrderUrl(t);
   }
@@ -801,7 +1006,11 @@
   document.getElementById('cart-fab').addEventListener('click', function () { openCart(true); });
   document.getElementById('cart-close').addEventListener('click', function () { openCart(false); });
   document.getElementById('cart-mask').addEventListener('click', function () { openCart(false); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') openCart(false); });
+  document.getElementById('pd-mask').addEventListener('click', closeDetail);
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (document.getElementById('pd').classList.contains('show')) closeDetail(); else openCart(false);
+  });
 
   function renderDiary(list) {
     var box = document.getElementById('diary-list');

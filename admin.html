@@ -332,6 +332,12 @@
   .irow input[type=number] { padding:8px; }
   .irow label { display:flex; align-items:center; gap:4px; font-size:.85rem; margin:0; }
   .irow button { border:0; background: var(--sky); color:#fff; border-radius:8px; padding:8px 10px; font:inherit; font-size:.82rem; cursor:pointer; }
+  .irow .more { grid-column: 1 / -1; justify-self:start; background:none; color: var(--sky-ink); padding:2px 0; text-decoration:underline; }
+  .idetail { grid-column: 1 / -1; display:none; background: var(--paper-2); border:1px solid var(--line); border-radius:12px; padding:12px; margin-bottom:6px; }
+  .idetail.show { display:block; }
+  .idetail label { display:block; font-size:.85rem; font-weight:700; margin:8px 0 4px; }
+  .idetail textarea { width:100%; box-sizing:border-box; font:inherit; font-size:15px; border:1px solid var(--line); border-radius:10px; padding:8px 10px; min-height:84px; background: var(--paper); }
+  .idetail .why { font-weight:400; color: var(--muted); }
   .restore-link { background:none; border:0; color: var(--sky-ink); font-size:.82rem; cursor:pointer; text-decoration:underline; padding:4px 0; margin-top:8px; }
 
   .login-wrap { max-width: 380px; margin: 15vh auto 0; padding: 0 16px; }
@@ -1678,6 +1684,11 @@
   }
 
   // 品項與價格
+  function escHtml(v) {
+    return String(v == null ? '' : v).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
   function renderItems() {
     var box = document.getElementById('i-list');
     box.className = '';
@@ -1685,18 +1696,35 @@
     packItems.forEach(function (it) {
       var row = document.createElement('div');
       row.className = 'irow';
+      function ta(key, label, why) {
+        return '<label>' + label + (why ? ' <span class="why">' + why + '</span>' : '') + '</label>'
+          + '<textarea data-k="' + key + '">' + escHtml(it[key] || '') + '</textarea>';
+      }
       row.innerHTML = '<span class="nm">' + it.品項 + '</span>'
         + '<input type="number" inputmode="numeric" min="1" value="' + it.單價 + '" aria-label="' + it.品項 + ' 單價">'
         + '<label><input type="checkbox"' + (it.上架 ? ' checked' : '') + '> 上架</label>'
-        + '<button type="button">存</button>';
-      row.querySelector('button').addEventListener('click', function () {
+        + '<button type="button" class="save">存</button>'
+        + '<button type="button" class="more">✏️ 編輯官網介紹</button>'
+        + '<div class="idetail">'
+        + '<label>規格 <span class="why">卡片和商品頁標題下面那一行</span></label><textarea data-k="規格" style="min-height:44px">' + escHtml(it.規格 || '') + '</textarea>'
+        + ta('特色', '特色', '一行一點，第一行會出現在商品卡片上')
+        + ta('料理方式', '料理方式', '一行一個步驟')
+        + ta('保存', '保存', '一行一點')
+        + '<label>分類 <span class="why">官網上方的篩選鈕，例如「魚」</span></label><textarea data-k="分類" style="min-height:44px">' + escHtml(it.分類 || '') + '</textarea>'
+        + '<p class="hint" style="margin:8px 0 0">改完按上面的「存」。</p></div>';
+      row.querySelector('.more').addEventListener('click', function () {
+        row.querySelector('.idetail').classList.toggle('show');
+      });
+      row.querySelector('.save').addEventListener('click', function () {
         var btn = this;
         btn.disabled = true; btn.textContent = '…';
-        postAction({
+        var body = {
           action: '設定品項', 品項: it.品項,
           單價: row.querySelector('input[type=number]').value,
           上架: row.querySelector('input[type=checkbox]').checked ? '是' : '否'
-        }).then(function (res) {
+        };
+        row.querySelectorAll('.idetail textarea').forEach(function (t) { body[t.dataset.k] = t.value; });
+        postAction(body).then(function (res) {
           btn.disabled = false; btn.textContent = res.ok ? '✓' : '存';
           if (!res.ok) alert(res.error);
           else setTimeout(function () { btn.textContent = '存'; }, 1500);
