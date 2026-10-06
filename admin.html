@@ -53,7 +53,7 @@
 
   label { display:block; font-size:.88rem; font-weight:600; color: var(--ink); margin: 12px 0 6px; }
   label:first-of-type { margin-top:0; }
-  input[type=text], input[type=number], input[type=tel], input[type=date], input[type=month], select {
+  input[type=text], input[type=number], input[type=tel], input[type=email], input[type=date], input[type=month], select {
     width:100%; max-width:100%; font: inherit; font-size:16px; padding:11px 14px; border-radius:10px;
     border:1px solid var(--line); background: var(--paper-2); color: var(--ink);
     -webkit-appearance: none; appearance: none;
@@ -292,7 +292,7 @@
   .modal .err { display:none; color:#B4413B; font-size:.85rem; margin:0 0 10px; }
   .modal.edit-modal { max-width: 420px; max-height: 86vh; overflow-y: auto; text-align: left; }
   .modal.edit-modal h3 { color: var(--sky-ink); }
-  .modal.edit-modal input[type=text], .modal.edit-modal input[type=tel],
+  .modal.edit-modal input[type=text], .modal.edit-modal input[type=tel], .modal.edit-modal input[type=email],
   .modal.edit-modal input[type=number], .modal.edit-modal input[type=date] { margin-bottom: 0; text-align: left; font-size: 16px; letter-spacing: normal; }
   .edit-link { background:none; border:0; color: var(--sky-ink); font-size:.82rem; cursor:pointer; text-decoration:underline; padding:4px 10px 4px 0; margin-top:8px; }
   .modal.ok-modal { text-align:center; }
@@ -309,6 +309,29 @@
   .filter-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
   .filter-row button { border:1px solid var(--line); background: var(--paper); color: var(--ink-soft); font:inherit; font-size:.86rem; font-weight:600; padding:8px 14px; border-radius:999px; cursor:pointer; }
   .filter-row button.on { background: var(--sky); color:#fff; border-color: var(--sky); }
+  /* 逐包販售 */
+  .gram-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+  .gram-row input { flex:1; }
+  .gram-row .x { border:0; background:none; color: var(--muted); font-size:1.2rem; cursor:pointer; padding:4px 8px; }
+  .pack-made { margin-top:14px; padding:14px; border-radius:12px; background: var(--ok-soft); }
+  .pack-made b { display:inline-block; min-width:3.2em; font-size:1.5rem; color: var(--ok); }
+  .pack-grp { margin-bottom:12px; }
+  .pack-grp h4 { margin:0 0 6px; font-size:.92rem; color: var(--ink-soft); }
+  .pack-chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .pack-chip { display:flex; align-items:center; gap:6px; border:1px solid var(--line); background: var(--paper); border-radius:10px; padding:8px 10px; font-size:.88rem; cursor:pointer; }
+  .pack-chip:has(input:checked) { border-color: var(--sky); background: var(--sky-soft); color: var(--sky-ink); font-weight:700; }
+  .pack-chip input { accent-color: var(--sky); }
+  .prow { display:flex; align-items:center; gap:10px; border:1px solid var(--line); border-radius:12px; padding:10px 12px; margin-bottom:8px; background: var(--paper-2); flex-wrap:wrap; }
+  .prow .no { font-family: var(--font-serif); font-weight:700; font-size:1.3rem; min-width:2.6em; color: var(--sky-ink); }
+  .prow .info { flex:1; min-width:9em; font-size:.9rem; }
+  .prow .info small { display:block; color: var(--muted); font-size:.8rem; }
+  .prow .act { display:flex; gap:6px; }
+  .prow .act button { border:1px solid var(--line); background: var(--paper); border-radius:8px; padding:6px 10px; font:inherit; font-size:.82rem; cursor:pointer; }
+  .irow { display:grid; grid-template-columns: 1fr 5.5em auto auto; gap:8px; align-items:center; margin-bottom:8px; }
+  .irow .nm { font-weight:700; }
+  .irow input[type=number] { padding:8px; }
+  .irow label { display:flex; align-items:center; gap:4px; font-size:.85rem; margin:0; }
+  .irow button { border:0; background: var(--sky); color:#fff; border-radius:8px; padding:8px 10px; font:inherit; font-size:.82rem; cursor:pointer; }
   .restore-link { background:none; border:0; color: var(--sky-ink); font-size:.82rem; cursor:pointer; text-decoration:underline; padding:4px 0; margin-top:8px; }
 
   .login-wrap { max-width: 380px; margin: 15vh auto 0; padding: 0 16px; }
@@ -374,6 +397,7 @@
 
   <nav class="tabs" role="tablist">
     <button role="tab" aria-selected="true" data-target="catch">🎣 回報漁獲</button>
+    <button role="tab" aria-selected="false" data-target="packs">🏷️ 包裝</button>
     <button role="tab" aria-selected="false" data-target="order">📋 登記訂單</button>
     <button role="tab" aria-selected="false" data-target="pending">🚚 待處理</button>
     <button role="tab" aria-selected="false" data-target="stock">📦 庫存</button>
@@ -416,6 +440,44 @@
     </div>
   </section>
 
+  <section class="pane" id="pane-packs">
+    <div class="cols2">
+    <div class="card">
+      <h2>登記包裝</h2>
+      <p class="hint">每封好一包就秤重登記，系統給的編號寫在袋子上。官網上客人看到、挑的就是這一包。</p>
+      <label for="p-item">品項</label>
+      <select id="p-item"></select>
+      <label for="p-date">封包日期</label>
+      <input type="date" id="p-date">
+      <label>每一包幾克</label>
+      <div id="p-grams"></div>
+      <button type="button" class="btn ghost small" id="p-add-row">＋ 再一包</button>
+      <label for="p-note">備註（不用填也可以）</label>
+      <input type="text" id="p-note">
+      <button type="button" class="btn" id="p-submit">送出登記</button>
+      <div class="msg" id="p-msg"></div>
+      <div id="p-result"></div>
+    </div>
+    <div class="card">
+      <h2>品項與價格</h2>
+      <p class="hint">改價、上下架都在這裡，官網會跟著變。價格是「元／台斤」，每包的價錢會自動用克數算。</p>
+      <div id="i-list" class="loading">讀取中…</div>
+    </div>
+    </div>
+    <div class="card">
+      <h2>包裝清單</h2>
+      <div class="filter-row" id="p-filter">
+        <button type="button" class="on" data-st="在庫">在庫</button>
+        <button type="button" data-st="保留">已訂、還沒寄</button>
+        <button type="button" data-st="已售">已寄出</button>
+        <button type="button" data-st="下架">下架</button>
+        <button type="button" data-st="">全部</button>
+      </div>
+      <div id="p-list" class="loading">讀取中…</div>
+    </div>
+    <button class="dl-refresh" id="btn-refresh-packs" type="button" style="margin-top:14px">🔄 重新整理</button>
+  </section>
+
   <section class="pane" id="pane-order">
     <div class="card">
       <h2>登記訂單</h2>
@@ -431,12 +493,23 @@
       </div>
 
       <form id="form-order">
+        <label>賣法</label>
+        <div class="radio-row">
+          <label class="opt"><input type="radio" name="o-mode" value="pack" checked> 挑包裝</label>
+          <label class="opt"><input type="radio" name="o-mode" value="weight"> 秤重（舊的小管）</label>
+        </div>
+        <div id="o-pack-box">
+          <label>客人要哪幾包<span class="why">只列「在庫」的；被官網訂走的會自動消失</span></label>
+          <div id="o-pack-list" class="loading">讀取中…</div>
+        </div>
+        <div class="weight-only">
         <label for="o-item">品項</label>
         <select id="o-item">
           <option value="小管">小管</option>
           <option value="其他">其他</option>
         </select>
         <input type="text" id="o-item-other" placeholder="請輸入品項名稱" style="display:none; margin-top:8px;">
+        </div>
         <label for="o-name">客人姓名<span class="why">老客人打名字會自動帶出上次的資料</span></label>
         <input type="text" id="o-name" list="customer-list" autocomplete="off">
         <datalist id="customer-list"></datalist>
@@ -444,6 +517,7 @@
         <input type="tel" id="o-phone">
         <label for="o-email">Email<span class="why">7-11 寄件要用，建議先問</span></label>
         <input type="email" id="o-email" inputmode="email" autocomplete="off">
+        <div class="weight-only">
         <label for="o-kg">數量</label>
         <div class="qty-row">
           <input type="number" id="o-kg" inputmode="decimal" step="any" min="0">
@@ -451,6 +525,7 @@
         </div>
         <label for="o-price" id="o-price-label">單價（元／台斤）</label>
         <input type="number" id="o-price" inputmode="numeric" step="any" min="0" value="650">
+        </div>
         <div class="calc" id="o-calc">金額：－</div>
         <label>出貨方式</label>
         <div class="radio-row">
@@ -694,6 +769,7 @@
     <input type="tel" id="e-phone">
     <label for="e-email">Email<span class="why">7-11 寄件要用</span></label>
     <input type="email" id="e-email" inputmode="email" autocomplete="off">
+    <div id="e-weight">
     <label for="e-item">品項</label>
     <input type="text" id="e-item">
     <label for="e-kg">數量</label>
@@ -703,6 +779,8 @@
     </div>
     <label for="e-price">單價</label>
     <input type="number" id="e-price" inputmode="numeric" step="any" min="0">
+    </div>
+    <p class="hint" id="e-pack-note" style="display:none"></p>
     <label for="e-fee">運費</label>
     <input type="number" id="e-fee" inputmode="numeric" step="any" min="0">
     <label for="e-cost">出貨成本</label>
@@ -767,7 +845,8 @@
       if (btn.dataset.target === 'stock') { loadSummary(); loadAdjusts(); }
       if (btn.dataset.target === 'report') loadReport();
       if (btn.dataset.target === 'orders') loadOrders();
-      if (btn.dataset.target === 'order') loadCustomers();
+      if (btn.dataset.target === 'order') { loadCustomers(); loadOrderPacks(); }
+      if (btn.dataset.target === 'packs') { loadPacks(); }
       if (btn.dataset.target === 'archive') loadArchive();
       if (btn.dataset.target === 'diary') showDiaryTab('write');
     });
@@ -796,6 +875,7 @@
   function freeShipAt(ship) { return isStore(ship) ? FREE_SHIP_711 : FREE_SHIP_HOME; }
 
   function updateCalc() {
+    if (orderMode() === 'pack') return updatePackCalc();
     var kg = parseFloat(document.getElementById('o-kg').value);
     var oUnit = document.getElementById('o-unit').value;
     var price = parseFloat(document.getElementById('o-price').value);
@@ -953,6 +1033,7 @@
   function showApp() {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app-screen').style.display = 'block';
+    setOrderMode(orderMode());
     loadSummary();
     loadCatches();
     loadAdjusts();
@@ -1037,8 +1118,11 @@
     e.preventDefault();
     var ship = document.querySelector('input[name="o-ship"]:checked').value;
     var msg = document.getElementById('o-msg');
+    var packIds = orderMode() === 'pack' ? pickedPackIds() : [];
+    if (orderMode() === 'pack' && !packIds.length) { showMsg(msg, false, '請先勾客人要的包裝'); return; }
     postAction({
       action: '新增訂單',
+      包裝編號: packIds,
       品項: pickedItem('o-item', 'o-item-other'),
       客人姓名: document.getElementById('o-name').value,
       電話: document.getElementById('o-phone').value,
@@ -1054,12 +1138,15 @@
       showMsg(msg, res.ok, res.ok ? res.message : res.error);
       if (res.ok) {
         showOk('訂單登記成功', res.message);
+        var keepMode = orderMode();
         document.getElementById('form-order').reset();
+        document.querySelector('input[name="o-mode"][value="' + keepMode + '"]').checked = true;
         document.getElementById('o-price').value = 650;
         document.getElementById('o-fee').value = 120;
         document.getElementById('o-cost').value = 149;
         document.getElementById('o-item-other').style.display = 'none';
-        updateCalc();
+        setOrderMode(orderMode());
+        loadOrderPacks();
       }
     }).catch(function (err) { showMsg(msg, false, '送出失敗：' + err); });
   });
@@ -1111,7 +1198,7 @@
     var head = '🐟 虎井嶼手釣魚 出貨清單（' + d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + '）\n共 ' + shipRows.length + ' 筆\n';
     var body = shipRows.map(function (o, i) {
       return '\n' + (i + 1) + '. ' + o.客人姓名 + '　' + o.電話 +
-        '\n　　' + o.品項 + ' ' + qtyShort(o) + '　' + money(o.金額) + '（' + o.收款狀態 + '）' +
+        '\n　　' + itemLine(o) + '　' + money(o.金額) + '（' + o.收款狀態 + '）' +
         '\n　　' + o.出貨方式 + '　' + o.門市或地址;
     }).join('\n');
     var totalKg = shipRows.reduce(function (s, o) { return s + o.公斤數; }, 0);
@@ -1121,7 +1208,7 @@
 
   function downloadShipCsv() {
     if (!shipRows.length) return;
-    var cols = ['日期', '客人姓名', '電話', 'Email', '品項', '數量', '單位', '出貨方式', '門市或地址', '金額', '收款狀態'];
+    var cols = ['訂單編號', '日期', '客人姓名', '電話', 'Email', '品項', '包裝編號', '數量', '單位', '出貨方式', '門市或地址', '金額', '收款狀態'];
     function esc(v) {
       var s = (v === null || v === undefined) ? '' : v.toString();
       return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
@@ -1130,7 +1217,7 @@
     shipRows.forEach(function (o) {
       // 電話前面加 tab，Excel 才不會又把開頭的 0 吃掉
       lines.push([
-        esc(o.日期), esc(o.客人姓名), '="' + o.電話 + '"', esc(o.Email), esc(o.品項), esc(qtyOf(o)), esc(unitOf(o)),
+        esc(o.訂單編號), esc(o.日期), esc(o.客人姓名), '="' + o.電話 + '"', esc(o.Email), esc(o.品項), esc(o.包裝編號 || ''), esc(qtyOf(o)), esc(unitOf(o)),
         esc(o.出貨方式), esc(o.門市或地址), esc(o.金額), esc(o.收款狀態)
       ].join(','));
     });
@@ -1403,10 +1490,12 @@
   function todoRowHtml(o) {
     var paid = o.收款狀態 === '已收';
     var needMail = o.下一步 === '該出貨了';
-    return '<div class="top"><span class="name">' + o.客人姓名 + '</span>' +
+    return '<div class="top"><span class="name">' + (o.訂單編號 ? '#' + o.訂單編號 + ' ' : '') + o.客人姓名 + '</span>' +
       '<span class="amt">' + money(o.金額) + '</span></div>' +
-      '<div class="meta">' + (o.日期 || '') + '　' + waitTag(o.日期) + '</div>' +
-      '<div class="meta">' + o.品項 + ' ' + qtyShort(o)
+      '<div class="meta">' + (o.日期 || '') + '　' + waitTag(o.日期)
+        + (o.來源 === '官網' ? '　🌐 官網下單' : '')
+        + (o.保留到期 ? '　⏰ ' + o.保留到期 + ' 前沒匯款會自動取消' : '') + '</div>' +
+      '<div class="meta">' + itemLine(o)
         + (o.運費 ? '　＋運費 ' + money(o.運費) : '') + '</div>' +
       (o.電話 ? '<div class="meta">☎ ' + o.電話 + '</div>' : '') +
       (o.Email ? '<div class="meta">✉ ' + o.Email + '</div>'
@@ -1455,6 +1544,242 @@
   }
 
   function money(n) { return '$' + (Number(n) || 0).toLocaleString(); }
+
+  // ══════════ 逐包販售 ══════════
+  // 一筆訂單的品項怎麼寫：挑包裝的寫「玳瑁石斑　2 包（1、4 號）」，舊的寫「小管 2 台斤」
+  function itemLine(o) {
+    if (o.包裝編號) {
+      var ids = o.包裝編號.toString().split(/[、,，\s]+/).filter(Boolean);
+      return o.品項 + '　' + ids.length + ' 包（' + ids.join('、') + ' 號）';
+    }
+    return o.品項 + ' ' + qtyShort(o);
+  }
+
+  var packItems = [];   // 品項表
+  var orderPacks = [];  // 登記訂單時可以挑的包（在庫）
+
+  function fillPackItemSelect() {
+    var sel = document.getElementById('p-item');
+    var prev = sel.value;
+    sel.innerHTML = packItems.map(function (it) {
+      return '<option value="' + it.品項 + '">' + it.品項 + '（' + it.單價 + ' 元／台斤）</option>';
+    }).join('');
+    if (prev) sel.value = prev;
+  }
+
+  // 登記包裝：一包一格，按「再一包」多一格
+  function addGramRow(focus) {
+    var box = document.getElementById('p-grams');
+    var row = document.createElement('div');
+    row.className = 'gram-row';
+    row.innerHTML = '<input type="number" inputmode="numeric" min="1" step="1" placeholder="例如 420">'
+      + '<span>克</span><button type="button" class="x" aria-label="刪掉這一格">✕</button>';
+    row.querySelector('.x').addEventListener('click', function () {
+      if (box.children.length > 1) row.remove();
+    });
+    // 按 Enter 直接跳下一格，連續秤比較快
+    row.querySelector('input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); addGramRow(true); }
+    });
+    box.appendChild(row);
+    if (focus) row.querySelector('input').focus();
+  }
+  document.getElementById('p-add-row').addEventListener('click', function () { addGramRow(true); });
+  addGramRow(false);
+  document.getElementById('p-date').value = todayStr();
+
+  document.getElementById('p-submit').addEventListener('click', function () {
+    var btn = this, msg = document.getElementById('p-msg');
+    var grams = Array.prototype.map.call(document.querySelectorAll('#p-grams input'), function (i) { return i.value.trim(); })
+      .filter(function (v) { return v !== ''; }).map(Number);
+    if (!grams.length) { showMsg(msg, false, '至少填一包的克數'); return; }
+    if (grams.some(function (g) { return !(g > 0); })) { showMsg(msg, false, '克數要填大於 0 的數字'); return; }
+    btn.disabled = true;
+    showBusy(msg, '登記中…');
+    postAction({
+      action: '登記包裝', 品項: document.getElementById('p-item').value,
+      日期: document.getElementById('p-date').value, 克數: grams,
+      備註: document.getElementById('p-note').value
+    }).then(function (res) {
+      btn.disabled = false;
+      showMsg(msg, res.ok, res.ok ? '登記好了' : res.error);
+      if (!res.ok) return;
+      document.getElementById('p-result').innerHTML = '<div class="pack-made"><p style="margin:0 0 8px">✍️ 請把編號寫在袋子上：</p>'
+        + res.包.map(function (m) {
+          return '<div><b>' + m.編號 + ' 號</b>' + m.克數 + ' 克　' + money(m.價格) + '</div>';
+        }).join('') + '</div>';
+      document.getElementById('p-grams').innerHTML = '';
+      addGramRow(false);
+      document.getElementById('p-note').value = '';
+      loadPacks();
+    }).catch(function (err) { btn.disabled = false; showMsg(msg, false, '送出失敗：' + err); });
+  });
+
+  // 包裝清單
+  var packFilter = '在庫';
+  document.querySelectorAll('#p-filter button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.querySelectorAll('#p-filter button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      packFilter = b.dataset.st;
+      loadPacks();
+    });
+  });
+  document.getElementById('btn-refresh-packs').addEventListener('click', loadPacks);
+
+  function loadPacks() {
+    var box = document.getElementById('p-list');
+    box.className = 'loading'; box.textContent = '讀取中…';
+    postAction({ action: '包裝清單', 狀態: packFilter }).then(function (res) {
+      box.className = '';
+      if (!res.ok) { box.innerHTML = '<div class="empty">' + res.error + '</div>'; return; }
+      packItems = res.品項 || [];
+      fillPackItemSelect();
+      renderItems();
+      if (!res.包.length) { box.innerHTML = '<div class="empty">沒有' + (packFilter || '') + '的包裝</div>'; return; }
+      var total = res.包.reduce(function (s, p) { return s + p.克數; }, 0);
+      box.innerHTML = '<div class="qcount">共 ' + res.包.length + ' 包　' + total.toLocaleString() + ' 克（約 '
+        + tidy(total / 600) + ' 台斤）</div>';
+      res.包.forEach(function (p) {
+        var row = document.createElement('div');
+        row.className = 'prow';
+        row.innerHTML = '<span class="no">' + p.編號 + '</span>'
+          + '<div class="info">' + p.品項 + '　' + p.克數 + ' 克　' + money(p.價格)
+          + '<small>' + p.狀態 + (p.訂單編號 ? '　訂單 #' + p.訂單編號 : '') + '　封包 ' + (p.封包日期 || '')
+          + (p.備註 ? '　' + p.備註 : '') + '</small></div><div class="act"></div>';
+        var act = row.querySelector('.act');
+        function addBtn(text, fn) {
+          var b = document.createElement('button'); b.type = 'button'; b.textContent = text;
+          b.addEventListener('click', fn); act.appendChild(b);
+        }
+        if (p.狀態 === '在庫') {
+          addBtn('改克數', function () {
+            var v = prompt(p.編號 + ' 號現在是 ' + p.克數 + ' 克，要改成幾克？', p.克數);
+            if (v === null || v.trim() === '') return;
+            editPack({ 編號: p.編號, 克數: v.trim() });
+          });
+          addBtn('下架', function () {
+            var why = prompt(p.編號 + ' 號為什麼不賣了？（自己吃、送人、壞掉…）', '');
+            if (why === null) return;
+            editPack({ 編號: p.編號, 狀態: '下架', 備註: why });
+          });
+        } else if (p.狀態 === '下架') {
+          addBtn('放回在庫', function () { editPack({ 編號: p.編號, 狀態: '在庫' }); });
+        }
+        box.appendChild(row);
+      });
+    }).catch(function (err) { box.className = ''; box.innerHTML = '<div class="empty">讀取失敗：' + err + '</div>'; });
+  }
+  function editPack(body) {
+    body.action = '編輯包裝';
+    postAction(body).then(function (res) {
+      if (!res.ok) { alert(res.error); return; }
+      loadPacks();
+    }).catch(function (err) { alert('失敗：' + err); });
+  }
+
+  // 品項與價格
+  function renderItems() {
+    var box = document.getElementById('i-list');
+    box.className = '';
+    box.innerHTML = '';
+    packItems.forEach(function (it) {
+      var row = document.createElement('div');
+      row.className = 'irow';
+      row.innerHTML = '<span class="nm">' + it.品項 + '</span>'
+        + '<input type="number" inputmode="numeric" min="1" value="' + it.單價 + '" aria-label="' + it.品項 + ' 單價">'
+        + '<label><input type="checkbox"' + (it.上架 ? ' checked' : '') + '> 上架</label>'
+        + '<button type="button">存</button>';
+      row.querySelector('button').addEventListener('click', function () {
+        var btn = this;
+        btn.disabled = true; btn.textContent = '…';
+        postAction({
+          action: '設定品項', 品項: it.品項,
+          單價: row.querySelector('input[type=number]').value,
+          上架: row.querySelector('input[type=checkbox]').checked ? '是' : '否'
+        }).then(function (res) {
+          btn.disabled = false; btn.textContent = res.ok ? '✓' : '存';
+          if (!res.ok) alert(res.error);
+          else setTimeout(function () { btn.textContent = '存'; }, 1500);
+        }).catch(function (err) { btn.disabled = false; btn.textContent = '存'; alert('失敗：' + err); });
+      });
+      box.appendChild(row);
+    });
+    if (!packItems.length) box.innerHTML = '<div class="empty">還沒有品項</div>';
+  }
+
+  // 登記訂單：挑包裝
+  function orderMode() {
+    var r = document.querySelector('input[name="o-mode"]:checked');
+    return r ? r.value : 'pack';
+  }
+  function setOrderMode(mode) {
+    document.getElementById('o-pack-box').style.display = mode === 'pack' ? '' : 'none';
+    document.querySelectorAll('#form-order .weight-only').forEach(function (el) {
+      el.style.display = mode === 'pack' ? 'none' : '';
+    });
+    updateCalc();
+  }
+  document.querySelectorAll('input[name="o-mode"]').forEach(function (r) {
+    r.addEventListener('change', function () { setOrderMode(this.value); });
+  });
+
+  function loadOrderPacks() {
+    var box = document.getElementById('o-pack-list');
+    box.className = 'loading'; box.textContent = '讀取中…';
+    postAction({ action: '包裝清單', 狀態: '在庫' }).then(function (res) {
+      box.className = '';
+      if (!res.ok) { box.innerHTML = '<div class="empty">' + res.error + '</div>'; return; }
+      orderPacks = res.包 || [];
+      if (!orderPacks.length) {
+        box.innerHTML = '<div class="empty">目前沒有在庫的包裝。先到「🏷️ 包裝」登記，或用「秤重」</div>';
+        // 一包都沒登記時直接切到秤重，接單才不會卡住
+        if (orderMode() === 'pack') {
+          document.querySelector('input[name="o-mode"][value="weight"]').checked = true;
+          setOrderMode('weight');
+        }
+        updateCalc();
+        return;
+      }
+      var names = [];
+      orderPacks.forEach(function (p) { if (names.indexOf(p.品項) === -1) names.push(p.品項); });
+      box.innerHTML = names.map(function (n) {
+        return '<div class="pack-grp"><h4>' + n + '</h4><div class="pack-chips">'
+          + orderPacks.filter(function (p) { return p.品項 === n; }).map(function (p) {
+            return '<label class="pack-chip"><input type="checkbox" value="' + p.編號 + '">'
+              + p.編號 + ' 號　' + p.克數 + ' 克　' + money(p.價格) + '</label>';
+          }).join('') + '</div></div>';
+      }).join('');
+      box.querySelectorAll('input').forEach(function (c) { c.addEventListener('change', updateCalc); });
+      updateCalc();
+    }).catch(function (err) { box.className = ''; box.innerHTML = '<div class="empty">讀取失敗：' + err + '</div>'; });
+  }
+  function pickedPackIds() {
+    return Array.prototype.map.call(document.querySelectorAll('#o-pack-list input:checked'), function (c) { return Number(c.value); });
+  }
+  function updatePackCalc() {
+    var ids = pickedPackIds();
+    var box = document.getElementById('o-calc');
+    if (!ids.length) { box.textContent = '金額：－（先勾包裝）'; return; }
+    var picked = orderPacks.filter(function (p) { return ids.indexOf(p.編號) !== -1; });
+    var amount = picked.reduce(function (s, p) { return s + p.價格; }, 0);
+    var grams = picked.reduce(function (s, p) { return s + p.克數; }, 0);
+    var fee = parseFloat(document.getElementById('o-fee').value) || 0;
+    var cost = parseFloat(document.getElementById('o-cost').value) || 0;
+    var ship = document.querySelector('input[name="o-ship"]:checked').value;
+    var freeAt = freeShipAt(ship);
+    var freed = amount >= freeAt;
+    if (freed) fee = 0;
+    var raw = amount + fee, due = roundDown(raw);
+    var html = '魚 $' + amount.toLocaleString() + '（' + ids.length + ' 包，' + grams.toLocaleString() + ' 克）＋ 運費 $' + fee.toLocaleString();
+    if (freed) html += '<span style="font-weight:500;font-size:.82rem">（滿 ' + freeAt.toLocaleString() + ' 免運）</span>';
+    html += '<br><span style="font-size:1.05rem">應收 $' + due.toLocaleString() + '</span>';
+    if (raw !== due) html += '<span style="font-weight:500;font-size:.82rem">（去零頭 −$' + (raw - due) + '）</span>';
+    html += '<br><span style="font-weight:500;font-size:.85rem">實際成本 $' + cost.toLocaleString() + ' → 淨賺 $' + (due - cost).toLocaleString() + '</span>';
+    if (ship === '7-11取貨付款' && due > COD_MAX) {
+      html += '<br><span style="color:#B4413B;font-weight:700">⚠ 超過超商代收上限 $' + COD_MAX.toLocaleString() + '，請改選「7-11 先匯款」</span>';
+    }
+    box.innerHTML = html;
+  }
 
   // 距今幾天（用來提醒別拖太久）
   function daysAgo(dateStr) {
@@ -1523,11 +1848,13 @@
 
   // ---- 編輯訂單 ----
   var editMask = document.getElementById('edit-modal');
-  var editRow = null, editOnDone = null;
+  var editRow = null, editOnDone = null, editShipFallback = '';
 
   function editCalc() {
     var kg = parseFloat(document.getElementById('e-kg').value) || 0;
     var price = parseFloat(document.getElementById('e-price').value) || 0;
+    // 逐包的單：金額固定是那幾包的價錢，用「1 × 金額」套進下面同一套算法
+    if (editIsPack) { kg = 1; price = editPackAmount; }
     var fee = parseFloat(document.getElementById('e-fee').value) || 0;
     var shipEl = document.querySelector('input[name="e-ship"]:checked');
     var ship = shipEl ? shipEl.value : '7-11先匯款';
@@ -1555,8 +1882,15 @@
   });
   document.getElementById('e-unit').addEventListener('change', editCalc);
 
+  var editIsPack = false, editPackAmount = 0;
   function openEdit(o, onDone) {
     editRow = o.rowIndex; editOnDone = onDone;
+    editIsPack = !!o.包裝編號;
+    editPackAmount = Number(o.商品金額) || 0;
+    document.getElementById('e-weight').style.display = editIsPack ? 'none' : '';
+    var pn = document.getElementById('e-pack-note');
+    pn.style.display = editIsPack ? '' : 'none';
+    pn.textContent = editIsPack ? '這張單是挑包裝的（' + itemLine(o) + '），品項和重量跟著包裝走，不能在這裡改。要換包請刪掉這張單重新登記。' : '';
     document.getElementById('e-date').value = o.日期 || '';
     document.getElementById('e-name').value = o.客人姓名 || '';
     document.getElementById('e-phone').value = o.電話 || '';
@@ -1568,8 +1902,9 @@
     document.getElementById('e-fee').value = o.運費 || 0;
     document.getElementById('e-cost').value = o.出貨成本 || '';
     document.getElementById('e-addr').value = o.門市或地址 || '';
-    var ship = (o.出貨方式 === '宅配') ? '宅配' : '7-11交貨便';
-    document.querySelectorAll('input[name="e-ship"]').forEach(function (r) { r.checked = (r.value === ship); });
+    // 舊資料的「7-11交貨便」沒有對應的選項，就都不勾，存檔時沿用原本的值
+    editShipFallback = o.出貨方式 || '';
+    document.querySelectorAll('input[name="e-ship"]').forEach(function (r) { r.checked = (r.value === o.出貨方式); });
     document.getElementById('e-paid').checked = (o.收款狀態 === '已收');
     document.getElementById('e-shipped').checked = (o.出貨狀態 === '已出');
     document.getElementById('e-err').classList.remove('show');
@@ -1604,7 +1939,7 @@
       單價: document.getElementById('e-price').value,
       運費: document.getElementById('e-fee').value,
       出貨成本: document.getElementById('e-cost').value,
-      出貨方式: document.querySelector('input[name="e-ship"]:checked').value,
+      出貨方式: (document.querySelector('input[name="e-ship"]:checked') || { value: editShipFallback }).value,
       門市或地址: document.getElementById('e-addr').value,
       收款狀態: document.getElementById('e-paid').checked ? '已收' : '未收',
       出貨狀態: document.getElementById('e-shipped').checked ? '已出' : '未出'
@@ -1643,9 +1978,9 @@
   }
 
   var orderFilter = '全部';
-  document.querySelectorAll('.filter-row button').forEach(function (b) {
+  document.querySelectorAll('#pane-orders .filter-row button').forEach(function (b) {
     b.addEventListener('click', function () {
-      document.querySelectorAll('.filter-row button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      document.querySelectorAll('#pane-orders .filter-row button').forEach(function (x) { x.classList.toggle('on', x === b); });
       orderFilter = b.dataset.filter;
       loadOrders();
     });
@@ -1670,8 +2005,9 @@
         var shipTag = o.出貨狀態 === '已出'
           ? '<span class="tag shipped">已出貨</span>' : '<span class="tag unshipped">未出貨</span>';
         div.innerHTML =
-          '<div class="oh"><span class="who">' + o.客人姓名 + '</span><span class="amt">' + money(o.金額) + '</span></div>' +
-          '<div class="line">' + o.日期 + '　' + o.品項 + ' ' + qtyText(o) + ' × ' + o.單價 + ' 元</div>' +
+          '<div class="oh"><span class="who">' + (o.訂單編號 ? '#' + o.訂單編號 + ' ' : '') + o.客人姓名 + '</span><span class="amt">' + money(o.金額) + '</span></div>' +
+          '<div class="line">' + o.日期 + '　' + (o.包裝編號 ? itemLine(o) : o.品項 + ' ' + qtyText(o) + ' × ' + o.單價 + ' 元')
+            + (o.來源 === '官網' ? '　🌐 官網' : '') + '</div>' +
           '<div class="line">' + o.出貨方式 + '　' + o.門市或地址 + '</div>' +
           (o.電話 ? '<div class="line">☎ ' + o.電話 + '</div>' : '') +
           (o.Email ? '<div class="line">✉ ' + o.Email + '</div>' : '') +
@@ -1681,7 +2017,7 @@
             + '</div>';
         attachEdit(div, o, loadOrders);
         attachDelete(div, {
-          label: o.客人姓名 + '　' + o.品項 + ' ' + qtyShort(o),
+          label: o.客人姓名 + '　' + itemLine(o),
           action: '刪除訂單',
           rowIndex: o.rowIndex,
           onDone: loadOrders
